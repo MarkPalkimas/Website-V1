@@ -16,7 +16,6 @@
         body {
             display: flex;
             flex-direction: column;
-            align-items: center;
             min-height: 100vh;
             background-color: #f4f4f4;
             color: #333;
@@ -90,13 +89,17 @@
             z-index: 15;
         }
 
-        /* Contact Section */
-        .contact-section {
-            margin-top: 20px;
-            text-align: center;
-            padding: 1em;
-            background-color: #f4f4f4;
+        /* Footer */
+        footer {
             width: 100%;
+            padding: 1em;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
         }
 
         .social-links {
@@ -110,19 +113,7 @@
             width: 30px;
         }
 
-        /* Gravity Ball Section */
-        .gravity-ball-container {
-            position: relative;
-            width: 100%;
-            height: 100px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #e0e0e0;
-            margin-top: 20px;
-        }
-
+        /* Gravity Ball */
         .gravity-btn {
             padding: 8px 16px;
             cursor: pointer;
@@ -130,40 +121,30 @@
             color: white;
             border: none;
             border-radius: 5px;
+            margin-top: 10px;
         }
 
-        .gravity-ball {
+        .gravity-ball-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            margin-top: 60px;
+            z-index: 0;
+        }
+
+        .ball {
             position: absolute;
             width: 20px;
             height: 20px;
             border-radius: 50%;
             background-color: #0073e6;
-            animation: bounce 3s infinite ease-in-out;
+            animation: bounce 5s infinite ease-in-out;
         }
 
         @keyframes bounce {
             0% { transform: translateY(0); }
-            100% { transform: translateY(80px); }
-        }
-
-        /* Footer and Copyright */
-        footer {
-            width: 100%;
-            text-align: center;
-            padding: 1em;
-            background-color: #333;
-            color: #fff;
-            position: relative;
-        }
-
-        .copyright {
-            color: rgba(140, 140, 140, 0.4);
-            font-size: 0.85em;
-            opacity: 0.7;
-            position: absolute;
-            bottom: -20px;
-            width: 100%;
-            text-align: center;
+            100% { transform: translateY(100vh); }
         }
     </style>
 </head>
@@ -188,31 +169,23 @@
             </div>
         </section>
 
-        <!-- Contact Section -->
-        <section class="contact-section">
-            <h2>Contact Me</h2>
-            <div class="social-links">
-                <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
-                <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank"><img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn"></a>
-                <a href="https://github.com/MarkPalkimas" target="_blank"><img src="github-logo.png" alt="GitHub"></a>
-                <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
-                <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
-            </div>
-        </section>
-
-        <!-- Gravity Ball Section -->
-        <div class="gravity-ball-container">
+        <!-- Gravity Ball Container -->
+        <div class="gravity-ball-container" id="ballContainer">
             <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
-            <div class="gravity-ball"></div>
         </div>
     </main>
 
+    <!-- Footer with Social Links -->
     <footer>
-        <p>Mark Palkimas' Portfolio © 2024</p>
+        <h2>Contact Me</h2>
+        <div class="social-links">
+            <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
+            <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank"><img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn"></a>
+            <a href="https://github.com/MarkPalkimas" target="_blank"><img src="github-logo.png" alt="GitHub"></a>
+            <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
+            <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
+        </div>
     </footer>
-    <div class="copyright">
-        &copy; 2024 Mark Palkimas. All rights reserved.
-    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -232,8 +205,16 @@
         });
 
         function dropBall() {
-            const ball = document.querySelector(".gravity-ball");
-            ball.style.animation = "bounce 3s infinite ease-in-out";
+            const container = document.getElementById("ballContainer");
+            const ball = document.createElement("div");
+            ball.className = "ball";
+            ball.style.left = `${Math.random() * (window.innerWidth - 20)}px`;
+            ball.style.animationDuration = `${3 + Math.random() * 2}s`;
+            container.appendChild(ball);
+
+            ball.addEventListener("animationiteration", () => {
+                ball.style.left = `${Math.random() * (window.innerWidth - 20)}px`;
+            });
         }
     </script>
 </body>
