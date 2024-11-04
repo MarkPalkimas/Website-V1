@@ -90,25 +90,20 @@
             background-color: #333;
             color: #fff;
             text-align: center;
-            position: relative; /* Allows footer to be above hidden section */
+            position: absolute; /* Change to absolute */
+            bottom: 0; /* Fix to the bottom of the page */
+            left: 0; /* Align to the left */
         }
 
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 0.5em;
-            margin-top: 0.5em;
-        }
-
-        .social-links img {
-            width: 30px;
+        /* Add padding to the main section to allow space for the footer */
+        main {
+            padding-bottom: 80px; /* Adjust this value to the height of the footer */
         }
 
         /* Scrollable Section for Copyright and Drop Ball Button */
         .bottom-section {
             text-align: center;
             padding: 20px;
-            position: relative;
             height: 5vh; /* This section occupies some space below the footer */
         }
 
