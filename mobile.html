@@ -13,6 +13,7 @@
             font-family: Arial, sans-serif;
         }
 
+        /* Body Styling */
         body {
             display: flex;
             flex-direction: column;
@@ -82,13 +83,15 @@
             z-index: 20;
         }
 
-        /* Footer */
+        /* Footer at Screen Bottom */
         footer {
             width: 100%;
             padding: 1em;
             background-color: #333;
             color: #fff;
             text-align: center;
+            position: fixed;
+            bottom: 5%;
         }
 
         .social-links {
@@ -102,52 +105,47 @@
             width: 30px;
         }
 
-        /* Hidden Drop Ball Button */
+        /* Hidden Drop Ball Section */
+        .drop-ball-section {
+            height: 5%;
+            text-align: center;
+            position: relative;
+        }
+
         .drop-ball-btn {
-            position: absolute;
-            bottom: 5%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: block;
+            display: inline-block;
             padding: 0.5em 1em;
             font-size: 1em;
             cursor: pointer;
+            margin-top: 1em;
+            background-color: #0073e6;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
         }
 
-        /* Gravity Ball */
+        /* Gravity Ball Container */
         .gravity-ball-container {
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 5vh;
+            height: 100vh;
             overflow: hidden;
         }
 
         .ball {
             position: absolute;
-            width: 20px;
-            height: 20px;
             border-radius: 50%;
-            background-color: #0073e6;
-            animation: bounce 1s ease-out infinite;
+            animation: drop 1s ease-in-out;
         }
 
-        /* Reset Button */
-        .reset-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 0.5em 1em;
-            font-size: 0.9em;
-            cursor: pointer;
-            display: none;
-        }
-
-        /* Physics-based Animation */
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-50px); }
-            100% { transform: translateY(0); }
-        }
+        /* Colors for Balls */
+        .color1 { background-color: #FF5733; }
+        .color2 { background-color: #33FF57; }
+        .color3 { background-color: #5733FF; }
+        .color4 { background-color: #33CFFF; }
+        .color5 { background-color: #FF33CF; }
     </style>
 </head>
 <body>
@@ -169,7 +167,6 @@
         </section>
     </main>
 
-    <!-- Footer with Social Links -->
     <footer>
         <h2>Contact Me</h2>
         <div class="social-links">
@@ -181,12 +178,14 @@
         </div>
     </footer>
 
-    <!-- Drop Ball Button -->
-    <button class="drop-ball-btn" onclick="dropBall()">Drop Ball</button>
-    <div class="gravity-ball-container" id="ballContainer"></div>
+    <!-- Hidden Section with Drop Ball Button and Copyright -->
+    <div class="drop-ball-section">
+        <button class="drop-ball-btn" onclick="dropBall()">Drop Ball</button>
+        <p>&copy; 2024 Mark Palkimas</p>
+    </div>
 
-    <!-- Reset Button -->
-    <button class="reset-btn" id="resetButton" onclick="resetBalls()">Reset</button>
+    <!-- Container for Balls -->
+    <div class="gravity-ball-container" id="ballContainer"></div>
 
     <script>
         function showAboutSection() {
@@ -196,37 +195,45 @@
 
         function dropBall() {
             const container = document.getElementById("ballContainer");
+
+            // Create ball with random color and size
             const ball = document.createElement("div");
-            ball.className = "ball";
-            ball.style.left = `${Math.random() * (window.innerWidth - 20)}px`;
+            const size = Math.random() * 30 + 20;  // size range 20px - 50px
+            ball.style.width = ball.style.height = `${size}px`;
+            ball.classList.add("ball", `color${Math.ceil(Math.random() * 5)}`);
+            ball.style.left = `${Math.random() * (window.innerWidth - size)}px`;
             container.appendChild(ball);
 
-            // Show Reset Button after first ball drop
-            const resetButton = document.getElementById("resetButton");
-            resetButton.style.display = "block";
-
-            // Physics-based movement with simple gravity simulation
-            let velocityY = 2;
+            // Initialize physics
+            let velocityY = 0;
             let posY = 0;
-            function animateBall() {
-                posY += velocityY;
-                velocityY += 0.2;  // simulate gravity
-                if (posY >= window.innerHeight - 100) {
-                    posY = window.innerHeight - 100;
-                    velocityY *= -0.6;  // reverse and dampen velocity for bounce
-                    if (Math.abs(velocityY) < 0.5) velocityY = 0;  // stop bouncing when small enough
-                }
-                ball.style.transform = `translateY(${posY}px)`;
-                if (velocityY !== 0) requestAnimationFrame(animateBall);
-            }
-            requestAnimationFrame(animateBall);
-        }
+            const gravity = 0.5;
+            const damping = 0.7;
 
-        function resetBalls() {
-            const container = document.getElementById("ballContainer");
-            container.innerHTML = "";
-            const resetButton = document.getElementById("resetButton");
-            resetButton.style.display = "none";  // Hide reset button
+            // Animate ball with physics and collision handling
+            function animateBall() {
+                velocityY += gravity;
+                posY += velocityY;
+
+                // Bounce off footer if reaching it
+                if (posY >= window.innerHeight - size - 60) {
+                    posY = window.innerHeight - size - 60;
+                    velocityY *= -damping;
+
+                    // Stop bouncing if velocity is low
+                    if (Math.abs(velocityY) < 0.5) {
+                        velocityY = 0;
+                        ball.style.transform = `translateY(${posY}px)`;
+                        return;  // End animation when ball settles
+                    }
+                }
+
+                // Apply updated position
+                ball.style.transform = `translateY(${posY}px)`;
+                requestAnimationFrame(animateBall);
+            }
+
+            animateBall();
         }
     </script>
 </body>
