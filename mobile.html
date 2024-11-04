@@ -20,6 +20,7 @@
             background-color: #f4f4f4;
             color: #333;
             position: relative;
+            overflow-x: hidden;
         }
 
         /* Header */
@@ -82,29 +83,51 @@
             z-index: 15;
         }
 
-        /* Footer and Gravity */
+        /* Footer */
         footer {
             width: 100%;
-            text-align: center;
-            padding: 1em;
+            padding: 1.5em 0;
             background-color: #333;
             color: #fff;
-            margin-top: auto;
+            text-align: center;
+            position: relative;
+            z-index: 5;
         }
 
-        .footer-content {
+        .contact-section {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
         }
 
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .social-links img {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.3s;
+        }
+
+        .social-links img:hover {
+            transform: scale(1.2);
+        }
+
+        .footer-content p {
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        /* Gravity Buttons (Positioned below footer) */
         .gravity-section {
             text-align: center;
             padding: 1em;
-            position: fixed;
-            bottom: 10px;
-            width: 100%;
+            position: relative;
+            top: 105vh;
         }
 
         .gravity-btn, .reset-btn {
@@ -153,10 +176,17 @@
     </main>
 
     <footer>
-        <div class="footer-content">
-            <p>Contact: email@example.com | Phone: 123-456-7890</p>
+        <section class="contact-section">
+            <h2>Contact Me</h2>
+            <div class="social-links">
+                <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
+                <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank"><img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn"></a>
+                <a href="https://github.com/MarkPalkimas" target="_blank"><img src="github-logo.png" alt="GitHub"></a>
+                <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
+                <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
+            </div>
             <p>&copy; 2024 Mark Palkimas. All rights reserved.</p>
-        </div>
+        </section>
     </footer>
 
     <div class="gravity-section">
@@ -166,7 +196,6 @@
 
     <script>
         const balls = [];
-        const footer = document.querySelector("footer");
         const resetBtn = document.querySelector(".reset-btn");
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -200,14 +229,13 @@
             document.body.appendChild(ball);
             balls.push(ball);
 
-            // Show reset button once a ball is dropped
             resetBtn.style.display = "inline-block";
         }
 
         function resetBalls() {
             balls.forEach(ball => ball.remove());
             balls.length = 0;
-            resetBtn.style.display = "none"; // Hide reset button after resetting
+            resetBtn.style.display = "none";
         }
 
         function getRandomColor() {
@@ -221,6 +249,7 @@
 
         function updateBalls() {
             const velocityCutoff = 0.01;
+            const footerTop = window.innerHeight - document.querySelector("footer").offsetHeight;
 
             balls.forEach(ball => {
                 let currentTop = parseFloat(ball.style.top) || 0;
@@ -228,12 +257,9 @@
                 let newTop = currentTop + ball.velocityY;
                 let newLeft = currentLeft + ball.velocityX;
 
-                const footerTop = window.innerHeight - footer.offsetHeight;
-
                 if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
                     newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
                     ball.velocityY *= -0.8;
-
                     if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
                 } else {
                     ball.velocityY += 0.3;
