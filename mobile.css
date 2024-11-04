@@ -9,17 +9,17 @@
 
 html, body {
     height: 100%;
-    background: linear-gradient(to bottom, #ffffff, #ababab, 0.5);
+    background: linear-gradient(to bottom, #ffffff, #ABABAB);
     color: #000;
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    overflow-x: hidden;
+    padding: 0 10px; /* Adds slight padding to avoid edges */
 }
 
 /* Header */
@@ -30,55 +30,46 @@ body {
     position: fixed;
     top: 0;
     z-index: 1000;
+    font-size: 14px; /* Smaller font for mobile */
 }
 
 .nav-bar {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 100%;
 }
 
 .logo {
     font-size: 20px;
     color: #fff;
-    cursor: pointer;
-    margin-bottom: 10px;
 }
 
 .nav-links {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
+    list-style: none;
+    gap: 10px; /* Reduced gap */
 }
 
 .nav-links a {
+    text-decoration: none;
     color: #ffffff;
     font-weight: bold;
-    transition: color 0.3s;
-    text-decoration: none;
 }
 
-.nav-links a:hover {
-    color: #ffcc00;
-}
-
-/* Profile Photo and Intro Text Styling */
+/* Profile Photo and Intro Text */
 .profile-photo {
-    margin-top: 80px;
+    margin-top: 100px;
     width: 180px;
     height: 180px;
     border-radius: 50%;
     border: 4px solid #000;
-    margin-bottom: 20px;
 }
 
 .intro-text {
-    padding: 0 20px;
+    margin-top: 20px;
     text-align: center;
-    max-width: 90%;
+    padding: 0 10px;
 }
 
 .intro-text h2 {
@@ -87,87 +78,61 @@ body {
 }
 
 .intro-text p {
-    font-size: 1.1em;
+    font-size: 1em;
     color: #555;
 }
 
 /* About Section */
 .about-section {
-    display: block;
+    margin-top: 20px;
+    position: relative;
     background-color: #fff;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 350px;
-    margin: 20px auto;
     text-align: center;
+    max-width: 90%;
+    width: auto;
+    font-size: 0.9em; /* Smaller text for readability */
 }
 
 /* Footer and Social Links */
 .footer {
     background-color: rgba(171, 171, 171, 0.5);
-    padding: 10px 0;
+    padding: 10px;
     text-align: center;
     width: 100%;
 }
 
 .footer p {
     font-size: 1em;
+    font-weight: bold;
     margin-bottom: 5px;
 }
 
 .social-links {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 15px; /* Smaller gap */
 }
 
 .social-logo {
-    width: 32px;
-    height: 32px;
-    transition: transform 0.3s, filter 0.3s;
-}
-
-.social-logo:hover {
-    transform: scale(1.1);
-    filter: brightness(1.2);
+    width: 24px;
+    height: 24px; /* Reduced size */
 }
 
 /* Footer Bottom */
 .footer-bottom {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
     padding-top: 10px;
+    flex-wrap: wrap;
 }
 
 .gravity-btn, .admin-btn {
-    padding: 8px 15px;
-    background-color: #0073e6;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: background-color 0.3s;
-}
-
-.gravity-btn:hover, .admin-btn:hover {
-    background-color: #005bb5;
-}
-
-.copyright {
-    color: rgba(140, 140, 140, 0.4);
-    font-size: 0.75em;
-    margin-top: 5px;
-}
-
-/* Gravity Ball adjustments for mobile */
-@media only screen and (max-width: 600px) {
-    .gravity-ball {
-        width: 100%;
-        height: auto;
-        overflow: hidden;
-    }
+    padding: 8px 16px;
+    font-size: 0.9em;
+    border-radius: 4px;
 }
