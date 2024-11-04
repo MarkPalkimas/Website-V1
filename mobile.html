@@ -89,13 +89,22 @@
             padding: 1em;
             background-color: #333;
             color: #fff;
-            position: relative;
-            margin-top: 5vh;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .gravity-section {
             text-align: center;
             padding: 1em;
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
         }
 
         .gravity-btn, .reset-btn {
@@ -106,6 +115,11 @@
             border: none;
             border-radius: 5px;
             margin-top: 10px;
+            display: inline-block;
+        }
+
+        .reset-btn {
+            display: none; /* Initially hidden */
         }
 
         /* Ball Styling */
@@ -139,15 +153,21 @@
     </main>
 
     <footer>
-        <div class="gravity-section">
-            <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
-            <button class="reset-btn" onclick="resetBalls()">Reset</button>
+        <div class="footer-content">
+            <p>Contact: email@example.com | Phone: 123-456-7890</p>
+            <p>&copy; 2024 Mark Palkimas. All rights reserved.</p>
         </div>
     </footer>
+
+    <div class="gravity-section">
+        <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
+        <button class="reset-btn" onclick="resetBalls()">Reset</button>
+    </div>
 
     <script>
         const balls = [];
         const footer = document.querySelector("footer");
+        const resetBtn = document.querySelector(".reset-btn");
 
         document.addEventListener("DOMContentLoaded", function () {
             const dimmedOverlay = document.querySelector(".dimmed");
@@ -158,6 +178,14 @@
                 dimmedOverlay.style.display = "none";
             });
         });
+
+        function showAboutSection() {
+            const aboutPopup = document.querySelector(".about-popup");
+            const dimmedOverlay = document.querySelector(".dimmed");
+
+            aboutPopup.style.display = aboutPopup.style.display === "none" ? "block" : "none";
+            dimmedOverlay.style.display = dimmedOverlay.style.display === "none" ? "block" : "none";
+        }
 
         function dropBall() {
             const ball = document.createElement("div");
@@ -171,11 +199,15 @@
 
             document.body.appendChild(ball);
             balls.push(ball);
+
+            // Show reset button once a ball is dropped
+            resetBtn.style.display = "inline-block";
         }
 
         function resetBalls() {
             balls.forEach(ball => ball.remove());
             balls.length = 0;
+            resetBtn.style.display = "none"; // Hide reset button after resetting
         }
 
         function getRandomColor() {
