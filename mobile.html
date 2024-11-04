@@ -114,11 +114,11 @@
         .gravity-ball-container {
             position: relative;
             width: 100%;
-            height: 100px;
+            height: 300px; /* Increased height for visibility */
             overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-end; /* Aligns to bottom */
             background-color: #e0e0e0;
             margin-top: 20px;
         }
@@ -130,8 +130,11 @@
             color: white;
             border: none;
             border-radius: 5px;
+            position: absolute;
+            top: 10px; /* Button position at the top */
         }
 
+        /* Ball Styling */
         .gravity-ball {
             position: absolute;
             width: 20px;
@@ -203,7 +206,6 @@
         <!-- Gravity Ball Section -->
         <div class="gravity-ball-container">
             <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
-            <div class="gravity-ball"></div>
         </div>
     </main>
 
@@ -232,8 +234,40 @@
         });
 
         function dropBall() {
-            const ball = document.querySelector(".gravity-ball");
-            ball.style.animation = "bounce 3s infinite ease-in-out";
+            const container = document.querySelector(".gravity-ball-container");
+            const ball = document.createElement("div");
+            ball.className = "gravity-ball";
+            ball.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`; // Random color
+            ball.style.width = `${Math.random() * 30 + 15}px`; // Random size
+            ball.style.height = ball.style.width; // Maintain circle shape
+            ball.style.left = `${Math.random() * (container.clientWidth - 30)}px`; // Random horizontal position
+            container.appendChild(ball);
+
+            // Simulate falling with physics
+            let posY = 0;
+            let velocityY = 0;
+            const gravity = 0.2; // Gravity strength
+            const damping = 0.7; // Damping for bouncing
+
+            function animateBall() {
+                velocityY += gravity; // Apply gravity
+                posY += velocityY; // Update position
+
+                // Check for collision with the bottom of the container
+                if (posY + parseInt(ball.style.height) >= container.clientHeight) {
+                    posY = container.clientHeight - parseInt(ball.style.height); // Reset position
+                    velocityY *= -damping; // Reverse velocity with damping
+                }
+
+                ball.style.transform = `translateY(${posY}px)`; // Apply position
+
+                // Continue animation as long as the ball is moving
+                if (Math.abs(velocityY) > 0.5) {
+                    requestAnimationFrame(animateBall);
+                }
+            }
+
+            animateBall();
         }
     </script>
 </body>
