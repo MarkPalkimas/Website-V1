@@ -55,7 +55,7 @@
         .profile-photo {
             margin-top: 80px;
             width: 150px;
-            height: 200px;
+            height: 150px;
             border-radius: 50%;
             cursor: pointer;
             object-fit: cover;
@@ -200,6 +200,7 @@
             ball.style.width = ball.style.height = `${size}px`;
             ball.classList.add("ball", `color${Math.ceil(Math.random() * 5)}`);
             ball.style.left = `${Math.random() * (window.innerWidth - size)}px`;
+            ball.style.top = '0px';  // Start from the top
             container.appendChild(ball);
 
             // Set initial position and velocity
@@ -226,12 +227,9 @@
 
                 // Apply updated position
                 ball.style.transform = `translateY(${posY}px)`;
-                
+
                 if (velocityY !== 0) {
                     requestAnimationFrame(animateBall);
-                } else {
-                    // Check for ball settling condition (to form a ball pit)
-                    ball.style.transform = `translateY(${posY}px)`; // Ensure final position
                 }
             }
 
