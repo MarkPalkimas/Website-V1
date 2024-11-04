@@ -19,6 +19,7 @@
             min-height: 100vh;
             background-color: #f4f4f4;
             color: #333;
+            overflow-x: hidden;
         }
 
         /* Header */
@@ -102,18 +103,23 @@
         }
 
         /* Hidden Drop Ball Button */
-        .gravity-btn {
-            display: none;
+        .drop-ball-btn {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: block;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
         }
 
         /* Gravity Ball */
         .gravity-ball-container {
             position: relative;
             width: 100%;
-            height: 100vh;
+            height: 5vh;
             overflow: hidden;
-            margin-top: 60px;
-            z-index: 0;
         }
 
         .ball {
@@ -122,18 +128,29 @@
             height: 20px;
             border-radius: 50%;
             background-color: #0073e6;
-            animation: drop 2s ease-out forwards;
+            animation: bounce 1s ease-out infinite;
         }
 
-        @keyframes drop {
+        /* Reset Button */
+        .reset-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 0.5em 1em;
+            font-size: 0.9em;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* Physics-based Animation */
+        @keyframes bounce {
             0% { transform: translateY(0); }
-            70% { transform: translateY(calc(100vh - 100px)); }
-            100% { transform: translateY(calc(100vh - 90px)); }
+            50% { transform: translateY(-50px); }
+            100% { transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <!-- Dimming Overlay Removed -->
     <header>
         <div class="logo">Mark Palkimas</div>
         <a href="projects.html" class="projects-link">Projects</a>
@@ -150,11 +167,6 @@
                 <p>This section contains more detailed information about me and my professional background.</p>
             </div>
         </section>
-
-        <!-- Gravity Ball Container -->
-        <div class="gravity-ball-container" id="ballContainer">
-            <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
-        </div>
     </main>
 
     <!-- Footer with Social Links -->
@@ -169,14 +181,19 @@
         </div>
     </footer>
 
+    <!-- Drop Ball Button -->
+    <button class="drop-ball-btn" onclick="dropBall()">Drop Ball</button>
+    <div class="gravity-ball-container" id="ballContainer"></div>
+
+    <!-- Reset Button -->
+    <button class="reset-btn" id="resetButton" onclick="resetBalls()">Reset</button>
+
     <script>
-        // Show About Popup next to the Profile Photo
         function showAboutSection() {
             const aboutPopup = document.getElementById("aboutPopup");
             aboutPopup.style.display = aboutPopup.style.display === "none" ? "block" : "none";
         }
 
-        // Drop Ball Function
         function dropBall() {
             const container = document.getElementById("ballContainer");
             const ball = document.createElement("div");
@@ -184,11 +201,32 @@
             ball.style.left = `${Math.random() * (window.innerWidth - 20)}px`;
             container.appendChild(ball);
 
-            // Stop the ball after it reaches the footer level
-            ball.addEventListener("animationend", () => {
-                ball.style.animation = "none";
-                ball.style.transform = "translateY(calc(100vh - 90px))";
-            });
+            // Show Reset Button after first ball drop
+            const resetButton = document.getElementById("resetButton");
+            resetButton.style.display = "block";
+
+            // Physics-based movement with simple gravity simulation
+            let velocityY = 2;
+            let posY = 0;
+            function animateBall() {
+                posY += velocityY;
+                velocityY += 0.2;  // simulate gravity
+                if (posY >= window.innerHeight - 100) {
+                    posY = window.innerHeight - 100;
+                    velocityY *= -0.6;  // reverse and dampen velocity for bounce
+                    if (Math.abs(velocityY) < 0.5) velocityY = 0;  // stop bouncing when small enough
+                }
+                ball.style.transform = `translateY(${posY}px)`;
+                if (velocityY !== 0) requestAnimationFrame(animateBall);
+            }
+            requestAnimationFrame(animateBall);
+        }
+
+        function resetBalls() {
+            const container = document.getElementById("ballContainer");
+            container.innerHTML = "";
+            const resetButton = document.getElementById("resetButton");
+            resetButton.style.display = "none";  // Hide reset button
         }
     </script>
 </body>
