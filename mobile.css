@@ -9,7 +9,7 @@
 
 html, body {
     height: 100%;
-    background: linear-gradient(to bottom, #ffffff, 171, 171, 171, 0.5);
+    background: linear-gradient(to bottom, #ffffff, #ababab);
     color: #000;
     font-size: 16px;
     line-height: 1.6;
@@ -20,6 +20,13 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+}
+
+/* Main Content Container */
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header */
@@ -102,7 +109,7 @@ body {
     padding: 15px 0;
     text-align: center;
     width: 100%;
-    position: relative;
+    margin-top: auto;
 }
 
 .footer p {
@@ -183,8 +190,4 @@ body {
     font-size: 0.85em;
     margin-top: 5px;
     opacity: 0.7;
-    position: absolute;
-    bottom: -20px;
-    width: 100%;
-    text-align: center;
 }
