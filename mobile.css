@@ -63,7 +63,8 @@ body {
     display: block;          /* Centers the image with margin auto */
     margin-left: auto;       /* Centers the image */
     margin-right: auto;      /* Centers the image */
-    cursor: pointer;         /* Changes cursor to pointer on hover */
+    cursor: pointer;   
+    z-index: 1;  /* Changes cursor to pointer on hover */
 }
 
 .intro-text {
@@ -84,7 +85,7 @@ body {
 
 /* About Section */
 .about-section {
-    margin-top: 80px;
+    margin-top: 140px;
     margin: 20px auto;
     padding: 15px;
     width: 90%;
@@ -123,6 +124,7 @@ body {
 
 /* Footer and Social Links */
 .footer {
+    margin-top: 20px;  
     background-color: rgba(171, 171, 171, 0.5);
     padding: 15px 0;
     text-align: center;
