@@ -13,14 +13,13 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Body Styling */
         body {
             display: flex;
             flex-direction: column;
+            align-items: center;
             min-height: 100vh;
             background-color: #f4f4f4;
             color: #333;
-            overflow-x: hidden;
         }
 
         /* Header */
@@ -42,198 +41,199 @@
         }
 
         .projects-link {
-            color: #ccc;
+            color: #fff;
             text-decoration: none;
-            font-size: 0.9em;
-            padding: 0.5em 0.8em;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
         }
 
         /* Profile and Intro */
-        #profile {
-            display: flex;
-            align-items: center;
-            margin-top: 80px; /* Space for fixed header */
-            padding: 0 20px; /* Padding for content */
-        }
-
         .profile-photo {
+            margin-top: 100px;
             width: 150px;
-            height: 150px;
+            height: 200px;
             border-radius: 50%;
             cursor: pointer;
             object-fit: cover;
             border: 4px solid #333;
-            margin-right: 20px; /* Space between image and text */
         }
 
         .intro-text {
             font-size: 1.4em;
+            text-align: center;
+            margin: 15px 0;
         }
 
-        /* About Popup Positioned Next to Profile Photo */
+        /* About Popup */
         .about-popup {
             display: none;
-            position: absolute;
-            top: 120px; /* Positioned below the profile photo */
+            position: fixed;
+            top: 10%;
             left: 50%;
             transform: translateX(-50%);
             background: #fff;
             padding: 1em;
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 80%;
+            max-width: 90%;
             z-index: 20;
         }
 
-        /* Footer at Page Bottom */
-        footer {
-            width: 100%;
-            padding: 1em;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            position: absolute; /* Change to absolute */
-            bottom: 0; /* Fix to the bottom of the page */
-            left: 0; /* Align to the left */
-        }
-
-        /* Add padding to the main section to allow space for the footer */
-        main {
-            padding-bottom: 80px; /* Adjust this value to the height of the footer */
-        }
-
-        /* Scrollable Section for Copyright and Drop Ball Button */
-        .bottom-section {
-            text-align: center;
-            padding: 20px;
-            height: 5vh; /* This section occupies some space below the footer */
-        }
-
-        .drop-ball-btn {
-            padding: 0.5em 1em;
-            font-size: 1em;
-            cursor: pointer;
-            background-color: #0073e6;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            margin-top: 1em;
-        }
-
-        /* Gravity Ball Container */
-        .gravity-ball-container {
-            position: absolute;
+        .dimmed {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100vh;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 15;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            margin-top: 20px;
+            text-align: center;
+            padding: 1em;
+            background-color: #f4f4f4;
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 0.5em;
+            margin-top: 0.5em;
+        }
+
+        .social-links img {
+            width: 30px;
+        }
+
+        /* Gravity Ball Section */
+        .gravity-ball-container {
+            position: relative;
+            width: 100%;
+            height: 100px;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e0e0e0;
+            margin-top: 20px;
         }
 
-        .ball {
+        .gravity-btn {
+            padding: 8px 16px;
+            cursor: pointer;
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .gravity-ball {
             position: absolute;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
+            background-color: #0073e6;
+            animation: bounce 3s infinite ease-in-out;
         }
 
-        /* Colors for Balls */
-        .color1 { background-color: #FF5733; }
-        .color2 { background-color: #33FF57; }
-        .color3 { background-color: #5733FF; }
-        .color4 { background-color: #33CFFF; }
-        .color5 { background-color: #FF33CF; }
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(80px); }
+        }
+
+        /* Footer and Copyright */
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 1em;
+            background-color: #333;
+            color: #fff;
+            position: relative;
+        }
+
+        .copyright {
+            color: rgba(140, 140, 140, 0.4);
+            font-size: 0.85em;
+            opacity: 0.7;
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <!-- Dimming Overlay -->
+    <div class="dimmed"></div>
+
     <header>
         <div class="logo">Mark Palkimas</div>
         <a href="projects.html" class="projects-link">Projects</a>
     </header>
 
     <main>
-        <section id="profile">
+        <section id="about">
             <img src="profile.jpg" alt="Profile Photo" class="profile-photo" onclick="showAboutSection()" />
             <div class="intro-text">
                 <h2>Hello, I'm Mark Palkimas</h2>
             </div>
-            <div class="about-popup" id="aboutPopup">
+            <div class="about-popup">
                 <h2>About Me</h2>
                 <p>This section contains more detailed information about me and my professional background.</p>
             </div>
         </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <h2>Contact Me</h2>
+            <div class="social-links">
+                <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
+                <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank"><img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn"></a>
+                <a href="https://github.com/MarkPalkimas" target="_blank"><img src="github-logo.png" alt="GitHub"></a>
+                <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
+                <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
+            </div>
+        </section>
+
+        <!-- Gravity Ball Section -->
+        <div class="gravity-ball-container">
+            <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
+            <div class="gravity-ball"></div>
+        </div>
     </main>
 
     <footer>
-        <h2>Contact Me</h2>
-        <div class="social-links">
-            <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
-            <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank"><img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn"></a>
-            <a href="https://github.com/MarkPalkimas" target="_blank"><img src="github-logo.png" alt="GitHub"></a>
-            <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
-            <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
-        </div>
+        <p>Mark Palkimas' Portfolio © 2024</p>
     </footer>
-
-    <!-- Hidden Bottom Section with Drop Ball Button and Copyright -->
-    <div class="bottom-section">
-        <button class="drop-ball-btn" onclick="dropBall()">Drop Ball</button>
-        <p>&copy; 2024 Mark Palkimas</p>
+    <div class="copyright">
+        &copy; 2024 Mark Palkimas. All rights reserved.
     </div>
 
-    <!-- Container for Balls -->
-    <div class="gravity-ball-container" id="ballContainer"></div>
-
     <script>
-        function showAboutSection() {
-            const aboutPopup = document.getElementById("aboutPopup");
-            aboutPopup.style.display = aboutPopup.style.display === "none" ? "block" : "none";
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const profilePic = document.querySelector(".profile-photo");
+            const aboutPopup = document.querySelector(".about-popup");
+            const dimmedOverlay = document.querySelector(".dimmed");
+
+            profilePic.addEventListener("click", () => {
+                aboutPopup.style.display = "block";
+                dimmedOverlay.style.display = "block";
+            });
+
+            dimmedOverlay.addEventListener("click", () => {
+                aboutPopup.style.display = "none";
+                dimmedOverlay.style.display = "none";
+            });
+        });
 
         function dropBall() {
-            const container = document.getElementById("ballContainer");
-
-            // Create ball with random color and size
-            const ball = document.createElement("div");
-            const size = Math.random() * 30 + 20;  // size range 20px - 50px
-            ball.style.width = ball.style.height = `${size}px`;
-            ball.classList.add("ball", `color${Math.ceil(Math.random() * 5)}`);
-            ball.style.left = `${Math.random() * (window.innerWidth - size)}px`;
-            ball.style.top = '0px';  // Start from the top
-            container.appendChild(ball);
-
-            // Set initial position and velocity
-            let velocityY = 0;
-            let posY = 0;
-            const gravity = 0.5; // Gravity strength
-            const damping = 0.7; // Damping factor for bounce
-
-            // Animate ball with physics and collision handling
-            function animateBall() {
-                velocityY += gravity;
-                posY += velocityY;
-
-                // Bounce off footer if reaching it
-                if (posY >= window.innerHeight - size - 60) { // Adjusted for footer height
-                    posY = window.innerHeight - size - 60; // Reset position to footer height
-                    velocityY *= -damping; // Reverse velocity with damping
-
-                    // Stop bouncing if velocity is low
-                    if (Math.abs(velocityY) < 0.5) {
-                        velocityY = 0; // Stop bouncing
-                    }
-                }
-
-                // Apply updated position
-                ball.style.transform = `translateY(${posY}px)`;
-
-                if (velocityY !== 0) {
-                    requestAnimationFrame(animateBall);
-                }
-            }
-
-            animateBall();
+            const ball = document.querySelector(".gravity-ball");
+            ball.style.animation = "bounce 3s infinite ease-in-out";
         }
     </script>
 </body>
