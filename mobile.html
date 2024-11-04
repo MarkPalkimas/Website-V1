@@ -52,27 +52,32 @@
         }
 
         /* Profile and Intro */
+        #profile {
+            display: flex;
+            align-items: center;
+            margin-top: 80px; /* Space for fixed header */
+            padding: 0 20px; /* Padding for content */
+        }
+
         .profile-photo {
-            margin-top: 80px;
             width: 150px;
             height: 150px;
             border-radius: 50%;
             cursor: pointer;
             object-fit: cover;
             border: 4px solid #333;
+            margin-right: 20px; /* Space between image and text */
         }
 
         .intro-text {
             font-size: 1.4em;
-            text-align: center;
-            margin: 15px 0;
         }
 
         /* About Popup Positioned Next to Profile Photo */
         .about-popup {
             display: none;
             position: absolute;
-            top: 120px;
+            top: 120px; /* Positioned below the profile photo */
             left: 50%;
             transform: translateX(-50%);
             background: #fff;
@@ -148,7 +153,7 @@
     </header>
 
     <main>
-        <section id="about">
+        <section id="profile">
             <img src="profile.jpg" alt="Profile Photo" class="profile-photo" onclick="showAboutSection()" />
             <div class="intro-text">
                 <h2>Hello, I'm Mark Palkimas</h2>
