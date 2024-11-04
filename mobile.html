@@ -40,15 +40,18 @@
         }
 
         .projects-link {
-            color: #fff;
+            color: #ccc;
             text-decoration: none;
-            font-size: 1.2em;
-            font-weight: bold;
+            font-size: 0.9em;
+            padding: 0.5em 0.8em;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         /* Profile and Intro */
         .profile-photo {
-            margin-top: 100px;
+            margin-top: 80px;
             width: 150px;
             height: 200px;
             border-radius: 50%;
@@ -63,30 +66,19 @@
             margin: 15px 0;
         }
 
-        /* About Popup */
+        /* About Popup Positioned Next to Profile Photo */
         .about-popup {
             display: none;
-            position: fixed;
-            top: 10%;
+            position: absolute;
+            top: 120px;
             left: 50%;
             transform: translateX(-50%);
             background: #fff;
             padding: 1em;
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
+            max-width: 80%;
             z-index: 20;
-        }
-
-        .dimmed {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 15;
         }
 
         /* Footer */
@@ -95,11 +87,7 @@
             padding: 1em;
             background-color: #333;
             color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: fixed;
-            bottom: 0;
+            text-align: center;
         }
 
         .social-links {
@@ -113,17 +101,12 @@
             width: 30px;
         }
 
-        /* Gravity Ball */
+        /* Hidden Drop Ball Button */
         .gravity-btn {
-            padding: 8px 16px;
-            cursor: pointer;
-            background-color: #0073e6;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 10px;
+            display: none;
         }
 
+        /* Gravity Ball */
         .gravity-ball-container {
             position: relative;
             width: 100%;
@@ -139,19 +122,18 @@
             height: 20px;
             border-radius: 50%;
             background-color: #0073e6;
-            animation: bounce 5s infinite ease-in-out;
+            animation: drop 2s ease-out forwards;
         }
 
-        @keyframes bounce {
+        @keyframes drop {
             0% { transform: translateY(0); }
-            100% { transform: translateY(100vh); }
+            70% { transform: translateY(calc(100vh - 100px)); }
+            100% { transform: translateY(calc(100vh - 90px)); }
         }
     </style>
 </head>
 <body>
-    <!-- Dimming Overlay -->
-    <div class="dimmed"></div>
-
+    <!-- Dimming Overlay Removed -->
     <header>
         <div class="logo">Mark Palkimas</div>
         <a href="projects.html" class="projects-link">Projects</a>
@@ -163,7 +145,7 @@
             <div class="intro-text">
                 <h2>Hello, I'm Mark Palkimas</h2>
             </div>
-            <div class="about-popup">
+            <div class="about-popup" id="aboutPopup">
                 <h2>About Me</h2>
                 <p>This section contains more detailed information about me and my professional background.</p>
             </div>
@@ -188,32 +170,24 @@
     </footer>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const profilePic = document.querySelector(".profile-photo");
-            const aboutPopup = document.querySelector(".about-popup");
-            const dimmedOverlay = document.querySelector(".dimmed");
+        // Show About Popup next to the Profile Photo
+        function showAboutSection() {
+            const aboutPopup = document.getElementById("aboutPopup");
+            aboutPopup.style.display = aboutPopup.style.display === "none" ? "block" : "none";
+        }
 
-            profilePic.addEventListener("click", () => {
-                aboutPopup.style.display = "block";
-                dimmedOverlay.style.display = "block";
-            });
-
-            dimmedOverlay.addEventListener("click", () => {
-                aboutPopup.style.display = "none";
-                dimmedOverlay.style.display = "none";
-            });
-        });
-
+        // Drop Ball Function
         function dropBall() {
             const container = document.getElementById("ballContainer");
             const ball = document.createElement("div");
             ball.className = "ball";
             ball.style.left = `${Math.random() * (window.innerWidth - 20)}px`;
-            ball.style.animationDuration = `${3 + Math.random() * 2}s`;
             container.appendChild(ball);
 
-            ball.addEventListener("animationiteration", () => {
-                ball.style.left = `${Math.random() * (window.innerWidth - 20)}px`;
+            // Stop the ball after it reaches the footer level
+            ball.addEventListener("animationend", () => {
+                ball.style.animation = "none";
+                ball.style.transform = "translateY(calc(100vh - 90px))";
             });
         }
     </script>
