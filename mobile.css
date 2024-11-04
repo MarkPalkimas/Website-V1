@@ -53,17 +53,17 @@ body {
 
 /* Profile Photo and Intro Text Styling */
 .profile-photo {
-    margin-top: 140px;
-    width: 200px;
-    height: 240px;
-    border-radius: 50%;
-    border: 6px solid #000;
-    transition: transform 0.3s, box-shadow 0.3s;
-    object-fit: cover;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    cursor: pointer;
+    margin-top: 140px;       /* Space above the image */
+    width: 200px;            /* Width of the oval */
+    height: 100px;           /* Reduced height for oval effect */
+    border-radius: 50%;      /* Keep this to round the edges */
+    border: 6px solid #000;  /* Black border */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transitions for hover effects */
+    object-fit: cover;       /* Ensures the image fills the space correctly */
+    display: block;          /* Centers the image with margin auto */
+    margin-left: auto;       /* Centers the image */
+    margin-right: auto;      /* Centers the image */
+    cursor: pointer;         /* Changes cursor to pointer on hover */
 }
 
 .intro-text {
@@ -84,6 +84,7 @@ body {
 
 /* About Section */
 .about-section {
+    margin-top: 80px;
     margin: 20px auto;
     padding: 15px;
     width: 90%;
