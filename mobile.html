@@ -5,71 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mark Palkimas' Interactive Website</title>
     <style>
-        /* Basic Reset */
+        /* General Reset and Global Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        html, body {
+            height: 100%;
+            background: linear-gradient(to bottom, #ffffff, #aaaaaa);
+            color: #000;
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-color: #f4f4f4;
-            color: #333;
-            position: relative;
-            overflow-x: hidden;
         }
 
         /* Header */
-        header {
+        .header {
+            background-color: rgba(0, 0, 0, 0.85);
+            padding: 10px;
             width: 100%;
-            padding: 1em;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #333;
             color: #fff;
-            position: fixed;
-            top: 0;
-            z-index: 10;
         }
 
-        .projects-link {
-            color: #bbb;
-            text-decoration: none;
-            font-size: 1em;
-            padding: 0.5em 1em;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        /* Profile and Popup */
-        .profile-photo {
-            margin-top: 100px;
-            width: 150px;
-            height: 200px;
-            border-radius: 50%;
+        .header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fff;
             cursor: pointer;
+        }
+
+        .header .projects-link {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Profile Photo and Intro Text Styling */
+        .profile-photo {
+            margin-top: 120px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid #000;
+            transition: transform 0.3s, box-shadow 0.3s;
             object-fit: cover;
-            border: 4px solid #333;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            cursor: pointer;
             z-index: 20;
         }
 
+        .intro-text {
+            text-align: center;
+            margin-top: 10px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .intro-text h2 {
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        /* About Section */
         .about-popup {
             display: none;
             position: absolute;
-            top: 100px;
-            left: calc(50%);
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
             background: #fff;
             padding: 1em;
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 250px;
             z-index: 20;
+            text-align: center;
         }
 
         .dimmed {
@@ -84,15 +114,13 @@
         }
 
         /* Footer */
-        footer {
-            margin-top: 45vh;
-            width: 100%;
-            padding: 1.5em 0;
+        .footer {
             background-color: #333;
             color: #fff;
             text-align: center;
-            position: relative;
-            z-index: 5;
+            padding: 1.5em;
+            margin-top: auto;
+            margin-bottom: 100px; /* Lift the footer by 100px */
         }
 
         .contact-section {
@@ -123,12 +151,12 @@
             font-size: 0.9em;
         }
 
-        /* Gravity Buttons (Positioned below footer) */
+        /* Gravity Buttons */
         .gravity-section {
             text-align: center;
             padding: 1em;
             position: relative;
-            top: .05vh;
+            top: 10px;
         }
 
         .gravity-btn, .reset-btn {
@@ -143,25 +171,14 @@
         }
 
         .reset-btn {
-            display: none; /* Initially hidden */
+            display: none;
         }
-
-        /* Ball Styling */
-        .ball {
-            position: absolute;
-            top: 0;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #0073e6;
-        }
-
     </style>
 </head>
 <body>
     <div class="dimmed"></div>
 
-    <header>
+    <header class="header">
         <div class="logo">Mark Palkimas</div>
         <a href="projects.html" class="projects-link">Projects</a>
     </header>
@@ -173,10 +190,13 @@
                 <h2>About Me</h2>
                 <p>This section contains more detailed information about me and my professional background.</p>
             </div>
+            <div class="intro-text">
+                <h2>Hello, I'm Mark Palkimas</h2>
+            </div>
         </section>
     </main>
 
-    <footer>
+    <footer class="footer">
         <section class="contact-section">
             <h2>Contact Me</h2>
             <div class="social-links">
@@ -196,96 +216,19 @@
     </div>
 
     <script>
-    const balls = [];
-    const resetBtn = document.querySelector(".reset-btn");
-    const footer = document.querySelector("footer");
+    // JavaScript to handle About section and gravity feature
+    const dimmedOverlay = document.querySelector(".dimmed");
+    const aboutPopup = document.querySelector(".about-popup");
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const dimmedOverlay = document.querySelector(".dimmed");
-        const aboutPopup = document.querySelector(".about-popup");
-
-        dimmedOverlay.addEventListener("click", () => {
-            aboutPopup.style.display = "none";
-            dimmedOverlay.style.display = "none";
-        });
+    dimmedOverlay.addEventListener("click", () => {
+        aboutPopup.style.display = "none";
+        dimmedOverlay.style.display = "none";
     });
 
     function showAboutSection() {
-        const aboutPopup = document.querySelector(".about-popup");
-        const dimmedOverlay = document.querySelector(".dimmed");
-
         aboutPopup.style.display = aboutPopup.style.display === "none" ? "block" : "none";
         dimmedOverlay.style.display = dimmedOverlay.style.display === "none" ? "block" : "none";
     }
-
-    function dropBall() {
-        const ball = document.createElement("div");
-        ball.className = "ball";
-        ball.style.backgroundColor = getRandomColor();
-        ball.style.width = ball.style.height = Math.random() * 20 + 30 + "px";
-        ball.style.left = Math.random() * (window.innerWidth - 50) + "px";
-        ball.velocityY = Math.random() * 4 + 1;
-        ball.velocityX = Math.random() * 2 - 1;
-        ball.bounceOffset = 10;
-
-        document.body.appendChild(ball);
-        balls.push(ball);
-
-        resetBtn.style.display = "inline-block";
-    }
-
-    function resetBalls() {
-        balls.forEach(ball => ball.remove());
-        balls.length = 0;
-        resetBtn.style.display = "none";
-    }
-
-    function getRandomColor() {
-        const letters = "0123456789ABCDEF";
-        let color = "#";
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
-    function updateBalls() {
-        const velocityCutoff = 0.01;
-
-        // Get the footer's position relative to the viewport and page scroll
-        const footerTop = footer.getBoundingClientRect().top + window.scrollY;
-
-        balls.forEach(ball => {
-            let currentTop = parseFloat(ball.style.top) || 0;
-            let currentLeft = parseFloat(ball.style.left) || 0;
-            let newTop = currentTop + ball.velocityY;
-            let newLeft = currentLeft + ball.velocityX;
-
-            // Detect collision with footer
-            if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
-                newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
-                ball.velocityY *= -0.8;  // Reverse velocity to create bounce
-
-                if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
-            } else {
-                ball.velocityY += 0.3;  // Apply gravity
-            }
-
-            // Detect collision with screen edges
-            if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
-                newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
-                ball.velocityX *= -1;  // Reverse horizontal velocity on collision
-            }
-
-            ball.style.top = newTop + "px";
-            ball.style.left = newLeft + "px";
-        });
-
-        requestAnimationFrame(updateBalls);
-    }
-
-    // Start the animation
-    updateBalls();
     </script>
 </body>
 </html>
