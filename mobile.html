@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Palkimas' Responsive Website</title>
+    <title>Mark Palkimas' Interactive Website</title>
     <style>
         /* Basic Reset */
         * {
@@ -16,10 +16,10 @@
         body {
             display: flex;
             flex-direction: column;
-            align-items: center;
             min-height: 100vh;
             background-color: #f4f4f4;
             color: #333;
+            position: relative;
         }
 
         /* Header */
@@ -36,10 +36,6 @@
             z-index: 10;
         }
 
-        .logo {
-            font-size: 1.5em;
-        }
-
         .projects-link {
             color: #bbb;
             text-decoration: none;
@@ -50,11 +46,7 @@
             transition: background-color 0.3s;
         }
 
-        .projects-link:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Profile and Intro */
+        /* Profile and Popup */
         .profile-photo {
             margin-top: 100px;
             width: 150px;
@@ -66,18 +58,11 @@
             z-index: 20;
         }
 
-        .intro-text {
-            font-size: 1.4em;
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        /* About Popup */
         .about-popup {
             display: none;
             position: absolute;
             top: 100px;
-            left: calc(50% - 200px); /* Position to the left of profile */
+            left: calc(50% - 200px);
             background: #fff;
             padding: 1em;
             border-radius: 8px;
@@ -97,74 +82,45 @@
             z-index: 15;
         }
 
-        /* Contact Section */
-        .contact-section {
+        /* Footer and Gravity */
+        footer {
+            width: 100%;
             text-align: center;
             padding: 1em;
             background-color: #333;
             color: #fff;
-            width: 100%;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 0.5em;
-            margin-top: 0.5em;
-        }
-
-        .social-links img {
-            width: 30px;
-        }
-
-        /* Gravity Ball Section */
-        .gravity-ball-container {
             position: relative;
-            width: 100%;
-            height: 300px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #e0e0e0;
+            margin-top: 5vh;
         }
 
-        .gravity-btn {
+        .gravity-section {
+            text-align: center;
+            padding: 1em;
+        }
+
+        .gravity-btn, .reset-btn {
             padding: 8px 16px;
             cursor: pointer;
             background-color: #0073e6;
             color: white;
             border: none;
             border-radius: 5px;
-            position: relative;
-            top: 20px;
+            margin-top: 10px;
         }
 
         /* Ball Styling */
-        .gravity-ball {
+        .ball {
             position: absolute;
             top: 0;
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background-color: #0073e6;
-        }
-
-        /* Footer */
-        footer {
-            margin-top: 0.5em;
-            width: 100%;
-            text-align: center;
-            padding: 1em;
-            background-color: #333;
-            color: #fff;
-            position: relative;
         }
 
     </style>
 </head>
 <body>
-    <!-- Dimming Overlay -->
     <div class="dimmed"></div>
 
     <header>
@@ -175,9 +131,6 @@
     <main>
         <section id="about">
             <img src="profile.jpg" alt="Profile Photo" class="profile-photo" onclick="showAboutSection()" />
-            <div class="intro-text">
-                <h2>Hello, I'm Mark Palkimas</h2>
-            </div>
             <div class="about-popup">
                 <h2>About Me</h2>
                 <p>This section contains more detailed information about me and my professional background.</p>
@@ -185,35 +138,20 @@
         </section>
     </main>
 
-    <!-- Footer with Contact Section -->
     <footer>
-        <div class="contact-section">
-            <h2>Contact Me</h2>
-            <div class="social-links">
-                <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
-                <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank"><img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn"></a>
-                <a href="https://github.com/MarkPalkimas" target="_blank"><img src="github-logo.png" alt="GitHub"></a>
-                <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
-                <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
-            </div>
+        <div class="gravity-section">
+            <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
+            <button class="reset-btn" onclick="resetBalls()">Reset</button>
         </div>
     </footer>
 
-    <!-- Gravity Ball Section Below Footer -->
-    <div class="gravity-ball-container">
-        <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
-    </div>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const profilePic = document.querySelector(".profile-photo");
-            const aboutPopup = document.querySelector(".about-popup");
-            const dimmedOverlay = document.querySelector(".dimmed");
+        const balls = [];
+        const footer = document.querySelector("footer");
 
-            profilePic.addEventListener("click", () => {
-                aboutPopup.style.display = "block";
-                dimmedOverlay.style.display = "block";
-            });
+        document.addEventListener("DOMContentLoaded", function () {
+            const dimmedOverlay = document.querySelector(".dimmed");
+            const aboutPopup = document.querySelector(".about-popup");
 
             dimmedOverlay.addEventListener("click", () => {
                 aboutPopup.style.display = "none";
@@ -222,40 +160,66 @@
         });
 
         function dropBall() {
-            const container = document.querySelector(".gravity-ball-container");
             const ball = document.createElement("div");
-            ball.className = "gravity-ball";
-            ball.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`; // Random color
-            ball.style.width = `${Math.random() * 30 + 15}px`; // Random size
-            ball.style.height = ball.style.width; // Maintain circle shape
-            ball.style.left = `${Math.random() * (container.clientWidth - 30)}px`; // Random horizontal position
-            document.body.appendChild(ball); // Drop from top of page
+            ball.className = "ball";
+            ball.style.backgroundColor = getRandomColor();
+            ball.style.width = ball.style.height = Math.random() * 20 + 30 + "px";
+            ball.style.left = Math.random() * (window.innerWidth - 50) + "px";
+            ball.velocityY = Math.random() * 4 + 1;
+            ball.velocityX = Math.random() * 2 - 1;
+            ball.bounceOffset = 10;
 
-            // Simulate falling with physics
-            let posY = 0;
-            let velocityY = 0;
-            const gravity = 0.2;
-            const damping = 0.7;
-
-            function animateBall() {
-                velocityY += gravity;
-                posY += velocityY;
-
-                // Check for collision with the footer
-                if (posY + parseInt(ball.style.height) >= document.querySelector("footer").offsetTop) {
-                    posY = document.querySelector("footer").offsetTop - parseInt(ball.style.height);
-                    velocityY *= -damping;
-                }
-
-                ball.style.transform = `translateY(${posY}px)`;
-
-                if (Math.abs(velocityY) > 0.5) {
-                    requestAnimationFrame(animateBall);
-                }
-            }
-
-            animateBall();
+            document.body.appendChild(ball);
+            balls.push(ball);
         }
+
+        function resetBalls() {
+            balls.forEach(ball => ball.remove());
+            balls.length = 0;
+        }
+
+        function getRandomColor() {
+            const letters = "0123456789ABCDEF";
+            let color = "#";
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function updateBalls() {
+            const velocityCutoff = 0.01;
+
+            balls.forEach(ball => {
+                let currentTop = parseFloat(ball.style.top) || 0;
+                let currentLeft = parseFloat(ball.style.left) || 0;
+                let newTop = currentTop + ball.velocityY;
+                let newLeft = currentLeft + ball.velocityX;
+
+                const footerTop = window.innerHeight - footer.offsetHeight;
+
+                if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
+                    newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
+                    ball.velocityY *= -0.8;
+
+                    if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
+                } else {
+                    ball.velocityY += 0.3;
+                }
+
+                if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
+                    newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
+                    ball.velocityX *= -1;
+                }
+
+                ball.style.top = newTop + "px";
+                ball.style.left = newLeft + "px";
+            });
+
+            requestAnimationFrame(updateBalls);
+        }
+
+        updateBalls();
     </script>
 </body>
 </html>
