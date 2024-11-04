@@ -84,6 +84,7 @@ body {
 
 /* About Section */
 .about-section {
+    top: 200px;
     margin: 20px auto;
     padding: 15px;
     width: 90%;
