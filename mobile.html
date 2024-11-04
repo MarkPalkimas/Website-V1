@@ -62,8 +62,8 @@
         .profile-photo {
             margin-top: 120px;
             width: 150px;
-            height: 150px;
-            border-radius: 50%;
+            height: 200px;
+            border-radius: 50% 25%; /* Creates an oval shape */
             border: 4px solid #000;
             transition: transform 0.3s, box-shadow 0.3s;
             object-fit: cover;
@@ -89,7 +89,7 @@
         .about-popup {
             display: none;
             position: absolute;
-            top: 150px;
+            top: 200px; /* Adjusted to position below "Hello, I'm Mark Palkimas" */
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
@@ -120,7 +120,7 @@
             text-align: center;
             padding: 1.5em;
             margin-top: auto;
-            margin-bottom: 100px; /* Lift the footer by 100px */
+            margin-bottom: 50px; /* Lowers footer by 50px */
         }
 
         .contact-section {
@@ -228,6 +228,40 @@
     function showAboutSection() {
         aboutPopup.style.display = aboutPopup.style.display === "none" ? "block" : "none";
         dimmedOverlay.style.display = dimmedOverlay.style.display === "none" ? "block" : "none";
+    }
+
+    // Gravity feature for balls
+    const gravitySection = document.querySelector(".gravity-section");
+    const gravityButton = document.querySelector(".gravity-btn");
+    const resetButton = document.querySelector(".reset-btn");
+    
+    function dropBall() {
+        const ball = document.createElement("div");
+        ball.style.width = "20px";
+        ball.style.height = "20px";
+        ball.style.backgroundColor = "#0073e6";
+        ball.style.borderRadius = "50%";
+        ball.style.position = "absolute";
+        ball.style.left = `${Math.random() * 90 + 5}%`;
+        ball.style.top = "0px";
+        gravitySection.appendChild(ball);
+
+        let pos = 0;
+        const fallInterval = setInterval(() => {
+            if (pos >= gravitySection.clientHeight - 30) {
+                clearInterval(fallInterval);
+            } else {
+                pos += 5;
+                ball.style.top = pos + "px";
+            }
+        }, 20);
+        
+        resetButton.style.display = "inline-block";
+    }
+
+    function resetBalls() {
+        gravitySection.innerHTML = `<button class="gravity-btn" onclick="dropBall()">Drop Ball</button><button class="reset-btn" onclick="resetBalls()">Reset</button>`;
+        resetButton.style.display = "none";
     }
     </script>
 </body>
