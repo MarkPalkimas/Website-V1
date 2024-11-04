@@ -41,10 +41,17 @@
         }
 
         .projects-link {
-            color: #fff;
+            color: #bbb;
             text-decoration: none;
-            font-size: 1.2em;
-            font-weight: bold;
+            font-size: 1em;
+            padding: 0.5em 1em;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .projects-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
         /* Profile and Intro */
@@ -56,6 +63,7 @@
             cursor: pointer;
             object-fit: cover;
             border: 4px solid #333;
+            z-index: 20;
         }
 
         .intro-text {
@@ -67,15 +75,14 @@
         /* About Popup */
         .about-popup {
             display: none;
-            position: fixed;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
+            position: absolute;
+            top: 100px;
+            left: calc(50% - 200px); /* Position to the left of profile */
             background: #fff;
             padding: 1em;
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
+            max-width: 250px;
             z-index: 20;
         }
 
@@ -92,10 +99,10 @@
 
         /* Contact Section */
         .contact-section {
-            margin-top: 20px;
             text-align: center;
             padding: 1em;
-            background-color: #f4f4f4;
+            background-color: #333;
+            color: #fff;
             width: 100%;
         }
 
@@ -114,13 +121,12 @@
         .gravity-ball-container {
             position: relative;
             width: 100%;
-            height: 300px; /* Increased height for visibility */
+            height: 300px;
             overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: flex-end; /* Aligns to bottom */
+            align-items: center;
             background-color: #e0e0e0;
-            margin-top: 20px;
         }
 
         .gravity-btn {
@@ -130,26 +136,21 @@
             color: white;
             border: none;
             border-radius: 5px;
-            position: absolute;
-            top: 10px; /* Button position at the top */
+            position: relative;
+            top: 20px;
         }
 
         /* Ball Styling */
         .gravity-ball {
             position: absolute;
+            top: 0;
             width: 20px;
             height: 20px;
             border-radius: 50%;
             background-color: #0073e6;
-            animation: bounce 3s infinite ease-in-out;
         }
 
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(80px); }
-        }
-
-        /* Footer and Copyright */
+        /* Footer */
         footer {
             width: 100%;
             text-align: center;
@@ -159,15 +160,6 @@
             position: relative;
         }
 
-        .copyright {
-            color: rgba(140, 140, 140, 0.4);
-            font-size: 0.85em;
-            opacity: 0.7;
-            position: absolute;
-            bottom: -20px;
-            width: 100%;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -190,9 +182,11 @@
                 <p>This section contains more detailed information about me and my professional background.</p>
             </div>
         </section>
+    </main>
 
-        <!-- Contact Section -->
-        <section class="contact-section">
+    <!-- Footer with Contact Section -->
+    <footer>
+        <div class="contact-section">
             <h2>Contact Me</h2>
             <div class="social-links">
                 <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
@@ -201,19 +195,12 @@
                 <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
                 <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
             </div>
-        </section>
-
-        <!-- Gravity Ball Section -->
-        <div class="gravity-ball-container">
-            <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
         </div>
-    </main>
-
-    <footer>
-        <p>Mark Palkimas' Portfolio © 2024</p>
     </footer>
-    <div class="copyright">
-        &copy; 2024 Mark Palkimas. All rights reserved.
+
+    <!-- Gravity Ball Section Below Footer -->
+    <div class="gravity-ball-container">
+        <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
     </div>
 
     <script>
@@ -241,27 +228,26 @@
             ball.style.width = `${Math.random() * 30 + 15}px`; // Random size
             ball.style.height = ball.style.width; // Maintain circle shape
             ball.style.left = `${Math.random() * (container.clientWidth - 30)}px`; // Random horizontal position
-            container.appendChild(ball);
+            document.body.appendChild(ball); // Drop from top of page
 
             // Simulate falling with physics
             let posY = 0;
             let velocityY = 0;
-            const gravity = 0.2; // Gravity strength
-            const damping = 0.7; // Damping for bouncing
+            const gravity = 0.2;
+            const damping = 0.7;
 
             function animateBall() {
-                velocityY += gravity; // Apply gravity
-                posY += velocityY; // Update position
+                velocityY += gravity;
+                posY += velocityY;
 
-                // Check for collision with the bottom of the container
-                if (posY + parseInt(ball.style.height) >= container.clientHeight) {
-                    posY = container.clientHeight - parseInt(ball.style.height); // Reset position
-                    velocityY *= -damping; // Reverse velocity with damping
+                // Check for collision with the footer
+                if (posY + parseInt(ball.style.height) >= document.querySelector("footer").offsetTop) {
+                    posY = document.querySelector("footer").offsetTop - parseInt(ball.style.height);
+                    velocityY *= -damping;
                 }
 
-                ball.style.transform = `translateY(${posY}px)`; // Apply position
+                ball.style.transform = `translateY(${posY}px)`;
 
-                // Continue animation as long as the ball is moving
                 if (Math.abs(velocityY) > 0.5) {
                     requestAnimationFrame(animateBall);
                 }
