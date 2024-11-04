@@ -250,35 +250,47 @@
 
         function updateBalls() {
             const velocityCutoff = 0.01;
-            const footerTop = window.innerHeight - document.querySelector("footer").offsetHeight;
+           // Define footerTop outside of any function to keep it constant
+let footerTop;
 
-            balls.forEach(ball => {
-                let currentTop = parseFloat(ball.style.top) || 0;
-                let currentLeft = parseFloat(ball.style.left) || 0;
-                let newTop = currentTop + ball.velocityY;
-                let newLeft = currentLeft + ball.velocityX;
+document.addEventListener("DOMContentLoaded", function () {
+    // Calculate footerTop only once, when the page loads
+    footerTop = window.innerHeight - document.querySelector("footer").offsetHeight;
+});
 
-                if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
-                    newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
-                    ball.velocityY *= -0.8;
-                    if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
-                } else {
-                    ball.velocityY += 0.3;
-                }
+// Now use `footerTop` directly in your updateBalls function
+function updateBalls() {
+    const velocityCutoff = 0.01;
 
-                if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
-                    newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
-                    ball.velocityX *= -1;
-                }
+    balls.forEach(ball => {
+        let currentTop = parseFloat(ball.style.top) || 0;
+        let currentLeft = parseFloat(ball.style.left) || 0;
+        let newTop = currentTop + ball.velocityY;
+        let newLeft = currentLeft + ball.velocityX;
 
-                ball.style.top = newTop + "px";
-                ball.style.left = newLeft + "px";
-            });
+        // Use the stored footerTop value instead of recalculating it
+        if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
+            newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
+            ball.velocityY *= -0.8;
 
-            requestAnimationFrame(updateBalls);
+            if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
+        } else {
+            ball.velocityY += 0.3;
         }
 
-        updateBalls();
+        if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
+            newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
+            ball.velocityX *= -1;
+        }
+
+        ball.style.top = newTop + "px";
+        ball.style.left = newLeft + "px";
+    });
+
+    requestAnimationFrame(updateBalls);
+}
+
+updateBalls();
     </script>
 </body>
 </html>
