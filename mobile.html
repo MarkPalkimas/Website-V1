@@ -250,7 +250,7 @@
 
         function updateBalls() {
             const velocityCutoff = 0.01;
-            const footerTop = window.innerHeight - document.querySelector("footer").offsetHeight;
+            const footerTop = footer.getBoundingClientRect().top + window.scrollY - footer.offsetHeight;
 
             balls.forEach(ball => {
                 let currentTop = parseFloat(ball.style.top) || 0;
