@@ -83,15 +83,14 @@
             z-index: 20;
         }
 
-        /* Footer at Screen Bottom */
+        /* Footer at Page Bottom */
         footer {
             width: 100%;
             padding: 1em;
             background-color: #333;
             color: #fff;
             text-align: center;
-            position: fixed;
-            bottom: 5%;
+            position: relative; /* Allows footer to be above hidden section */
         }
 
         .social-links {
@@ -105,23 +104,23 @@
             width: 30px;
         }
 
-        /* Hidden Drop Ball Section */
-        .drop-ball-section {
-            height: 5%;
+        /* Scrollable Section for Copyright and Drop Ball Button */
+        .bottom-section {
             text-align: center;
+            padding: 20px;
             position: relative;
+            height: 5vh; /* This section occupies some space below the footer */
         }
 
         .drop-ball-btn {
-            display: inline-block;
             padding: 0.5em 1em;
             font-size: 1em;
             cursor: pointer;
-            margin-top: 1em;
             background-color: #0073e6;
             color: #fff;
             border: none;
             border-radius: 5px;
+            margin-top: 1em;
         }
 
         /* Gravity Ball Container */
@@ -137,7 +136,6 @@
         .ball {
             position: absolute;
             border-radius: 50%;
-            animation: drop 1s ease-in-out;
         }
 
         /* Colors for Balls */
@@ -178,8 +176,8 @@
         </div>
     </footer>
 
-    <!-- Hidden Section with Drop Ball Button and Copyright -->
-    <div class="drop-ball-section">
+    <!-- Hidden Bottom Section with Drop Ball Button and Copyright -->
+    <div class="bottom-section">
         <button class="drop-ball-btn" onclick="dropBall()">Drop Ball</button>
         <p>&copy; 2024 Mark Palkimas</p>
     </div>
@@ -204,11 +202,11 @@
             ball.style.left = `${Math.random() * (window.innerWidth - size)}px`;
             container.appendChild(ball);
 
-            // Initialize physics
+            // Set initial position and velocity
             let velocityY = 0;
             let posY = 0;
-            const gravity = 0.5;
-            const damping = 0.7;
+            const gravity = 0.5; // Gravity strength
+            const damping = 0.7; // Damping factor for bounce
 
             // Animate ball with physics and collision handling
             function animateBall() {
@@ -216,21 +214,25 @@
                 posY += velocityY;
 
                 // Bounce off footer if reaching it
-                if (posY >= window.innerHeight - size - 60) {
-                    posY = window.innerHeight - size - 60;
-                    velocityY *= -damping;
+                if (posY >= window.innerHeight - size - 60) { // Adjusted for footer height
+                    posY = window.innerHeight - size - 60; // Reset position to footer height
+                    velocityY *= -damping; // Reverse velocity with damping
 
                     // Stop bouncing if velocity is low
                     if (Math.abs(velocityY) < 0.5) {
-                        velocityY = 0;
-                        ball.style.transform = `translateY(${posY}px)`;
-                        return;  // End animation when ball settles
+                        velocityY = 0; // Stop bouncing
                     }
                 }
 
                 // Apply updated position
                 ball.style.transform = `translateY(${posY}px)`;
-                requestAnimationFrame(animateBall);
+                
+                if (velocityY !== 0) {
+                    requestAnimationFrame(animateBall);
+                } else {
+                    // Check for ball settling condition (to form a ball pit)
+                    ball.style.transform = `translateY(${posY}px)`; // Ensure final position
+                }
             }
 
             animateBall();
