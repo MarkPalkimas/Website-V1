@@ -3,29 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Palkimas' Mobile Website</title>
-    <link rel="stylesheet" href="mobile.css">
+    <title>Mark Palkimas' Responsive Website</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Basic styles for body and containers */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            width: 100%;
+            padding: 1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.5em;
+        }
+
+        .menu button {
+            background: none;
+            color: #fff;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            gap: 1.5em;
+            margin-top: 5em;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            gap: 1.5em;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Content Sections */
+        .section {
+            max-width: 900px;
+            padding: 2em 1em;
+            margin: 1em 0;
+        }
+
+        .profile-photo {
+            width: 100px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .intro-text {
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .about-popup {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            padding: 1em;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            z-index: 20;
+        }
+
+        .dimmed {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 15;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.5em;
+        }
+
+        .social-links img {
+            width: 30px;
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 1em;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+        }
+
+        /* Gravity Ball Styles */
+        .ball {
+            position: absolute;
+            border-radius: 50%;
+            bottom: 100%;
+            animation: fall 2s infinite ease-in;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(0); }
+            to { transform: translateY(100vh); }
+        }
+
+        /* Responsive Styling */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav {
+                display: none;
+                flex-direction: column;
+                gap: 1em;
+            }
+
+            .menu button {
+                font-size: 1em;
+            }
+
+            .intro-text {
+                font-size: 1em;
+            }
+
+            .profile-photo {
+                width: 80px;
+            }
+
+            .section {
+                padding: 1.5em 1em;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                flex-direction: column;
+                gap: 1em;
+            }
+
+            footer {
+                padding: 0.5em;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Dimming Overlay -->
     <div class="dimmed"></div>
 
-    <header class="header">
+    <header>
         <div class="logo">Mark Palkimas</div>
         <div class="menu">
-            <button id="menu-toggle">Menu</button>
+            <button id="menu-toggle">☰ Menu</button>
         </div>
     </header>
 
-    <nav class="nav-links" id="mobile-menu" style="display: none;">
+    <nav id="nav-links">
         <ul>
             <li><a href="#about" class="about-link">About</a></li>
-            <li><a href="projects.html" target="_blank">Projects</a></li>
-            <li><a href="#contact" class="contact-link">Contact</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 
-    <main class="content">
+    <main>
         <section id="about" class="section">
             <img src="profile.jpg" alt="Profile Photo" class="profile-photo">
             <div class="intro-text">
@@ -37,39 +214,37 @@
             </div>
         </section>
 
-        <section id="portfolio" class="section">
-            <!-- Mobile-optimized portfolio content -->
+        <section id="projects" class="section">
+            <h2>Projects</h2>
+            <!-- Content here -->
+        </section>
+
+        <section id="contact" class="section">
+            <h2>Contact Me</h2>
+            <div class="social-links">
+                <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
+                <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank"><img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn"></a>
+                <a href="https://github.com/MarkPalkimas" target="_blank"><img src="github-logo.png" alt="GitHub"></a>
+                <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
+                <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
+            </div>
         </section>
     </main>
 
-    <footer class="footer">
-        <p>Contact Me</p>
-        <div class="social-links">
-            <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
-            <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank"><img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn"></a>
-            <a href="https://github.com/MarkPalkimas" target="_blank"><img src="github-logo.png" alt="GitHub"></a>
-            <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
-            <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
-        </div>
-        <button class="gravity-btn">Drop Ball</button>
-        <button class="admin-btn">Admin</button>
-        <button class="reset-btn" style="display: none;">Reset</button>
+    <footer>
+        <p>Mark Palkimas' Portfolio © 2024</p>
     </footer>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            const menuToggle = document.getElementById("menu-toggle");
+            const navLinks = document.getElementById("nav-links");
             const profilePic = document.querySelector(".profile-photo");
             const aboutPopup = document.querySelector(".about-popup");
             const dimmedOverlay = document.querySelector(".dimmed");
-            const menuToggle = document.getElementById("menu-toggle");
-            const mobileMenu = document.getElementById("mobile-menu");
-            const gravityBtn = document.querySelector(".gravity-btn");
-            const resetBtn = document.querySelector(".reset-btn");
-            const balls = [];
 
-            // Toggle mobile menu
             menuToggle.addEventListener("click", () => {
-                mobileMenu.style.display = mobileMenu.style.display === "none" ? "block" : "none";
+                navLinks.style.display = navLinks.style.display === "none" ? "block" : "none";
             });
 
             profilePic.addEventListener("click", () => {
@@ -81,61 +256,6 @@
                 aboutPopup.style.display = "none";
                 dimmedOverlay.style.display = "none";
             });
-
-            gravityBtn.addEventListener("click", () => {
-                dropBall();
-                resetBtn.style.display = "block";
-            });
-
-            resetBtn.addEventListener("click", () => {
-                balls.forEach(ball => ball.remove());
-                balls.length = 0;
-                resetBtn.style.display = "none";
-            });
-
-            function dropBall() {
-                const ball = document.createElement("div");
-                ball.className = "ball";
-                ball.style.backgroundColor = getRandomColor();
-                ball.style.width = ball.style.height = Math.random() * 20 + 30 + "px";
-                ball.style.left = Math.random() * (window.innerWidth - 50) + "px";
-                ball.velocityY = Math.random() * 3 + 1;
-                ball.velocityX = Math.random() * 2 - 1;
-                document.body.appendChild(ball);
-                balls.push(ball);
-                requestAnimationFrame(updateBalls);
-            }
-
-            function getRandomColor() {
-                const letters = "0123456789ABCDEF";
-                let color = "#";
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            }
-
-            function updateBalls() {
-                balls.forEach(ball => {
-                    let top = parseFloat(ball.style.top) || 0;
-                    let left = parseFloat(ball.style.left) || 0;
-                    top += ball.velocityY;
-                    left += ball.velocityX;
-                    ball.style.top = top + "px";
-                    ball.style.left = left + "px";
-
-                    if (top + ball.offsetHeight >= window.innerHeight) {
-                        ball.velocityY *= -0.8;
-                    } else {
-                        ball.velocityY += 0.3;
-                    }
-
-                    if (left <= 0 || left + ball.offsetWidth >= window.innerWidth) {
-                        ball.velocityX *= -1;
-                    }
-                });
-                requestAnimationFrame(updateBalls);
-            }
         });
     </script>
 </body>
