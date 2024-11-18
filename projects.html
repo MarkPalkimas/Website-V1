@@ -51,9 +51,6 @@
 
         /* Home Button */
         .home-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
             background-color: #007bff;
             color: white;
             padding: 10px 20px;
@@ -61,10 +58,35 @@
             text-decoration: none;
             border-radius: 5px;
             z-index: 10;
+            position: absolute;
+            top: 10px;
+            left: 10px;
         }
 
         .home-button:hover {
             background-color: #0056b3;
+        }
+
+        /* Navigation Links Styling */
+        .nav-links {
+            display: flex;
+            list-style-type: none;
+        }
+
+        .nav-links li {
+            margin-right: 20px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ffd700;
         }
 
         /* Footer */
@@ -82,18 +104,12 @@
         <div class="nav-bar">
             <div class="logo">My Projects</div>
             <ul class="nav-links">
-                <li><a href="#about">About</a></li>
+                <!-- Home Button -->
+                <li><a href="index.html" class="home-button">Home</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </div>
-        <!-- Home Button -->
-        <a href="index.html" class="home-button">Home</a>
     </header>
-
-    <section id="about" class="section">
-        <h1>My Projects</h1>
-        <p>Explore the projects I've worked on. Click a square to learn more!</p>
-    </section>
 
     <section class="projects-container">
         <!-- Single project square -->
