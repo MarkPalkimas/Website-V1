@@ -49,28 +49,20 @@
             align-items: center;
         }
 
-        /* Home Button */
-        .home-button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            text-decoration: none;
-            border-radius: 5px;
-            z-index: 10;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-        .home-button:hover {
-            background-color: #0056b3;
-        }
-
         /* Navigation Links Styling */
+        .nav-bar {
+            background-color: #007bff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .nav-links {
             display: flex;
             list-style-type: none;
+            padding: 0;
+            margin: 0;
         }
 
         .nav-links li {
@@ -105,7 +97,7 @@
             <div class="logo">My Projects</div>
             <ul class="nav-links">
                 <!-- Home Button -->
-                <li><a href="index.html" class="home-button">Home</a></li>
+                <li><a href="index.html">Home</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </div>
