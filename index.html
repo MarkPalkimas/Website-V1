@@ -332,8 +332,8 @@
 }
 
 function handleBallCollisions() {
-    const velocityCutoff = 0.00001; // This should match your cutoff for stopping
-    const dampingFactor = 0.4; // Adjust this value to change how much balls react to collisions
+    const velocityCutoff = 0.01; // Minimum velocity to consider as motion
+    const dampingFactor = 0.4; // Factor for damping collision response
 
     for (let i = 0; i < balls.length; i++) {
         const ballA = balls[i];
@@ -347,96 +347,43 @@ function handleBallCollisions() {
             const xB = parseFloat(ballB.style.left) + radiusB;
             const yB = parseFloat(ballB.style.top) + radiusB;
 
-            // Calculate distance between centers
+            // Calculate the distance between ball centers
             const dx = xA - xB;
             const dy = yA - yB;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             // Check if the balls are colliding
             if (distance < radiusA + radiusB) {
-                // Normalize the direction vector
+                // Normalize the collision vector
                 const nx = dx / distance;
                 const ny = dy / distance;
 
-                // Calculate the relative velocity in the direction of the collision
+                // Calculate relative velocity along the collision axis
                 const dvx = ballA.velocityX - ballB.velocityX;
                 const dvy = ballA.velocityY - ballB.velocityY;
                 const impactSpeed = dvx * nx + dvy * ny;
 
-                // Only resolve if the balls are moving toward each other
+                // Resolve only if balls are moving towards each other
                 if (impactSpeed < 0) {
-                    // Apply collision response with damping
-                    const impulse = 2 * impactSpeed / (radiusA + radiusB);
+                    // Impulse magnitude
+                    const impulse = (2 * impactSpeed) / (radiusA + radiusB);
 
-                    // Apply damping if below cutoff
+                    // Adjust impulse with damping if velocity is low
                     const isBallAStopped = Math.abs(ballA.velocityX) < velocityCutoff && Math.abs(ballA.velocityY) < velocityCutoff;
                     const isBallBStopped = Math.abs(ballB.velocityX) < velocityCutoff && Math.abs(ballB.velocityY) < velocityCutoff;
+                    const adjustedImpulse = (isBallAStopped || isBallBStopped) ? impulse * dampingFactor : impulse;
 
-                    const adjustedImpulse = isBallAStopped || isBallBStopped ? impulse * dampingFactor : impulse;
-
+                    // Apply the impulse to velocities
                     ballA.velocityX -= adjustedImpulse * radiusB * nx;
                     ballA.velocityY -= adjustedImpulse * radiusB * ny;
                     ballB.velocityX += adjustedImpulse * radiusA * nx;
                     ballB.velocityY += adjustedImpulse * radiusA * ny;
 
-                    // Apply velocity cutoff after collisions
+                    // Apply velocity cutoff to stop balls with low velocity
                     if (Math.abs(ballA.velocityX) < velocityCutoff) ballA.velocityX = 0;
                     if (Math.abs(ballA.velocityY) < velocityCutoff) ballA.velocityY = 0;
                     if (Math.abs(ballB.velocityX) < velocityCutoff) ballB.velocityX = 0;
                     if (Math.abs(ballB.velocityY) < velocityCutoff) ballB.velocityY = 0;
-                }
-            }
-        }
-    }
-}
-
-function handleBallCollisions() {
-    const velocityCutoff = 0.01; // This should match your cutoff for stopping
-    const dampingFactor = 0.4; // Adjust this value to change how much balls react to collisions
-
-    for (let i = 0; i < balls.length; i++) {
-        const ballA = balls[i];
-        const radiusA = parseFloat(ballA.style.width) / 2;
-        const xA = parseFloat(ballA.style.left) + radiusA;
-        const yA = parseFloat(ballA.style.top) + radiusA;
-
-        for (let j = i + 1; j < balls.length; j++) {
-            const ballB = balls[j];
-            const radiusB = parseFloat(ballB.style.width) / 2;
-            const xB = parseFloat(ballB.style.left) + radiusB;
-            const yB = parseFloat(ballB.style.top) + radiusB;
-
-            // Calculate distance between centers
-            const dx = xA - xB;
-            const dy = yA - yB;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            // Check if the balls are colliding
-            if (distance < radiusA + radiusB) {
-                // Normalize the direction vector
-                const nx = dx / distance;
-                const ny = dy / distance;
-
-                // Calculate the relative velocity in the direction of the collision
-                const dvx = ballA.velocityX - ballB.velocityX;
-                const dvy = ballA.velocityY - ballB.velocityY;
-                const impactSpeed = dvx * nx + dvy * ny;
-
-                // Only resolve if the balls are moving toward each other
-                if (impactSpeed < 0) {
-                    // Apply collision response with damping
-                    const impulse = 2 * impactSpeed / (radiusA + radiusB);
-
-                    // Apply damping if below cutoff
-                    const isBallAStopped = Math.abs(ballA.velocityX) < velocityCutoff && Math.abs(ballA.velocityY) < velocityCutoff;
-                    const isBallBStopped = Math.abs(ballB.velocityX) < velocityCutoff && Math.abs(ballB.velocityY) < velocityCutoff;
-
-                    const adjustedImpulse = isBallAStopped || isBallBStopped ? impulse * dampingFactor : impulse;
-
-                    ballA.velocityX -= adjustedImpulse * radiusB * nx;
-                    ballA.velocityY -= adjustedImpulse * radiusB * ny;
-                    ballB.velocityX += adjustedImpulse * radiusA * nx;
-                    ballB.velocityY += adjustedImpulse * radiusA * ny;
                 }
             }
         }
