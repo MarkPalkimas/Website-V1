@@ -16,7 +16,7 @@
 
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             padding: 20px;
         }
@@ -28,6 +28,8 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
             transition: transform 0.2s;
+            width: 250px;
+            height: 300px;
         }
 
         .project-card:hover {
@@ -64,22 +66,38 @@
         .project-card a:hover {
             background-color: #0056b3;
         }
-    </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const homeButton = document.querySelector(".home-link");
 
-            homeButton.addEventListener("click", (e) => {
-                e.preventDefault();
-                const homeTab = window.open("", "_self");
-                if (homeTab.location.pathname === "/index.html") {
-                    homeTab.close();
-                } else {
-                    window.location.href = "index.html";
-                }
-            });
-        });
-    </script>
+        /* Contact Popup */
+        .dimmed {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        .social-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+        }
+
+        .popup-social-links img {
+            width: 50px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -113,32 +131,69 @@
                 <p>A brief description of Project 3.</p>
                 <a href="https://github.com/MarkPalkimas/project3" target="_blank">View on GitHub</a>
             </div>
-            <!-- Add more project cards as needed -->
         </section>
     </main>
 
     <footer class="footer">
-        <p>Contact Me</p>
-        <div class="social-links">
-            <a href="https://www.instagram.com/ya.boimark" target="_blank">
-                <img src="iconmonstr-instagram-11-240.png" alt="Instagram" class="social-logo">
-            </a>
-            <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank">
-                <img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn" class="social-logo">
-            </a>
-            <a href="https://github.com/MarkPalkimas" target="_blank">
-                <img src="github-logo.png" alt="GitHub" class="social-logo">
-            </a>
-            <a href="mailto:mark.palkimas@gmail.com" target="_blank">
-                <img src="iconmonstr-gmail-1-240.png" alt="Gmail" class="social-logo">
-            </a>
-            <a href="https://www.youtube.com/@markpalkimas" target="_blank">
-                <img src="iconmonstr-youtube-6-240.png" alt="YouTube" class="social-logo">
-            </a>
-        </div>
+        <p class="contact-link">Contact Me</p>
         <div class="footer-bottom">
-            <p class="copyright">© 2024 Mark Palkimas</p>
+            <p>© 2024 Mark Palkimas</p>
         </div>
     </footer>
+
+    <!-- Dimming Overlay -->
+    <div class="dimmed"></div>
+
+    <!-- Contact Popup -->
+    <div class="social-popup">
+        <div class="social-popup-content">
+            <p>Contact Links:</p>
+            <div class="popup-social-links">
+                <a href="https://www.instagram.com/ya.boimark" target="_blank">
+                    <img src="iconmonstr-instagram-11-240.png" alt="Instagram">
+                </a>
+                <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank">
+                    <img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn">
+                </a>
+                <a href="https://github.com/MarkPalkimas" target="_blank">
+                    <img src="github-logo.png" alt="GitHub">
+                </a>
+                <a href="mailto:mark.palkimas@gmail.com" target="_blank">
+                    <img src="iconmonstr-gmail-1-240.png" alt="Gmail">
+                </a>
+                <a href="https://www.youtube.com/@markpalkimas" target="_blank">
+                    <img src="iconmonstr-youtube-6-240.png" alt="YouTube">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const contactLink = document.querySelector(".contact-link");
+            const popup = document.querySelector(".social-popup");
+            const dimmedOverlay = document.querySelector(".dimmed");
+            const footer = document.querySelector("footer");
+
+            const togglePopup = () => {
+                popup.style.display = "flex";
+                dimmedOverlay.style.display = "block";
+                footer.style.display = "none";
+            };
+
+            const closePopup = () => {
+                popup.style.display = "none";
+                dimmedOverlay.style.display = "none";
+                footer.style.display = "block";
+            };
+
+            contactLink.addEventListener("click", (e) => {
+                e.preventDefault();
+                togglePopup();
+            });
+
+            dimmedOverlay.addEventListener("click", closePopup);
+        });
+    </script>
 </body>
 </html>
