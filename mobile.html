@@ -282,10 +282,10 @@ function updateBalls() {
         let newTop = currentTop + ball.velocityY;
         let newLeft = currentLeft + ball.velocityX;
 
-        // Bounce off the footer's top (considering zoom and scrolling)
+        // Bounce off the footer's top
         if (newTop + ball.offsetHeight >= footerTop) {
             newTop = footerTop - ball.offsetHeight;
-            ball.velocityY *= -0.8; // Lose some energy when bouncing
+            ball.velocityY *= -0.8; // Lose some energy
 
             // Stop jittering if velocity is too small
             if (Math.abs(ball.velocityY) < velocityCutoff) {
@@ -295,12 +295,11 @@ function updateBalls() {
             ball.velocityY += 0.3; // Apply gravity
         }
 
-        // Bounce off walls (account for page zoom)
+        // Bounce off walls
         if (newLeft <= 0 || newLeft + ball.offsetWidth >= document.documentElement.clientWidth) {
             newLeft = newLeft <= 0 ? 0 : document.documentElement.clientWidth - ball.offsetWidth;
-            ball.velocityX *= -0.8; // Invert and lose some horizontal energy
+            ball.velocityX *= -0.8; // Invert and lose energy
 
-            // Stop jittering if velocity is too small
             if (Math.abs(ball.velocityX) < velocityCutoff) {
                 ball.velocityX = 0;
             }
@@ -322,7 +321,7 @@ function updateBalls() {
             const minDist = (ball.offsetWidth + otherBall.offsetWidth) / 2;
 
             if (distance < minDist) {
-                // Resolve collision
+                // Resolve overlap
                 const overlap = minDist - distance;
                 const offsetX = (overlap * dx) / distance / 2;
                 const offsetY = (overlap * dy) / distance / 2;
@@ -332,20 +331,17 @@ function updateBalls() {
                 otherBall.style.left = otherLeft + offsetX + "px";
                 otherBall.style.top = otherTop + offsetY + "px";
 
-                // Exchange velocities using 1D collision formula for elastic collisions
-                const m1 = ball.offsetWidth; // Assume mass proportional to ball size
-                const m2 = otherBall.offsetWidth;
-
+                // Exchange velocities
                 const v1x = ball.velocityX;
                 const v1y = ball.velocityY;
                 const v2x = otherBall.velocityX;
                 const v2y = otherBall.velocityY;
 
-                ball.velocityX = (v1x * (m1 - m2) + 2 * m2 * v2x) / (m1 + m2);
-                ball.velocityY = (v1y * (m1 - m2) + 2 * m2 * v2y) / (m1 + m2);
+                ball.velocityX = v2x;
+                ball.velocityY = v2y;
 
-                otherBall.velocityX = (v2x * (m2 - m1) + 2 * m1 * v1x) / (m1 + m2);
-                otherBall.velocityY = (v2y * (m2 - m1) + 2 * m1 * v1y) / (m1 + m2);
+                otherBall.velocityX = v1x;
+                otherBall.velocityY = v1y;
             }
         }
     });
