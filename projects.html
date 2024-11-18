@@ -17,35 +17,34 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-color: #000;
-            color: #fff;
+            background-color: #f4f4f4;
+            color: #333;
+            position: relative;
             overflow-x: hidden;
         }
 
+        /* Header */
         header {
             width: 100%;
             padding: 1em;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #222;
+            background-color: #333;
             color: #fff;
             position: fixed;
             top: 0;
             z-index: 10;
-            border-bottom: 1px solid #444;
         }
 
         .home-button {
-            color: #ccc;
+            color: #bbb;
             text-decoration: none;
             font-size: 1em;
             padding: 0.5em 1em;
             background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid #444;
             border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .home-button:hover {
@@ -53,6 +52,22 @@
             color: #fff;
         }
 
+        .projects-link {
+            color: #bbb;
+            text-decoration: none;
+            font-size: 1em;
+            padding: 0.5em 1em;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .projects-link:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        /* Main Content */
         main {
             flex: 1;
             padding-top: 4em;
@@ -83,30 +98,29 @@
             transition: background-color 0.3s, transform 0.2s;
         }
 
-        .footer-container {
-            width: 100%;
-            margin-top: auto;
-            position: relative;
-        }
-
+        /* Footer */
         footer {
+            margin-top: 42vh;
             width: 100%;
-            padding: 1em 0;
-            background-color: #111;
+            padding: 1.5em 0;
+            background-color: #333;
+            color: #fff;
             text-align: center;
-            border-top: 1px solid #444;
+            position: relative;
+            z-index: 5;
         }
 
         .contact-section {
-            padding: 1em 0;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .social-links {
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-bottom: 1em;
         }
 
         .social-links img {
@@ -119,13 +133,45 @@
             transform: scale(1.2);
         }
 
+        .footer-content p {
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
         .extra-space {
             height: 5%;
         }
 
-        .copyright {
-            color: #555;
-            padding-top: 1em;
+        .gravity-section {
+            text-align: center;
+            padding: 1em;
+            position: relative;
+            top: .05vh;
+        }
+
+        .gravity-btn, .reset-btn {
+            padding: 8px 16px;
+            cursor: pointer;
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .reset-btn {
+            display: none; /* Initially hidden */
+        }
+
+        /* Ball Styling */
+        .ball {
+            position: absolute;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #0073e6;
         }
     </style>
 </head>
@@ -154,8 +200,106 @@
                 </div>
             </section>
             <div class="extra-space"></div>
-            <p class="copyright">&copy; 2024 Mark Palkimas. All rights reserved.</p>
+            <p>&copy; 2024 Mark Palkimas. All rights reserved.</p>
         </footer>
     </div>
+
+    <script>
+        // Function to return to the home page and handle the tab switching behavior
+        document.querySelector(".home-button").addEventListener("click", function(event) {
+            event.preventDefault();
+
+            // Check if there is an existing tab with index.html open
+            let homeTab = null;
+            for (let i = 0; i < window.opener.length; i++) {
+                if (window.opener[i].location.href.includes('index.html')) {
+                    homeTab = window.opener[i];
+                    break;
+                }
+            }
+
+            if (homeTab) {
+                // If the home tab is open, bring it to the front and close the current tab
+                homeTab.focus();
+                window.close();
+            } else {
+                // If no home tab is found, open the home page
+                window.location.href = "index.html";
+            }
+        });
+
+        // Gravity Ball functions and movement
+        const balls = [];
+        const resetBtn = document.querySelector(".reset-btn");
+        const footer = document.querySelector("footer");
+
+        function dropBall() {
+            const ball = document.createElement("div");
+            ball.className = "ball";
+            ball.style.backgroundColor = getRandomColor();
+            ball.style.width = ball.style.height = Math.random() * 20 + 30 + "px";
+            ball.style.left = Math.random() * (window.innerWidth - 50) + "px";
+            ball.velocityY = Math.random() * 4 + 1;
+            ball.velocityX = Math.random() * 2 - 1;
+            ball.bounceOffset = 10;
+
+            document.body.appendChild(ball);
+            balls.push(ball);
+
+            resetBtn.style.display = "inline-block";
+        }
+
+        function resetBalls() {
+            balls.forEach(ball => ball.remove());
+            balls.length = 0;
+            resetBtn.style.display = "none";
+        }
+
+        function getRandomColor() {
+            const letters = "0123456789ABCDEF";
+            let color = "#";
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function updateBalls() {
+            const velocityCutoff = 0.01;
+            const footerTop = footer.getBoundingClientRect().top + window.scrollY;
+
+            balls.forEach((ball, index) => {
+                let currentTop = parseFloat(ball.style.top) || 0;
+                let currentLeft = parseFloat(ball.style.left) || 0;
+                let newTop = currentTop + ball.velocityY;
+                let newLeft = currentLeft + ball.velocityX;
+
+                // Bounce off the footer's top
+                if (newTop + ball.offsetHeight >= footerTop) {
+                    ball.velocityY = -ball.velocityY;
+                    newTop = footerTop - ball.offsetHeight;
+                }
+
+                // Apply movement
+                ball.style.top = newTop + "px";
+                ball.style.left = newLeft + "px";
+
+                // Slow down balls and stop when they are small enough
+                if (Math.abs(ball.velocityY) < velocityCutoff) {
+                    ball.velocityY = 0;
+                }
+                if (Math.abs(ball.velocityX) < velocityCutoff) {
+                    ball.velocityX = 0;
+                }
+            });
+        }
+
+        // Event Listeners
+        document.querySelector(".gravity-btn").addEventListener("click", dropBall);
+        resetBtn.addEventListener("click", resetBalls);
+
+        // Update ball movement continuously
+        setInterval(updateBalls, 16);  // Roughly 60fps
+    </script>
 </body>
 </html>
