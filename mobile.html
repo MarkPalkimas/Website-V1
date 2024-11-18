@@ -102,7 +102,7 @@
 
         /* Footer */
         footer {
-            margin-top: 45vh;
+            margin-top: 40vh;
             width: 100%;
             padding: 1.5em 0;
             background-color: #333;
@@ -310,28 +310,42 @@ function updateBalls() {
         ball.style.top = newTop + "px";
         ball.style.left = newLeft + "px";
 
-        // Check collisions between balls
+        // Handle collisions between balls
         for (let j = index + 1; j < balls.length; j++) {
             const otherBall = balls[j];
-            const dx = (currentLeft + ball.offsetWidth / 2) - (parseFloat(otherBall.style.left) + otherBall.offsetWidth / 2);
-            const dy = (currentTop + ball.offsetHeight / 2) - (parseFloat(otherBall.style.top) + otherBall.offsetHeight / 2);
+            const otherTop = parseFloat(otherBall.style.top) || 0;
+            const otherLeft = parseFloat(otherBall.style.left) || 0;
+
+            const dx = (currentLeft + ball.offsetWidth / 2) - (otherLeft + otherBall.offsetWidth / 2);
+            const dy = (currentTop + ball.offsetHeight / 2) - (otherTop + otherBall.offsetHeight / 2);
             const distance = Math.sqrt(dx * dx + dy * dy);
             const minDist = (ball.offsetWidth + otherBall.offsetWidth) / 2;
 
             if (distance < minDist) {
-                // Resolve collision by exchanging velocities
-                [ball.velocityX, otherBall.velocityX] = [otherBall.velocityX, ball.velocityX];
-                [ball.velocityY, otherBall.velocityY] = [otherBall.velocityY, ball.velocityY];
-
-                // Separate overlapping balls
+                // Resolve collision
                 const overlap = minDist - distance;
                 const offsetX = (overlap * dx) / distance / 2;
                 const offsetY = (overlap * dy) / distance / 2;
 
                 ball.style.left = currentLeft - offsetX + "px";
                 ball.style.top = currentTop - offsetY + "px";
-                otherBall.style.left = parseFloat(otherBall.style.left) + offsetX + "px";
-                otherBall.style.top = parseFloat(otherBall.style.top) + offsetY + "px";
+                otherBall.style.left = otherLeft + offsetX + "px";
+                otherBall.style.top = otherTop + offsetY + "px";
+
+                // Exchange velocities using 1D collision formula for elastic collisions
+                const m1 = ball.offsetWidth; // Assume mass proportional to ball size
+                const m2 = otherBall.offsetWidth;
+
+                const v1x = ball.velocityX;
+                const v1y = ball.velocityY;
+                const v2x = otherBall.velocityX;
+                const v2y = otherBall.velocityY;
+
+                ball.velocityX = (v1x * (m1 - m2) + 2 * m2 * v2x) / (m1 + m2);
+                ball.velocityY = (v1y * (m1 - m2) + 2 * m2 * v2y) / (m1 + m2);
+
+                otherBall.velocityX = (v2x * (m2 - m1) + 2 * m1 * v1x) / (m1 + m2);
+                otherBall.velocityY = (v2y * (m2 - m1) + 2 * m1 * v1y) / (m1 + m2);
             }
         }
     });
