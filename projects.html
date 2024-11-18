@@ -48,6 +48,33 @@
             justify-content: center;
             align-items: center;
         }
+
+        /* Home Button */
+        .home-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            z-index: 10;
+        }
+
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto; /* Ensures footer is at the bottom */
+            background-color: rgba(171, 171, 171, 0.5);
+            padding: 15px 0;
+            text-align: center;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -59,6 +86,8 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </div>
+        <!-- Home Button -->
+        <a href="index.html" class="home-button">Home</a>
     </header>
 
     <section id="about" class="section">
@@ -68,8 +97,8 @@
 
     <section class="projects-container">
         <!-- Single project square -->
-        <div class="project-square">
-            <a href="website-code.html">Website Code</a>
+        <div class="project-square" onclick="window.location.href='https://markpalkimas.com/website-code'">
+            Website Code
         </div>
     </section>
 
