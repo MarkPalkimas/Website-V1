@@ -294,7 +294,7 @@
         let newLeft = currentLeft + ball.velocityX;
 
         // Bounce off floor at 30px lower than footer top
-        const footerTop = window.innerHeight - footer.offsetHeight + 70;
+        const footerTop = footer.getBoundingClientRect().top + window.scrollY;
         if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
             newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
             ball.velocityY *= -ball.friction;
