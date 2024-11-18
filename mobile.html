@@ -270,7 +270,7 @@
             return color;
         }
 
-       function updateBalls() {
+function updateBalls() {
     const velocityCutoff = 0.01;
 
     // Get the footer's absolute position on the document
@@ -309,12 +309,38 @@
         // Update ball's position
         ball.style.top = newTop + "px";
         ball.style.left = newLeft + "px";
+
+        // Check collisions between balls
+        for (let j = index + 1; j < balls.length; j++) {
+            const otherBall = balls[j];
+            const dx = (currentLeft + ball.offsetWidth / 2) - (parseFloat(otherBall.style.left) + otherBall.offsetWidth / 2);
+            const dy = (currentTop + ball.offsetHeight / 2) - (parseFloat(otherBall.style.top) + otherBall.offsetHeight / 2);
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const minDist = (ball.offsetWidth + otherBall.offsetWidth) / 2;
+
+            if (distance < minDist) {
+                // Resolve collision by exchanging velocities
+                [ball.velocityX, otherBall.velocityX] = [otherBall.velocityX, ball.velocityX];
+                [ball.velocityY, otherBall.velocityY] = [otherBall.velocityY, ball.velocityY];
+
+                // Separate overlapping balls
+                const overlap = minDist - distance;
+                const offsetX = (overlap * dx) / distance / 2;
+                const offsetY = (overlap * dy) / distance / 2;
+
+                ball.style.left = currentLeft - offsetX + "px";
+                ball.style.top = currentTop - offsetY + "px";
+                otherBall.style.left = parseFloat(otherBall.style.left) + offsetX + "px";
+                otherBall.style.top = parseFloat(otherBall.style.top) + offsetY + "px";
+            }
+        }
     });
 
     requestAnimationFrame(updateBalls);
 }
-        // Start updating the balls
-        updateBalls();
+
+// Start updating the balls
+updateBalls();
     </script>
 </body>
 </html>
