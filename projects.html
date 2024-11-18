@@ -178,7 +178,7 @@
 <body>
     <header>
         <div class="logo">Mark Palkimas</div>
-        <a href="index.html" class="home-button">Home</a>
+        <a href="javascript:void(0);" class="home-button">Home</a>
     </header>
 
     <main>
@@ -274,17 +274,14 @@
                 let newTop = currentTop + ball.velocityY;
                 let newLeft = currentLeft + ball.velocityX;
 
-                // Bounce off the footer's top
                 if (newTop + ball.offsetHeight >= footerTop) {
                     ball.velocityY = -ball.velocityY;
                     newTop = footerTop - ball.offsetHeight;
                 }
 
-                // Apply movement
                 ball.style.top = newTop + "px";
                 ball.style.left = newLeft + "px";
 
-                // Slow down balls and stop when they are small enough
                 if (Math.abs(ball.velocityY) < velocityCutoff) {
                     ball.velocityY = 0;
                 }
@@ -294,11 +291,9 @@
             });
         }
 
-        // Event Listeners
         document.querySelector(".gravity-btn").addEventListener("click", dropBall);
         resetBtn.addEventListener("click", resetBalls);
 
-        // Update ball movement continuously
         setInterval(updateBalls, 16);  // Roughly 60fps
     </script>
 </body>
