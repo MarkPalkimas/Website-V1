@@ -284,7 +284,7 @@
                 }
                 return color;
             }
-function updateBalls() {
+            function updateBalls() {
     const velocityCutoff = 0.01; // Threshold for stopping jittering
 
     balls.forEach((ball, index) => {
@@ -330,9 +330,6 @@ function updateBalls() {
     handleBallCollisions();
     requestAnimationFrame(updateBalls);
 }
-
-// Make sure to call `updateBalls` after it's defined
-updateBalls(); // Start the animation loop
 
 function handleBallCollisions() {
     const velocityCutoff = 0.01; // Minimum velocity to consider as motion
