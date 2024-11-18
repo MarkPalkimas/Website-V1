@@ -3,298 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Palkimas' Projects</title>
+    <title>Projects - Mark Palkimas</title>
+    <link rel="stylesheet" href="app.css">
     <style>
-        /* Basic Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f4f4f4;
-            color: #333;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Header */
-        header {
-            width: 100%;
-            padding: 1em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #333;
-            color: #fff;
-            position: fixed;
-            top: 0;
-            z-index: 10;
-        }
-
-        .home-button {
-            color: #bbb;
-            text-decoration: none;
-            font-size: 1em;
-            padding: 0.5em 1em;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .home-button:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            color: #fff;
-        }
-
-        .projects-link {
-            color: #bbb;
-            text-decoration: none;
-            font-size: 1em;
-            padding: 0.5em 1em;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .projects-link:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            color: #fff;
-        }
-
-        /* Main Content */
-        main {
-            flex: 1;
-            padding-top: 4em;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            padding-left: 20px;
-        }
-
-        .code-box {
-            width: 200px;
-            height: 80px;
-            background-color: #222;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 5px;
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            position: relative;
-            top: 20px;
-        }
-
-        .code-box:hover {
-            background-color: #333;
-            transform: scale(1.05);
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        /* Footer */
-        footer {
-            margin-top: 42vh;
-            width: 100%;
-            padding: 1.5em 0;
-            background-color: #333;
-            color: #fff;
+        /* Additional styles specific to Projects page */
+        .projects-header {
             text-align: center;
-            position: relative;
-            z-index: 5;
+            margin-top: 20px;
+            font-size: 2.5rem;
+            color: #444;
         }
 
-        .contact-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
         }
 
-        .social-links {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .social-links img {
-            width: 30px;
-            height: 30px;
-            transition: transform 0.3s;
-        }
-
-        .social-links img:hover {
-            transform: scale(1.2);
-        }
-
-        .footer-content p {
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
-
-        .extra-space {
-            height: 5%;
-        }
-
-        .gravity-section {
+        .project-card {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
-            padding: 1em;
-            position: relative;
-            top: .05vh;
+            transition: transform 0.2s;
         }
 
-        .gravity-btn, .reset-btn {
-            padding: 8px 16px;
-            cursor: pointer;
-            background-color: #0073e6;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 5px;
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin: 15px 0;
+        }
+
+        .project-card p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .project-card a {
             display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
 
-        .reset-btn {
-            display: none; /* Initially hidden */
-        }
-
-        /* Ball Styling */
-        .ball {
-            position: absolute;
-            top: 0;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #0073e6;
+        .project-card a:hover {
+            background-color: #0056b3;
         }
     </style>
-</head>
-<body>
-    <header>
-        <div class="logo">Mark Palkimas</div>
-        <a href="javascript:void(0);" class="home-button">Home</a>
-    </header>
-
-    <main>
-        <div class="code-box" onclick="window.open('https://github.com/MarkPalkimas/Website', '_blank')">
-            Website Full Code
-        </div>
-    </main>
-
-    <div class="footer-container">
-        <footer>
-            <section class="contact-section">
-                <h2>Connect with Me</h2>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/ya.boimark" target="_blank"><img src="iconmonstr-instagram-11-240.png" alt="Instagram"></a>
-                    <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank"><img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn"></a>
-                    <a href="https://github.com/MarkPalkimas" target="_blank"><img src="github-logo.png" alt="GitHub"></a>
-                    <a href="mailto:mark.palkimas@gmail.com" target="_blank"><img src="iconmonstr-gmail-1-240.png" alt="Gmail"></a>
-                    <a href="https://www.youtube.com/@markpalkimas" target="_blank"><img src="iconmonstr-youtube-6-240.png" alt="YouTube"></a>
-                </div>
-            </section>
-            <div class="extra-space"></div>
-            <p>&copy; 2024 Mark Palkimas. All rights reserved.</p>
-        </footer>
-    </div>
-
     <script>
-        // Function to return to the home page and handle the tab switching behavior
-        document.querySelector(".home-button").addEventListener("click", function(event) {
-            event.preventDefault();
+        document.addEventListener("DOMContentLoaded", function () {
+            const homeButton = document.querySelector(".home-link");
 
-            // Check if there is an existing tab with index.html open
-            let homeTab = null;
-            for (let i = 0; i < window.opener.length; i++) {
-                if (window.opener[i].location.href.includes('index.html')) {
-                    homeTab = window.opener[i];
-                    break;
-                }
-            }
-
-            if (homeTab) {
-                // If the home tab is open, bring it to the front and close the current tab
-                homeTab.focus();
-                window.close();
-            } else {
-                // If no home tab is found, open the home page
-                window.location.href = "index.html";
-            }
-        });
-
-        // Gravity Ball functions and movement
-        const balls = [];
-        const resetBtn = document.querySelector(".reset-btn");
-        const footer = document.querySelector("footer");
-
-        function dropBall() {
-            const ball = document.createElement("div");
-            ball.className = "ball";
-            ball.style.backgroundColor = getRandomColor();
-            ball.style.width = ball.style.height = Math.random() * 20 + 30 + "px";
-            ball.style.left = Math.random() * (window.innerWidth - 50) + "px";
-            ball.velocityY = Math.random() * 4 + 1;
-            ball.velocityX = Math.random() * 2 - 1;
-            ball.bounceOffset = 10;
-
-            document.body.appendChild(ball);
-            balls.push(ball);
-
-            resetBtn.style.display = "inline-block";
-        }
-
-        function resetBalls() {
-            balls.forEach(ball => ball.remove());
-            balls.length = 0;
-            resetBtn.style.display = "none";
-        }
-
-        function getRandomColor() {
-            const letters = "0123456789ABCDEF";
-            let color = "#";
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
-        function updateBalls() {
-            const velocityCutoff = 0.01;
-            const footerTop = footer.getBoundingClientRect().top + window.scrollY;
-
-            balls.forEach((ball, index) => {
-                let currentTop = parseFloat(ball.style.top) || 0;
-                let currentLeft = parseFloat(ball.style.left) || 0;
-                let newTop = currentTop + ball.velocityY;
-                let newLeft = currentLeft + ball.velocityX;
-
-                if (newTop + ball.offsetHeight >= footerTop) {
-                    ball.velocityY = -ball.velocityY;
-                    newTop = footerTop - ball.offsetHeight;
-                }
-
-                ball.style.top = newTop + "px";
-                ball.style.left = newLeft + "px";
-
-                if (Math.abs(ball.velocityY) < velocityCutoff) {
-                    ball.velocityY = 0;
-                }
-                if (Math.abs(ball.velocityX) < velocityCutoff) {
-                    ball.velocityX = 0;
+            homeButton.addEventListener("click", (e) => {
+                e.preventDefault();
+                const homeTab = window.open("", "_self");
+                if (homeTab.location.pathname === "/index.html") {
+                    homeTab.close();
+                } else {
+                    window.location.href = "index.html";
                 }
             });
-        }
-
-        document.querySelector(".gravity-btn").addEventListener("click", dropBall);
-        resetBtn.addEventListener("click", resetBalls);
-
-        setInterval(updateBalls, 16);  // Roughly 60fps
+        });
     </script>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-bar">
+            <div class="logo">Mark Palkimas</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="home-link">Home</a></li>
+                <li><a href="#contact" class="contact-link">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="content">
+        <h1 class="projects-header">My Projects</h1>
+        <section class="projects-grid">
+            <div class="project-card">
+                <img src="project1.jpg" alt="Project 1">
+                <h3>Project Title 1</h3>
+                <p>A brief description of Project 1.</p>
+                <a href="https://github.com/MarkPalkimas/project1" target="_blank">View on GitHub</a>
+            </div>
+            <div class="project-card">
+                <img src="project2.jpg" alt="Project 2">
+                <h3>Project Title 2</h3>
+                <p>A brief description of Project 2.</p>
+                <a href="https://github.com/MarkPalkimas/project2" target="_blank">View on GitHub</a>
+            </div>
+            <div class="project-card">
+                <img src="project3.jpg" alt="Project 3">
+                <h3>Project Title 3</h3>
+                <p>A brief description of Project 3.</p>
+                <a href="https://github.com/MarkPalkimas/project3" target="_blank">View on GitHub</a>
+            </div>
+            <!-- Add more project cards as needed -->
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Contact Me</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/ya.boimark" target="_blank">
+                <img src="iconmonstr-instagram-11-240.png" alt="Instagram" class="social-logo">
+            </a>
+            <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank">
+                <img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn" class="social-logo">
+            </a>
+            <a href="https://github.com/MarkPalkimas" target="_blank">
+                <img src="github-logo.png" alt="GitHub" class="social-logo">
+            </a>
+            <a href="mailto:mark.palkimas@gmail.com" target="_blank">
+                <img src="iconmonstr-gmail-1-240.png" alt="Gmail" class="social-logo">
+            </a>
+            <a href="https://www.youtube.com/@markpalkimas" target="_blank">
+                <img src="iconmonstr-youtube-6-240.png" alt="YouTube" class="social-logo">
+            </a>
+        </div>
+        <div class="footer-bottom">
+            <p class="copyright">© 2024 Mark Palkimas</p>
+        </div>
+    </footer>
 </body>
 </html>
