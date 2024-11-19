@@ -80,14 +80,15 @@
 
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px; /* Add spacing between tiles */
             padding: 0 20px;
+            margin-bottom: 50px; /* Add space between tiles and footer */
         }
 
         .project-card {
             background-color: #f5f5f5;
-            padding: 10px;
+            padding: 8px; /* Reduced padding for smaller tiles */
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
@@ -108,13 +109,13 @@
         }
 
         .project-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
+            font-size: 1rem; /* Reduced font size */
+            margin-bottom: 6px;
             color: #333;
         }
 
         .project-card p {
-            font-size: 0.85rem;
+            font-size: 0.8rem; /* Reduced font size */
             color: #555;
         }
 
@@ -159,7 +160,12 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .projects-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* Single column on mobile */
+                gap: 15px;
+            }
+
+            .projects-header {
+                margin-top: 20px; /* Slightly smaller margin on mobile */
             }
         }
     </style>
