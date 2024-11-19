@@ -272,8 +272,7 @@
 
 function updateBalls() {
     const gravity = 0.3; // Gravity constant
-    const velocityCutoff = 0.01; // Stop balls when their velocity is very low
-    const restitution = 0.9; // Elasticity of collisions
+    const restitution = 0.9; // Elasticity of collisions (0.9 = 90% energy retained)
 
     const footerTop = footer.getBoundingClientRect().top + window.scrollY;
 
@@ -283,13 +282,10 @@ function updateBalls() {
         let newTop = currentTop + ball.velocityY;
         let newLeft = currentLeft + ball.velocityX;
 
-        // Bounce off the footer's top
+        // Apply gravity and bounce off the footer
         if (newTop + ball.offsetHeight >= footerTop) {
             newTop = footerTop - ball.offsetHeight;
-            ball.velocityY *= -restitution; // Bounce and lose energy
-            if (Math.abs(ball.velocityY) < velocityCutoff) {
-                ball.velocityY = 0;
-            }
+            ball.velocityY *= -restitution; // Reverse and reduce velocity
         } else {
             ball.velocityY += gravity; // Apply gravity
         }
@@ -297,10 +293,7 @@ function updateBalls() {
         // Bounce off walls
         if (newLeft <= 0 || newLeft + ball.offsetWidth >= document.documentElement.clientWidth) {
             newLeft = newLeft <= 0 ? 0 : document.documentElement.clientWidth - ball.offsetWidth;
-            ball.velocityX *= -restitution; // Bounce off walls
-            if (Math.abs(ball.velocityX) < velocityCutoff) {
-                ball.velocityX = 0;
-            }
+            ball.velocityX *= -restitution; // Reverse and reduce velocity
         }
 
         // Update ball's position
@@ -319,7 +312,7 @@ function updateBalls() {
             const minDist = (ball.offsetWidth + otherBall.offsetWidth) / 2;
 
             if (distance < minDist) {
-                // Resolve overlap
+                // Resolve overlap immediately
                 const overlap = minDist - distance;
                 const resolveX = (overlap * dx) / distance / 2;
                 const resolveY = (overlap * dy) / distance / 2;
@@ -329,37 +322,29 @@ function updateBalls() {
                 otherBall.style.left = otherLeft + resolveX + "px";
                 otherBall.style.top = otherTop + resolveY + "px";
 
-                // Calculate mass (area proportional to size)
+                // Elastic collision - update velocities
+                const normalX = dx / distance;
+                const normalY = dy / distance;
+
+                const ballNormalVelocity = ball.velocityX * normalX + ball.velocityY * normalY;
+                const otherNormalVelocity = otherBall.velocityX * normalX + otherBall.velocityY * normalY;
+
                 const ballMass = Math.PI * (ball.offsetWidth / 2) ** 2;
                 const otherMass = Math.PI * (otherBall.offsetWidth / 2) ** 2;
 
-                // Calculate normal and tangent vectors
-                const normalX = dx / distance;
-                const normalY = dy / distance;
-                const tangentX = -normalY;
-                const tangentY = normalX;
+                const combinedMass = ballMass + otherMass;
+                const massDifference = ballMass - otherMass;
 
-                // Project velocities onto normal and tangent vectors
-                const ballNormalVelocity = ball.velocityX * normalX + ball.velocityY * normalY;
-                const ballTangentVelocity = ball.velocityX * tangentX + ball.velocityY * tangentY;
+                const newBallNormalVelocity =
+                    (ballNormalVelocity * massDifference + 2 * otherMass * otherNormalVelocity) / combinedMass;
+                const newOtherNormalVelocity =
+                    (otherNormalVelocity * -massDifference + 2 * ballMass * ballNormalVelocity) / combinedMass;
 
-                const otherNormalVelocity = otherBall.velocityX * normalX + otherBall.velocityY * normalY;
-                const otherTangentVelocity = otherBall.velocityX * tangentX + otherBall.velocityY * tangentY;
+                ball.velocityX += (newBallNormalVelocity - ballNormalVelocity) * normalX;
+                ball.velocityY += (newBallNormalVelocity - ballNormalVelocity) * normalY;
 
-                // Compute new normal velocities (elastic collision)
-                const ballNewNormalVelocity =
-                    (ballNormalVelocity * (ballMass - otherMass) + 2 * otherMass * otherNormalVelocity) /
-                    (ballMass + otherMass);
-                const otherNewNormalVelocity =
-                    (otherNormalVelocity * (otherMass - ballMass) + 2 * ballMass * ballNormalVelocity) /
-                    (ballMass + otherMass);
-
-                // Update velocities (combine new normal and tangent components)
-                ball.velocityX = ballNewNormalVelocity * normalX + ballTangentVelocity * tangentX;
-                ball.velocityY = ballNewNormalVelocity * normalY + ballTangentVelocity * tangentY;
-
-                otherBall.velocityX = otherNewNormalVelocity * normalX + otherTangentVelocity * tangentX;
-                otherBall.velocityY = otherNewNormalVelocity * normalY + otherTangentVelocity * tangentY;
+                otherBall.velocityX += (newOtherNormalVelocity - otherNormalVelocity) * normalX;
+                otherBall.velocityY += (newOtherNormalVelocity - otherNormalVelocity) * normalY;
             }
         }
     });
