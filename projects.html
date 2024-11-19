@@ -94,13 +94,13 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
             cursor: pointer;
         }
 
         .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
         }
 
         .project-card img {
@@ -115,7 +115,7 @@
             font-size: 1.5rem;
             margin-bottom: 6px;
             color: #333;
-            transition: transform 0.3s, font-size 0.3s;
+            transition: transform 0.5s ease-in-out, font-size 0.5s ease-in-out;
         }
 
         .project-card p {
@@ -123,7 +123,7 @@
             color: #555;
             opacity: 0;
             transform: translateY(10px);
-            transition: opacity 0.3s, transform 0.3s;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
         .project-card:hover h3 {
@@ -188,6 +188,34 @@
                 opacity: 1;
             }
         }
+
+        /* Contact Section */
+        #contact {
+            padding: 40px 20px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+        }
+
+        #contact h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        #contact p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        #contact a {
+            color: #ffcc00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        #contact a:hover {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -223,18 +251,16 @@
     </main>
 
     <footer class="footer">
+        <div id="contact">
+            <h2>Contact Me</h2>
+            <p>Feel free to reach out via <a href="mailto:mark.palkimas@gmail.com">email</a> or connect with me on <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank">LinkedIn</a>.</p>
+        </div>
         <div class="social-links">
             <a href="https://www.instagram.com/ya.boimark" target="_blank">
                 <img src="iconmonstr-instagram-11-240.png" alt="Instagram">
             </a>
-            <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank">
-                <img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn">
-            </a>
             <a href="https://github.com/MarkPalkimas" target="_blank">
                 <img src="github-logo.png" alt="GitHub">
-            </a>
-            <a href="mailto:mark.palkimas@gmail.com" target="_blank">
-                <img src="iconmonstr-gmail-1-240.png" alt="Gmail">
             </a>
             <a href="https://www.youtube.com/@markpalkimas" target="_blank">
                 <img src="iconmonstr-youtube-6-240.png" alt="YouTube">
