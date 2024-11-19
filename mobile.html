@@ -331,24 +331,53 @@ function updateBalls() {
                 otherBall.style.left = otherLeft + offsetX + "px";
                 otherBall.style.top = otherTop + offsetY + "px";
 
-                // Exchange velocities
+                // Calculate new velocities using 1D elastic collision formulas
                 const v1x = ball.velocityX;
                 const v1y = ball.velocityY;
                 const v2x = otherBall.velocityX;
                 const v2y = otherBall.velocityY;
 
-                ball.velocityX = v2x;
-                ball.velocityY = v2y;
+                const m1 = Math.pow(ball.offsetWidth, 2); // Assume mass proportional to size
+                const m2 = Math.pow(otherBall.offsetWidth, 2);
 
-                otherBall.velocityX = v1x;
-                otherBall.velocityY = v1y;
+                const collisionAngle = Math.atan2(dy, dx);
+
+                const speed1 = Math.sqrt(v1x * v1x + v1y * v1y);
+                const speed2 = Math.sqrt(v2x * v2x + v2y * v2y);
+
+                const direction1 = Math.atan2(v1y, v1x);
+                const direction2 = Math.atan2(v2y, v2x);
+
+                const newVx1 = ((speed1 * Math.cos(direction1 - collisionAngle) * (m1 - m2) +
+                    2 * m2 * speed2 * Math.cos(direction2 - collisionAngle)) / (m1 + m2)) *
+                    Math.cos(collisionAngle) +
+                    speed1 * Math.sin(direction1 - collisionAngle) * Math.cos(collisionAngle + Math.PI / 2);
+
+                const newVy1 = ((speed1 * Math.cos(direction1 - collisionAngle) * (m1 - m2) +
+                    2 * m2 * speed2 * Math.cos(direction2 - collisionAngle)) / (m1 + m2)) *
+                    Math.sin(collisionAngle) +
+                    speed1 * Math.sin(direction1 - collisionAngle) * Math.sin(collisionAngle + Math.PI / 2);
+
+                const newVx2 = ((speed2 * Math.cos(direction2 - collisionAngle) * (m2 - m1) +
+                    2 * m1 * speed1 * Math.cos(direction1 - collisionAngle)) / (m1 + m2)) *
+                    Math.cos(collisionAngle) +
+                    speed2 * Math.sin(direction2 - collisionAngle) * Math.cos(collisionAngle + Math.PI / 2);
+
+                const newVy2 = ((speed2 * Math.cos(direction2 - collisionAngle) * (m2 - m1) +
+                    2 * m1 * speed1 * Math.cos(direction1 - collisionAngle)) / (m1 + m2)) *
+                    Math.sin(collisionAngle) +
+                    speed2 * Math.sin(direction2 - collisionAngle) * Math.sin(collisionAngle + Math.PI / 2);
+
+                ball.velocityX = newVx1;
+                ball.velocityY = newVy1;
+                otherBall.velocityX = newVx2;
+                otherBall.velocityY = newVy2;
             }
         }
     });
 
     requestAnimationFrame(updateBalls);
 }
-
 // Start updating the balls
 updateBalls();
     </script>
