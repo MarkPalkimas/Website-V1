@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mark Palkimas' Interactive Website</title>
     <style>
+        /* Basic Reset */
         * {
             margin: 0;
             padding: 0;
@@ -22,6 +23,7 @@
             overflow-x: hidden;
         }
 
+        /* Header */
         header {
             width: 100%;
             padding: 1em;
@@ -45,24 +47,25 @@
             transition: background-color 0.3s;
         }
 
+        /* Profile and Popup */
         .profile-container {
-            text-align: center;
+            text-align: center; /* Center the profile image and text */
             margin-top: 100px;
         }
 
         .profile-photo {
             width: 150px;
-            height: 150px;
+            height: 150px; /* Adjusted height for uniformity */
             border-radius: 50%;
             cursor: pointer;
             object-fit: cover;
             border: 4px solid #333;
-            transition: transform 0.3s;
+            transition: transform 0.3s; /* Smooth enlargement effect */
             z-index: 20;
         }
 
         .profile-photo:hover {
-            transform: scale(1.1);
+            transform: scale(1.1); /* Slightly enlarge on hover */
         }
 
         .hello-mark {
@@ -76,8 +79,8 @@
         .about-popup {
             display: none;
             position: absolute;
-            top: 250px;
-            left: calc(50% - 125px);
+            top: 250px; /* Positioned below the profile photo */
+            left: calc(50% - 125px); /* Centered based on popup width */
             background: #fff;
             padding: 1em;
             border-radius: 8px;
@@ -97,6 +100,7 @@
             z-index: 15;
         }
 
+        /* Footer */
         footer {
             margin-top: 41vh;
             width: 100%;
@@ -136,11 +140,12 @@
             font-size: 0.9em;
         }
 
+        /* Gravity Buttons (Positioned below footer) */
         .gravity-section {
             text-align: center;
             padding: 1em;
             position: relative;
-            top: 0.05vh;
+            top: .05vh;
         }
 
         .gravity-btn, .reset-btn {
@@ -155,9 +160,10 @@
         }
 
         .reset-btn {
-            display: none;
+            display: none; /* Initially hidden */
         }
 
+        /* Ball Styling */
         .ball {
             position: absolute;
             top: 0;
@@ -170,10 +176,12 @@
 </head>
 <body>
     <div class="dimmed"></div>
+
     <header>
         <div class="logo">Mark Palkimas</div>
         <a href="projects.html" class="projects-link">Projects</a>
     </header>
+
     <main>
         <section id="about" class="profile-container">
             <img src="profile.jpg" alt="Profile Photo" class="profile-photo" onclick="showAboutSection()" />
@@ -184,6 +192,7 @@
             </div>
         </section>
     </main>
+
     <footer>
         <section class="contact-section">
             <h2>Contact Me</h2>
@@ -197,10 +206,12 @@
             <p>&copy; 2024 Mark Palkimas. All rights reserved.</p>
         </section>
     </footer>
+
     <div class="gravity-section">
         <button class="gravity-btn" onclick="dropBall()">Drop Ball</button>
         <button class="reset-btn" onclick="resetBalls()">Reset</button>
     </div>
+
     <script>
         const balls = [];
         const resetBtn = document.querySelector(".reset-btn");
@@ -214,7 +225,7 @@
                 aboutPopup.style.display = "none";
                 dimmedOverlay.style.display = "none";
                 const profilePhoto = document.querySelector(".profile-photo");
-                profilePhoto.style.transform = "scale(1)";
+                profilePhoto.style.transform = "scale(1)"; // Reset size
             });
         });
 
@@ -225,7 +236,7 @@
 
             aboutPopup.style.display = "block";
             dimmedOverlay.style.display = "block";
-            profilePhoto.style.transform = "scale(1.1)";
+            profilePhoto.style.transform = "scale(1.1)"; // Enlarge on click
         }
 
         function dropBall() {
@@ -259,37 +270,98 @@
             return color;
         }
 
-        function updateBalls() {
-            const velocityCutoff = 0.01;
-            const footerTop = footer.getBoundingClientRect().top + window.scrollY;
+function updateBalls() {
+    const velocityCutoff = 0.01;
 
-            balls.forEach((ball, index) => {
-                let currentTop = parseFloat(ball.style.top) || 0;
-                let currentLeft = parseFloat(ball.style.left) || 0;
-                let newTop = currentTop + ball.velocityY;
-                let newLeft = currentLeft + ball.velocityX;
+    // Get the footer's absolute position on the document
+    const footerTop = footer.getBoundingClientRect().top + window.scrollY;
 
-                if (newTop + ball.offsetHeight >= footerTop) {
-                    newTop = footerTop - ball.offsetHeight;
-                    ball.velocityY *= -0.8;
-                    if (Math.abs(ball.velocityY) < velocityCutoff) {
-                        ball.velocityY = 0;
-                    }
-                }
+    balls.forEach((ball, index) => {
+        let currentTop = parseFloat(ball.style.top) || 0;
+        let currentLeft = parseFloat(ball.style.left) || 0;
+        let newTop = currentTop + ball.velocityY;
+        let newLeft = currentLeft + ball.velocityX;
 
-                if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
-                    ball.velocityX *= -0.8;
-                }
+        // Bounce off the footer's top
+        if (newTop + ball.offsetHeight >= footerTop) {
+            newTop = footerTop - ball.offsetHeight;
+            ball.velocityY *= -0.8; // Lose some energy
 
-                ball.style.top = newTop + "px";
-                ball.style.left = newLeft + "px";
-                ball.velocityY += 0.1;
-            });
-
-            requestAnimationFrame(updateBalls);
+            // Stop jittering if velocity is too small
+            if (Math.abs(ball.velocityY) < velocityCutoff) {
+                ball.velocityY = 0;
+            }
+        } else {
+            ball.velocityY += 0.3; // Apply gravity
         }
 
-        requestAnimationFrame(updateBalls);
+        // Bounce off walls
+        if (newLeft <= 0 || newLeft + ball.offsetWidth >= document.documentElement.clientWidth) {
+            newLeft = newLeft <= 0 ? 0 : document.documentElement.clientWidth - ball.offsetWidth;
+            ball.velocityX *= -0.8; // Invert and lose energy
+
+            if (Math.abs(ball.velocityX) < velocityCutoff) {
+                ball.velocityX = 0;
+            }
+        }
+
+        // Update ball's position
+        ball.style.top = newTop + "px";
+        ball.style.left = newLeft + "px";
+
+        // Handle collisions between balls
+        for (let j = index + 1; j < balls.length; j++) {
+            const otherBall = balls[j];
+            const otherTop = parseFloat(otherBall.style.top) || 0;
+            const otherLeft = parseFloat(otherBall.style.left) || 0;
+
+            const dx = (currentLeft + ball.offsetWidth / 2) - (otherLeft + otherBall.offsetWidth / 2);
+            const dy = (currentTop + ball.offsetHeight / 2) - (otherTop + otherBall.offsetHeight / 2);
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const minDist = (ball.offsetWidth + otherBall.offsetWidth) / 2;
+
+            if (distance < minDist) {
+                // Resolve overlap
+                const overlap = minDist - distance;
+                const offsetX = (overlap * dx) / distance / 2;
+                const offsetY = (overlap * dy) / distance / 2;
+
+                ball.style.left = currentLeft - offsetX + "px";
+                ball.style.top = currentTop - offsetY + "px";
+                otherBall.style.left = otherLeft + offsetX + "px";
+                otherBall.style.top = otherTop + offsetY + "px";
+
+                // Exchange velocities based on physics
+                const normalX = dx / distance;
+                const normalY = dy / distance;
+
+                const relativeVelocityX = ball.velocityX - otherBall.velocityX;
+                const relativeVelocityY = ball.velocityY - otherBall.velocityY;
+
+                const velocityAlongNormal = relativeVelocityX * normalX + relativeVelocityY * normalY;
+
+                if (velocityAlongNormal > 0) continue; // Balls are moving away; no need to resolve
+
+                const restitution = 0.8; // Elasticity of collision (1 = perfectly elastic)
+                const impulse = (-(1 + restitution) * velocityAlongNormal) / 2;
+
+                const impulseX = impulse * normalX;
+                const impulseY = impulse * normalY;
+
+                ball.velocityX -= impulseX;
+                ball.velocityY -= impulseY;
+
+                otherBall.velocityX += impulseX;
+                otherBall.velocityY += impulseY;
+            }
+        }
+    });
+
+    requestAnimationFrame(updateBalls);
+}
+
+// Start updating the balls
+updateBalls();
     </script>
 </body>
 </html>
