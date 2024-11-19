@@ -100,12 +100,13 @@
             transform: translateY(-5px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
-
-        .project-card img {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            margin-bottom: 8px;
+    
+            .project-card img {
+        width: 100%;          /* Makes the image take up full width of the card */
+        height: 200px;        /* Sets a fixed height for all images */
+        object-fit: cover;    /* Ensures the image fills the space without distortion */
+        border-radius: 6px;   /* Optional: Keeps the rounded corners */
+        margin-bottom: 8px;
         }
 
         .project-card h3 {
