@@ -312,7 +312,7 @@
 
                     if (distance < minDist) {
                         // Resolve overlap immediately
-                        const overlap = minDist - distance;
+                        const overlap = minDist - distance + 0.1; // Add small buffer to prevent re-sticking
                         const resolveX = (overlap * dx) / distance / 2;
                         const resolveY = (overlap * dy) / distance / 2;
 
