@@ -83,12 +83,14 @@
         text-align: center;
         position: relative;
         overflow: hidden;
-        transition: transform 0.3s, box-shadow 0.3s;
         cursor: pointer;
+        /* Enable smooth transform without affecting layout */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
       .project-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        /* Apply a subtle scale transform for a pop-out effect */
+        transform: scale(1.02);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
       }
       .project-card img {
         width: 100%;
@@ -101,22 +103,16 @@
         font-size: 1.5rem;
         margin-bottom: 6px;
         color: #333;
-        transition: transform 0.3s, font-size 0.3s;
+        /* No transform effect on heading to avoid layout shifts */
       }
       .project-card p {
         font-size: 0.9rem;
         color: #555;
         opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.3s, transform 0.3s;
-      }
-      .project-card:hover h3 {
-        font-size: 1rem;
-        transform: translateY(-20px);
+        transition: opacity 0.3s ease;
       }
       .project-card:hover p {
         opacity: 1;
-        transform: translateY(0);
       }
       /* Footer Styles */
       .footer {
