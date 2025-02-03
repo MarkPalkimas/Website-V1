@@ -86,9 +86,19 @@
         transition: transform 0.3s, box-shadow 0.3s;
         cursor: pointer;
       }
+      /* Only the hovered card is affected */
       .project-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+      /* Only affect the text inside the hovered card */
+      .project-card:hover > h3 {
+        font-size: 1rem;
+        transform: translateY(-20px);
+      }
+      .project-card:hover > p {
+        opacity: 1;
+        transform: translateY(0);
       }
       .project-card img {
         width: 100%;
@@ -110,15 +120,7 @@
         transform: translateY(10px);
         transition: opacity 0.3s, transform 0.3s;
       }
-      .project-card:hover h3 {
-        font-size: 1rem;
-        transform: translateY(-20px);
-      }
-      .project-card:hover p {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      /* Footer Styles */
+      /* Footer Styles - Matching index.html */
       .footer {
         background-color: rgba(171, 171, 171, 0.5);
         padding: 15px 0;
@@ -151,7 +153,21 @@
         font-size: 0.85rem;
         color: rgba(140, 140, 140, 0.7);
       }
-      /* Popup and Dimmed Overlay Styles */
+      .footer-bottom button {
+        background-color: #ff2222;
+        color: white;
+        padding: 10px 20px;
+        font-size: 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 0 5px;
+        transition: background-color 0.3s;
+      }
+      .footer-bottom button:hover {
+        background-color: #c21010;
+      }
+      /* Popup and Dimmed Overlay Styles (same as index.html) */
       .dimmed {
         position: fixed;
         top: 0;
@@ -199,6 +215,7 @@
     </style>
   </head>
   <body>
+    <!-- Header -->
     <header class="header">
       <div class="nav-bar">
         <div class="logo">Mark Palkimas</div>
@@ -209,6 +226,7 @@
       </div>
     </header>
 
+    <!-- Main Projects Content -->
     <main class="content">
       <h1 class="projects-header">My Projects</h1>
       <section class="projects-grid">
@@ -230,33 +248,35 @@
       </section>
     </main>
 
+    <!-- Footer (Matching index.html) -->
     <footer class="footer" id="contact">
       <p>Contact Me</p>
       <div class="social-links">
         <a href="https://www.instagram.com/ya.boimark" target="_blank">
-          <img src="iconmonstr-instagram-11-240.png" alt="Instagram">
+          <img src="iconmonstr-instagram-11-240.png" alt="Instagram" class="social-logo">
         </a>
         <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank">
-          <img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn">
+          <img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn" class="social-logo">
         </a>
         <a href="https://github.com/MarkPalkimas" target="_blank">
-          <img src="github-logo.png" alt="GitHub">
+          <img src="github-logo.png" alt="GitHub" class="social-logo">
         </a>
         <a href="mailto:mark.palkimas@gmail.com" target="_blank">
-          <img src="iconmonstr-gmail-1-240.png" alt="Gmail">
+          <img src="iconmonstr-gmail-1-240.png" alt="Gmail" class="social-logo">
         </a>
         <a href="https://www.youtube.com/@markpalkimas" target="_blank">
-          <img src="iconmonstr-youtube-6-240.png" alt="YouTube">
+          <img src="iconmonstr-youtube-6-240.png" alt="YouTube" class="social-logo">
         </a>
       </div>
       <div class="footer-bottom">
-        <p>© 2024 Mark Palkimas</p>
+        <button class="gravity-btn">Drop Ball</button>
+        <button class="admin-btn">Admin</button>
+        <p class="copyright">© 2024 Mark Palkimas</p>
       </div>
     </footer>
 
-    <!-- Dimmed Overlay -->
+    <!-- Dimmed Overlay and Social Popup (for Contact Me) -->
     <div class="dimmed"></div>
-    <!-- Social Popup -->
     <div class="social-popup">
       <div class="social-popup-content">
         <p>Contact Me:</p>
@@ -274,23 +294,20 @@
         const popupContent = document.querySelector(".popup-social-links");
         const dimmedOverlay = document.querySelector(".dimmed");
 
-        // When the contact link is clicked, show the popup and overlay.
         contactLink.addEventListener("click", (e) => {
           e.preventDefault();
-          // Hide the original social links (optional)
+          // Optionally hide the original social links
           socialLinks.classList.add("hidden");
-          // Display the popup and the dimmed overlay
+          // Show popup and dimmed overlay
           popup.style.display = "flex";
           dimmedOverlay.style.display = "block";
-          // Clone the social links into the popup
+          // Clone social links content into the popup
           popupContent.innerHTML = socialLinks.innerHTML;
         });
 
-        // Clicking the dimmed overlay closes the popup
         dimmedOverlay.addEventListener("click", () => {
           popup.style.display = "none";
           dimmedOverlay.style.display = "none";
-          // Restore the original social links’ visibility
           socialLinks.classList.remove("hidden");
         });
       });
