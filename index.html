@@ -1,478 +1,513 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mark Palkimas' Personal Website</title>
-  <link rel="stylesheet" href="app.css">
-  <script>
-    // Redirect to mobile version if on a mobile device
-    if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      window.location.href = "mobile.html";
-    }
-  </script>
-  <style>
-    /* Existing styles remain unchanged */
-    .profile-photo:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transition: box-shadow 0.3s;
-    }
-    /* In the original code the profile-photo.enlarged was used; we no longer transform it */
-    .social-popup, .about-popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-      z-index: 1010;
-      text-align: center;
-      max-width: 600px;
-    }
-    .social-popup-content, .about-popup-content {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-      text-align: center;
-    }
-    .social-popup-content img {
-      width: 60px;
-      height: 60px;
-      margin: 0 15px;
-    }
-    .dimmed {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 1005;
-      display: none;
-    }
-    .footer {
-      position: relative;
-      bottom: 0;
-    }
-    .intro-text.hidden {
-      display: none;
-    }
-    .social-links.hidden {
-      display: none;
-    }
-    .reset-btn {
-      display: none;
-      background-color: #ff2222;
-      color: white;
-      padding: 10px 20px;
-      font-size: 20px;
-      width: fit-content;
-      height: fit-content;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      z-index: 1020;
-    }
-    .reset-btn:hover {
-      background-color: #c21010;
-    }
-    .ball {
-      position: absolute;
-      border-radius: 50%;
-      z-index: 1000;
-      pointer-events: none;
-    }
-    /* NEW: Falling Quotes – They are placed behind the main content */
-    #quote-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      pointer-events: none;
-      z-index: -1;
-      overflow: hidden;
-    }
-    .falling-quote {
-      position: absolute;
-      font-size: 1.5rem;
-      font-family: 'Poppins', sans-serif;
-      color: rgba(0, 0, 0, 0.3);
-      opacity: 0.7;
-      white-space: nowrap;
-    }
-    @keyframes fall {
-      from {
-        top: -50px;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mark Palkimas' Personal Website</title>
+    <link rel="stylesheet" href="app.css" />
+    <script>
+      // Redirect to mobile version if on a mobile device
+      if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        window.location.href = "mobile.html";
       }
-      to {
-        top: 110vh;
+    </script>
+    <style>
+      /* --- Original and Essential Styles --- */
+      .profile-photo:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: box-shadow 0.3s;
       }
-    }
-  </style>
-</head>
-<body>
-  <!-- Dimming Overlay -->
-  <div class="dimmed"></div>
-  
-  <!-- Quote Container (initially empty; will be filled when balls are dropped) -->
-  <div id="quote-container"></div>
-  
-  <header class="header">
-    <div class="nav-bar">
-      <div class="logo">Mark Palkimas</div>
-      <ul class="nav-links">
-        <li><a href="#about" class="about-link">About</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="#contact" class="contact-link">Contact</a></li>
-      </ul>
-    </div>
-  </header>
-  
-  <main class="content">
-    <section id="about" class="section">
-      <img src="profile.jpg" alt="Profile Photo" class="profile-photo">
-      <div class="intro-text">
-        <h2>Hello, I'm Mark Palkimas</h2>
+      /* When enlarged (via click) the profile image changes as in your original code */
+      .profile-photo.enlarged {
+        width: 350px;
+        height: 490px;
+        position: absolute;
+        top: 30%;
+        left: -10%;
+        transform: translateY(-50%);
+        border-radius: 50%;
+        z-index: 1015;
+      }
+      .social-popup, .about-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        z-index: 1010;
+        text-align: center;
+        max-width: 600px;
+      }
+      .social-popup-content, .about-popup-content {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+      }
+      .social-popup-content img {
+        width: 60px;
+        height: 60px;
+        margin: 0 15px;
+      }
+      .dimmed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1005;
+        display: none;
+      }
+      .footer {
+        position: relative;
+        bottom: 0;
+      }
+      .intro-text.hidden {
+        display: none;
+      }
+      .social-links.hidden {
+        display: none;
+      }
+      .reset-btn {
+        display: none;
+        background-color: #ff2222;
+        color: white;
+        padding: 10px 20px;
+        font-size: 20px;
+        width: fit-content;
+        height: fit-content;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 1020;
+      }
+      .reset-btn:hover {
+        background-color: #c21010;
+      }
+      .ball {
+        position: absolute;
+        border-radius: 50%;
+        z-index: 1000;
+        pointer-events: none;
+      }
+      /* --- New: Falling Quotes Styles --- */
+      /* The quote container is placed behind the main content (z-index: -1) */
+      #quote-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        pointer-events: none;
+        z-index: -1;
+        overflow: hidden;
+      }
+      .falling-quote {
+        position: absolute;
+        font-size: 1.5rem;
+        font-family: 'Poppins', sans-serif;
+        color: rgba(0, 0, 0, 0.3);
+        opacity: 0.7;
+        white-space: nowrap;
+        transition: transform 0.3s;
+      }
+      /* We'll animate only the vertical position via CSS; horizontal oscillation is done in JS */
+      @keyframes fall {
+        from { top: -50px; }
+        to { top: 110vh; }
+      }
+      /* --- End Falling Quotes --- */
+    </style>
+  </head>
+  <body>
+    <!-- Dimming Overlay -->
+    <div class="dimmed"></div>
+
+    <!-- Quote Container (initially empty) -->
+    <div id="quote-container"></div>
+
+    <header class="header">
+      <div class="nav-bar">
+        <div class="logo">Mark Palkimas</div>
+        <ul class="nav-links">
+          <li><a href="#about" class="about-link">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="#contact" class="contact-link">Contact</a></li>
+        </ul>
       </div>
-      <div class="about-section about-popup">
-        <div class="about-popup-content">
-          <h2>About Me</h2>
-          <p>This section contains more detailed information about me and my professional background.</p>
+    </header>
+
+    <main class="content">
+      <section id="about" class="section">
+        <img src="profile.jpg" alt="Profile Photo" class="profile-photo">
+        <div class="intro-text">
+          <h2>Hello, I'm Mark Palkimas</h2>
+        </div>
+        <div class="about-section about-popup">
+          <div class="about-popup-content">
+            <h2>About Me</h2>
+            <p>This section contains more detailed information about me and my professional background.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="portfolio" class="section">
+        <!-- Portfolio content goes here -->
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Contact Me</p>
+      <div class="social-links">
+        <a href="https://www.instagram.com/ya.boimark" target="_blank">
+          <img src="iconmonstr-instagram-11-240.png" alt="Instagram" class="social-logo">
+        </a>
+        <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank">
+          <img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn" class="social-logo">
+        </a>
+        <a href="https://github.com/MarkPalkimas" target="_blank">
+          <img src="github-logo.png" alt="GitHub" class="social-logo">
+        </a>
+        <a href="mailto:mark.palkimas@gmail.com" target="_blank">
+          <img src="iconmonstr-gmail-1-240.png" alt="Gmail" class="social-logo">
+        </a>
+        <a href="https://www.youtube.com/@markpalkimas" target="_blank">
+          <img src="iconmonstr-youtube-6-240.png" alt="YouTube" class="social-logo">
+        </a>
+      </div>
+      
+      <div class="footer-bottom">
+        <button class="gravity-btn">Drop Ball</button>
+        <button class="admin-btn">Admin</button>
+        <p class="copyright">© 2024 Mark Palkimas</p>
+      </div>
+    </footer>
+
+    <div class="social-popup">
+      <div class="social-popup-content">
+        <p>Contact Links:</p>
+        <div class="popup-social-links">
+          <!-- Social links will be cloned here dynamically -->
         </div>
       </div>
-    </section>
-    
-    <section id="portfolio" class="section">
-      <!-- Portfolio content goes here -->
-    </section>
-  </main>
-  
-  <footer class="footer">
-    <p>Contact Me</p>
-    <div class="social-links">
-      <a href="https://www.instagram.com/ya.boimark" target="_blank">
-        <img src="iconmonstr-instagram-11-240.png" alt="Instagram" class="social-logo">
-      </a>
-      <a href="https://www.linkedin.com/in/mark-palkimas-27514a230/" target="_blank">
-        <img src="iconmonstr-linkedin-1-240.png" alt="LinkedIn" class="social-logo">
-      </a>
-      <a href="https://github.com/MarkPalkimas" target="_blank">
-        <img src="github-logo.png" alt="GitHub" class="social-logo">
-      </a>
-      <a href="mailto:mark.palkimas@gmail.com" target="_blank">
-        <img src="iconmonstr-gmail-1-240.png" alt="Gmail" class="social-logo">
-      </a>
-      <a href="https://www.youtube.com/@markpalkimas" target="_blank">
-        <img src="iconmonstr-youtube-6-240.png" alt="YouTube" class="social-logo">
-      </a>
     </div>
-    
-    <div class="footer-bottom">
-      <button class="gravity-btn">Drop Ball</button>
-      <button class="admin-btn">Admin</button>
-      <p class="copyright">© 2024 Mark Palkimas</p>
-    </div>
-  </footer>
-  
-  <div class="social-popup">
-    <div class="social-popup-content">
-      <p>Contact Links:</p>
-      <div class="popup-social-links">
-        <!-- Social links will be cloned here dynamically -->
-      </div>
-    </div>
-  </div>
-  
-  <!-- Reset button -->
-  <button class="reset-btn">Reset</button>
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const profilePic = document.querySelector(".profile-photo");
-      const aboutSection = document.querySelector(".about-popup");
-      const aboutLink = document.querySelector(".about-link");
-      const contactLink = document.querySelector(".contact-link");
-      const socialLinks = document.querySelector(".social-links");
-      const footer = document.querySelector(".footer");
-      const popup = document.querySelector(".social-popup");
-      const popupContent = document.querySelector(".popup-social-links");
-      const dimmedOverlay = document.querySelector(".dimmed");
-      const adminBtn = document.querySelector(".admin-btn");
-      const gravityBtn = document.querySelector(".gravity-btn");
-      const resetBtn = document.querySelector(".reset-btn");
-      const introText = document.querySelector(".intro-text");
-      const balls = [];
-      const headerHeight = document.querySelector('.header').offsetHeight;
-      
-      // NEW: Variable to ensure quotes start only once.
-      let quotesStarted = false;
-      let quoteIntervalID;
-      
-      // --- Popup Controls ---
-      profilePic.addEventListener("click", () => {
-        aboutSection.style.display = "flex";
-        dimmedOverlay.style.display = "block";
-        // (No enlargement transformation this time.)
-        introText.classList.add("hidden");
-      });
-      
-      aboutLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        aboutSection.style.display = "flex";
-        dimmedOverlay.style.display = "block";
-        introText.classList.add("hidden");
-      });
-      
-      contactLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        socialLinks.classList.add("hidden");
-        popup.style.display = "flex";
-        dimmedOverlay.style.display = "block";
-        popupContent.innerHTML = socialLinks.innerHTML;
-      });
-      
-      dimmedOverlay.addEventListener("click", () => {
-        aboutSection.style.display = "none";
-        popup.style.display = "none";
-        dimmedOverlay.style.display = "none";
-        introText.classList.remove("hidden");
-        socialLinks.classList.remove("hidden");
-      });
-      
-      adminBtn.addEventListener("click", () => {
-        const password = prompt("Enter password:");
-        if (password === "mark2005") {
-          window.location.href = "admin.html";
-        } else {
-          alert("Denied.");
-        }
-      });
-      
-      // --- Ball Gravity and Collision ---
-      gravityBtn.addEventListener("click", () => {
-        dropBall();
-        resetBtn.style.display = "block";
-        // Start the falling quotes if not already started.
-        if (!quotesStarted) {
-          startFallingQuotes();
-          quotesStarted = true;
-        }
-      });
-      
-      resetBtn.addEventListener("click", () => {
-        resetBalls();
-        resetBtn.style.display = "none";
-      });
-      
-      function dropBall() {
-        const ball = document.createElement("div");
-        ball.className = "ball";
-        ball.style.backgroundColor = getRandomColor();
-        ball.style.width = ball.style.height = Math.random() * 30 + 40 + "px";
-        ball.style.left = Math.random() * (window.innerWidth - 50) + "px";
-        ball.velocityY = Math.random() * 4 + 1;
-        ball.velocityX = Math.random() * 2 - 1;
-        ball.friction = 0.8;
-        ball.bounceOffset = 10; // Lower bounce height
+
+    <!-- Reset button -->
+    <button class="reset-btn">Reset</button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const profilePic = document.querySelector(".profile-photo");
+        const aboutPopup = document.querySelector(".about-popup");
+        const aboutLink = document.querySelector(".about-link");
+        const contactLink = document.querySelector(".contact-link");
+        const socialLinks = document.querySelector(".social-links");
+        const footer = document.querySelector(".footer");
+        const popup = document.querySelector(".social-popup");
+        const popupContent = document.querySelector(".popup-social-links");
+        const dimmedOverlay = document.querySelector(".dimmed");
+        const adminBtn = document.querySelector(".admin-btn");
+        const gravityBtn = document.querySelector(".gravity-btn");
+        const resetBtn = document.querySelector(".reset-btn");
+        const introText = document.querySelector(".intro-text");
+        const balls = [];
+        const headerHeight = document.querySelector('.header').offsetHeight;
         
-        document.body.appendChild(ball);
-        balls.push(ball);
-      }
-      
-      function resetBalls() {
-        balls.forEach(ball => ball.remove());
-        balls.length = 0;
-      }
-      
-      function getRandomColor() {
-        const letters = "0123456789ABCDEF";
-        let color = "#";
-        for (let i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-      }
-      
-      // NEW: Create falling quotes only after dropBall is triggered.
-      function startFallingQuotes() {
-        // Every 10 seconds create a new quote.
-        quoteIntervalID = setInterval(() => {
-          createFallingQuote();
-        }, 10000);
-      }
-      
-      // NEW: Create a falling quote element.
-      function createFallingQuote() {
-        const quotes = [
-          "Life isn’t about what you know, It’s about what you’re able to figure out.",
-          "The best time to plant a tree is 20 years ago, the second best time is today.",
-          "The rich get richer because the poor see every opportunity as a scam",
-          "Money is not the key to happiness, \nit is the key to pursuing opportunities.",
-          "Cold water feels warm when your hands are freezing.",
-          "Regret is proof you cared. But growth is proof you learned."
-        ];
-        const quoteText = quotes[Math.floor(Math.random() * quotes.length)];
-        const quoteElem = document.createElement("div");
-        quoteElem.className = "falling-quote";
-        quoteElem.innerText = quoteText;
-        // Position the quote at a random horizontal position
-        quoteElem.style.left = Math.random() * (window.innerWidth - 300) + "px";
-        // Start near the top (but not offscreen)
-        quoteElem.style.top = "0px";
-        // Apply a CSS animation to make it fall over 20s
-        quoteElem.style.animation = "fall 20s linear forwards";
-        // Append the quote to the container (which is behind main content)
-        document.getElementById("quote-container").appendChild(quoteElem);
-        // Remove the quote after animation completes
-        setTimeout(() => {
-          if (quoteElem.parentElement)
-            quoteElem.parentElement.removeChild(quoteElem);
-        }, 21000);
-      }
-      
-      // --- Update Balls (with collisions) ---
-      function updateBalls() {
-        const velocityCutoff = 0.01; // Threshold for stopping jittering
+        // NEW: Falling quotes will only start when a ball is dropped.
+        let quotesStarted = false;
+        let quoteStartTime = Date.now(); // used for oscillation
         
-        balls.forEach(ball => {
-          let currentTop = parseFloat(ball.style.top) || 0;
-          let currentLeft = parseFloat(ball.style.left) || 0;
-          let newTop = currentTop + ball.velocityY;
-          let newLeft = currentLeft + ball.velocityX;
-          
-          // Bounce off floor: using footer position as reference (as in original code)
-          const footerTop = footer.getBoundingClientRect().top + window.scrollY + 10;
-          if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
-            newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
-            ball.velocityY *= -ball.friction;
-            if (Math.abs(ball.velocityY) < velocityCutoff) {
-              ball.velocityY = 0;
-            }
-          } else {
-            ball.velocityY += 0.3; // Gravity effect
-          }
-          
-          // Bounce off walls
-          if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
-            newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
-            ball.velocityX *= -1;
-            if (Math.abs(ball.velocityX) < velocityCutoff) {
-              ball.velocityX = 0;
-            }
-          }
-          
-          // Stop small movements
-          if (Math.abs(ball.velocityX) < velocityCutoff) ball.velocityX = 0;
-          if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
-          
-          ball.style.top = newTop + "px";
-          ball.style.left = newLeft + "px";
+        // --- Popup Controls ---
+        profilePic.addEventListener("click", () => {
+          aboutPopup.style.display = "flex";
+          dimmedOverlay.style.display = "block";
+          // Add the enlargement so the profile image pops up as before.
+          profilePic.classList.add("enlarged");
+          introText.classList.add("hidden");
         });
         
-        // New: Check collisions between balls and falling quotes.
-        handleBallQuoteCollisions();
+        aboutLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          aboutPopup.style.display = "flex";
+          dimmedOverlay.style.display = "block";
+          profilePic.classList.add("enlarged");
+          introText.classList.add("hidden");
+        });
         
-        handleBallCollisions();
-        requestAnimationFrame(updateBalls);
-      }
-      
-      // --- Handle Collisions Between Balls and Other Balls (as before) ---
-      function handleBallCollisions() {
-        const velocityCutoff = 0.01;
-        const dampingFactor = 0.4;
-        try {
-          for (let i = 0; i < balls.length; i++) {
-            const ballA = balls[i];
-            const radiusA = parseFloat(ballA.style.width) / 2;
-            const xA = parseFloat(ballA.style.left) + radiusA;
-            const yA = parseFloat(ballA.style.top) + radiusA;
-            for (let j = i + 1; j < balls.length; j++) {
-              const ballB = balls[j];
-              const radiusB = parseFloat(ballB.style.width) / 2;
-              const xB = parseFloat(ballB.style.left) + radiusB;
-              const yB = parseFloat(ballB.style.top) + radiusB;
-              const dx = xA - xB;
-              const dy = yA - yB;
-              const distance = Math.sqrt(dx * dx + dy * dy);
-              if (distance < radiusA + radiusB) {
-                const nx = dx / distance;
-                const ny = dy / distance;
-                const dvx = ballA.velocityX - ballB.velocityX;
-                const dvy = ballA.velocityY - ballB.velocityY;
-                const impactSpeed = dvx * nx + dvy * ny;
-                if (impactSpeed < 0) {
-                  const impulse = (2 * impactSpeed) / (radiusA + radiusB);
-                  const isBallAStopped = Math.abs(ballA.velocityX) < velocityCutoff && Math.abs(ballA.velocityY) < velocityCutoff;
-                  const isBallBStopped = Math.abs(ballB.velocityX) < velocityCutoff && Math.abs(ballB.velocityY) < velocityCutoff;
-                  const adjustedImpulse = (isBallAStopped || isBallBStopped) ? impulse * dampingFactor : impulse;
-                  ballA.velocityX -= adjustedImpulse * radiusB * nx;
-                  ballA.velocityY -= adjustedImpulse * radiusB * ny;
-                  ballB.velocityX += adjustedImpulse * radiusA * nx;
-                  ballB.velocityY += adjustedImpulse * radiusA * ny;
-                  if (Math.abs(ballA.velocityX) < velocityCutoff) ballA.velocityX = 0;
-                  if (Math.abs(ballA.velocityY) < velocityCutoff) ballA.velocityY = 0;
-                  if (Math.abs(ballB.velocityX) < velocityCutoff) ballB.velocityX = 0;
-                  if (Math.abs(ballB.velocityY) < velocityCutoff) ballB.velocityY = 0;
+        contactLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          socialLinks.classList.add("hidden");
+          popup.style.display = "flex";
+          dimmedOverlay.style.display = "block";
+          popupContent.innerHTML = socialLinks.innerHTML;
+        });
+        
+        dimmedOverlay.addEventListener("click", () => {
+          aboutPopup.style.display = "none";
+          popup.style.display = "none";
+          dimmedOverlay.style.display = "none";
+          profilePic.classList.remove("enlarged");
+          introText.classList.remove("hidden");
+          socialLinks.classList.remove("hidden");
+        });
+        
+        adminBtn.addEventListener("click", () => {
+          const password = prompt("Enter password:");
+          if (password === "mark2005") {
+            window.location.href = "admin.html";
+          } else {
+            alert("Denied.");
+          }
+        });
+        
+        // --- Ball Gravity and Collision ---
+        gravityBtn.addEventListener("click", () => {
+          dropBall();
+          resetBtn.style.display = "block";
+          if (!quotesStarted) {
+            startFallingQuotes();
+            quotesStarted = true;
+          }
+        });
+        
+        resetBtn.addEventListener("click", () => {
+          resetBalls();
+          resetBtn.style.display = "none";
+        });
+        
+        function dropBall() {
+          const ball = document.createElement("div");
+          ball.className = "ball";
+          ball.style.backgroundColor = getRandomColor();
+          ball.style.width = ball.style.height = Math.random() * 30 + 40 + "px";
+          ball.style.left = Math.random() * (window.innerWidth - 50) + "px";
+          ball.velocityY = Math.random() * 4 + 1;
+          ball.velocityX = Math.random() * 2 - 1;
+          ball.friction = 0.8;
+          ball.bounceOffset = 10; // Lower bounce height
+          // Initialize top if not set
+          ball.style.top = "0px";
+          document.body.appendChild(ball);
+          balls.push(ball);
+        }
+        
+        function resetBalls() {
+          balls.forEach(ball => ball.remove());
+          balls.length = 0;
+        }
+        
+        function getRandomColor() {
+          const letters = "0123456789ABCDEF";
+          let color = "#";
+          for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        }
+        
+        // NEW: Falling Quotes
+        // Instead of a fixed CSS animation, we animate only the top property via CSS keyframes.
+        // We'll update each quote's horizontal position (oscillation) in JavaScript.
+        function startFallingQuotes() {
+          // Create a new quote every 10 seconds.
+          setInterval(() => {
+            createFallingQuote();
+          }, 10000);
+          // Start updating the oscillation of all quotes.
+          updateQuotes();
+        }
+        
+        function createFallingQuote() {
+          const quotes = [
+            "Life isn’t about what you know, It’s about what you’re able to figure out.",
+            "The best time to plant a tree is 20 years ago, the second best time is today.",
+            "The rich get richer because the poor see every opportunity as a scam",
+            "Money is not the key to happiness, \nit is the key to pursuing opportunities.",
+            "Cold water feels warm when your hands are freezing.",
+            "Regret is proof you cared. But growth is proof you learned."
+          ];
+          const quoteText = quotes[Math.floor(Math.random() * quotes.length)];
+          const quoteElem = document.createElement("div");
+          quoteElem.className = "falling-quote";
+          quoteElem.innerText = quoteText;
+          // Set a random initial horizontal position and store it
+          const initLeft = Math.random() * (window.innerWidth - 300);
+          quoteElem.dataset.initialLeft = initLeft;
+          // Also assign a random oscillation amplitude and phase
+          quoteElem.dataset.amp = (Math.random() * 20 + 10); // amplitude in pixels
+          quoteElem.dataset.phase = Math.random() * 2 * Math.PI;
+          // Set initial position
+          quoteElem.style.left = initLeft + "px";
+          quoteElem.style.top = "-50px";
+          // Use the keyframes "fall" to animate vertical motion over 20s
+          quoteElem.style.animation = "fall 20s linear forwards";
+          document.getElementById("quote-container").appendChild(quoteElem);
+          // Remove the quote after animation ends
+          setTimeout(() => {
+            if (quoteElem.parentElement)
+              quoteElem.parentElement.removeChild(quoteElem);
+          }, 21000);
+        }
+        
+        // Update horizontal oscillation for all falling quotes
+        function updateQuotes() {
+          const now = Date.now();
+          const quotes = document.querySelectorAll(".falling-quote");
+          quotes.forEach(quote => {
+            const initLeft = parseFloat(quote.dataset.initialLeft) || 0;
+            const amp = parseFloat(quote.dataset.amp) || 0;
+            const phase = parseFloat(quote.dataset.phase) || 0;
+            // Use time to calculate an oscillation (sine wave)
+            const t = (now - quoteStartTime) / 1000; // time in seconds
+            const offset = amp * Math.sin(t + phase);
+            quote.style.left = (initLeft + offset) + "px";
+          });
+          requestAnimationFrame(updateQuotes);
+        }
+        
+        // --- Update Balls and Handle Collisions ---
+        function updateBalls() {
+          const velocityCutoff = 0.01; // Threshold for stopping jittering
+          balls.forEach(ball => {
+            let currentTop = parseFloat(ball.style.top) || 0;
+            let currentLeft = parseFloat(ball.style.left) || 0;
+            let newTop = currentTop + ball.velocityY;
+            let newLeft = currentLeft + ball.velocityX;
+            
+            // Bounce off floor using footer as reference
+            const footerTop = footer.getBoundingClientRect().top + window.scrollY + 10;
+            if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
+              newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
+              ball.velocityY *= -ball.friction;
+              if (Math.abs(ball.velocityY) < velocityCutoff) {
+                ball.velocityY = 0;
+              }
+            } else {
+              ball.velocityY += 0.3; // Gravity effect
+            }
+            
+            // Bounce off walls
+            if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
+              newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
+              ball.velocityX *= -1;
+              if (Math.abs(ball.velocityX) < velocityCutoff) {
+                ball.velocityX = 0;
+              }
+            }
+            
+            if (Math.abs(ball.velocityX) < velocityCutoff) ball.velocityX = 0;
+            if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
+            
+            ball.style.top = newTop + "px";
+            ball.style.left = newLeft + "px";
+          });
+          
+          // Handle collisions between balls and quotes (and react on the quotes)
+          handleBallQuoteCollisions();
+          
+          handleBallCollisions();
+          requestAnimationFrame(updateBalls);
+        }
+        
+        // --- Handle Ball–Ball Collisions (as before) ---
+        function handleBallCollisions() {
+          const velocityCutoff = 0.01;
+          const dampingFactor = 0.4;
+          try {
+            for (let i = 0; i < balls.length; i++) {
+              const ballA = balls[i];
+              const radiusA = parseFloat(ballA.style.width) / 2;
+              const xA = parseFloat(ballA.style.left) + radiusA;
+              const yA = parseFloat(ballA.style.top) + radiusA;
+              for (let j = i + 1; j < balls.length; j++) {
+                const ballB = balls[j];
+                const radiusB = parseFloat(ballB.style.width) / 2;
+                const xB = parseFloat(ballB.style.left) + radiusB;
+                const yB = parseFloat(ballB.style.top) + radiusB;
+                const dx = xA - xB;
+                const dy = yA - yB;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < radiusA + radiusB) {
+                  const nx = dx / distance;
+                  const ny = dy / distance;
+                  const dvx = ballA.velocityX - ballB.velocityX;
+                  const dvy = ballA.velocityY - ballB.velocityY;
+                  const impactSpeed = dvx * nx + dvy * ny;
+                  if (impactSpeed < 0) {
+                    const impulse = (2 * impactSpeed) / (radiusA + radiusB);
+                    const isBallAStopped = Math.abs(ballA.velocityX) < velocityCutoff && Math.abs(ballA.velocityY) < velocityCutoff;
+                    const isBallBStopped = Math.abs(ballB.velocityX) < velocityCutoff && Math.abs(ballB.velocityY) < velocityCutoff;
+                    const adjustedImpulse = (isBallAStopped || isBallBStopped) ? impulse * dampingFactor : impulse;
+                    ballA.velocityX -= adjustedImpulse * radiusB * nx;
+                    ballA.velocityY -= adjustedImpulse * radiusB * ny;
+                    ballB.velocityX += adjustedImpulse * radiusA * nx;
+                    ballB.velocityY += adjustedImpulse * radiusA * ny;
+                    if (Math.abs(ballA.velocityX) < velocityCutoff) ballA.velocityX = 0;
+                    if (Math.abs(ballA.velocityY) < velocityCutoff) ballA.velocityY = 0;
+                    if (Math.abs(ballB.velocityX) < velocityCutoff) ballB.velocityX = 0;
+                    if (Math.abs(ballB.velocityY) < velocityCutoff) ballB.velocityY = 0;
+                  }
                 }
               }
             }
+          } catch (error) {
+            console.error("Error handling collisions:", error);
           }
-        } catch (error) {
-          console.error('Error handling collisions:', error);
         }
-      }
-      
-      // NEW: Handle collisions between balls and falling quotes.
-      function handleBallQuoteCollisions() {
-        const quoteElements = document.querySelectorAll(".falling-quote");
-        // For each ball, check against each quote element.
-        balls.forEach(ball => {
-          // Get ball center and radius.
-          const ballRadius = parseFloat(ball.style.width) / 2;
-          const ballX = parseFloat(ball.style.left) + ballRadius;
-          const ballY = parseFloat(ball.style.top) + ballRadius;
-          quoteElements.forEach(quote => {
-            const rect = quote.getBoundingClientRect();
-            // Convert rect to page coordinates:
-            const quoteX = rect.left;
-            const quoteY = rect.top + window.scrollY;
-            const quoteWidth = rect.width;
-            const quoteHeight = rect.height;
-            // Simple rectangle-circle collision:
-            // Find the closest point on the rectangle to the ball's center.
-            const closestX = Math.max(quoteX, Math.min(ballX, quoteX + quoteWidth));
-            const closestY = Math.max(quoteY, Math.min(ballY, quoteY + quoteHeight));
-            const distanceX = ballX - closestX;
-            const distanceY = ballY - closestY;
-            const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-            if (distance < ballRadius) {
-              // Reflect ball's velocity in a simple way.
-              ball.velocityX = -ball.velocityX * 0.8;
-              ball.velocityY = -ball.velocityY * 0.8;
-            }
+        
+        // --- Handle Collisions Between Balls and Falling Quotes ---
+        function handleBallQuoteCollisions() {
+          const quoteElements = document.querySelectorAll(".falling-quote");
+          balls.forEach(ball => {
+            const ballRadius = parseFloat(ball.style.width) / 2;
+            const ballX = parseFloat(ball.style.left) + ballRadius;
+            const ballY = parseFloat(ball.style.top) + ballRadius;
+            quoteElements.forEach(quote => {
+              const rect = quote.getBoundingClientRect();
+              const quoteX = rect.left;
+              const quoteY = rect.top + window.scrollY;
+              const quoteWidth = rect.width;
+              const quoteHeight = rect.height;
+              // Find closest point on the quote's rectangle to the ball's center.
+              const closestX = Math.max(quoteX, Math.min(ballX, quoteX + quoteWidth));
+              const closestY = Math.max(quoteY, Math.min(ballY, quoteY + quoteHeight));
+              const distanceX = ballX - closestX;
+              const distanceY = ballY - closestY;
+              const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+              if (distance < ballRadius) {
+                // Reflect ball's velocity (with damping)
+                ball.velocityX = -ball.velocityX * 0.8;
+                ball.velocityY = -ball.velocityY * 0.8;
+                // Make the quote react: temporarily scale up.
+                quote.style.transform = "scale(1.2)";
+                setTimeout(() => {
+                  quote.style.transform = "scale(1)";
+                }, 200);
+              }
+            });
+          });
+        }
+        
+        let lastScrollTop = window.scrollY;
+        window.addEventListener('scroll', () => {
+          const scrollTop = window.scrollY;
+          const scrollDirection = scrollTop > lastScrollTop ? 1 : -1;
+          lastScrollTop = scrollTop;
+          balls.forEach(ball => {
+            ball.velocityY += scrollDirection * 0.5;
           });
         });
-      }
-      
-      let lastScrollTop = window.scrollY;
-      window.addEventListener('scroll', () => {
-        const scrollTop = window.scrollY;
-        const scrollDirection = scrollTop > lastScrollTop ? 1 : -1;
-        lastScrollTop = scrollTop;
-        balls.forEach(ball => {
-          ball.velocityY += scrollDirection * 0.5;
-        });
+        
+        updateBalls();
       });
-      
-      updateBalls();
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
