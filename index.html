@@ -33,8 +33,8 @@
       body {
         display: flex;
         flex-direction: column;
-        /* Set to slightly more than viewport so extra content (drop ball/admin) is offscreen initially */
-        min-height: 105vh;
+        /* Changed from 105vh to 100vh so the footer is visible on initial load */
+        min-height: 100vh;
       }
       /* =======================
          Header & NavBar
@@ -134,7 +134,7 @@
         margin-bottom: 5px;
       }
       /* Extra content (drop ball, admin buttons, copyright)
-         is placed below the footer and initially offscreen */
+         is placed below the footer and remains offscreen until you scroll */
       .extra-content {
         width: 100%;
         text-align: center;
