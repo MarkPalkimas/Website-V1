@@ -70,6 +70,7 @@
         .footer {
             position: relative;
             bottom: 0;
+            background-color: rgba(171, 171, 171, 1);
         }
         .intro-text.hidden {
             display: none;
@@ -111,21 +112,44 @@
             height: 100vh;
             pointer-events: none;
             overflow: hidden;
-            z-index: -1;
+            z-index: 0;
         }
         .falling-quote {
             position: absolute;
             font-size: 1.5rem;
             font-family: 'Poppins', sans-serif;
-            color: rgba(0, 0, 0, 0.4);
-            opacity: 0.7;
+            color: rgba(0, 0, 0, 0.7);
+            opacity: 0.9;
             white-space: nowrap;
             text-shadow: 1px 1px 3px rgba(255,255,255,0.8);
+        }
+        @keyframes fall {
+            0% {
+                transform: translate(0, -60px);
+                opacity: 0.9;
+            }
+            25% {
+                transform: translate(20px, 25%);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-20px, 50%);
+                opacity: 0.7;
+            }
+            75% {
+                transform: translate(20px, 75%);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(0, 110vh);
+                opacity: 0;
+            }
         }
         /* New Layout Adjustments for Modern Full-Window Sizing */
         .content {
             padding-top: 70px;
-            min-height: calc(100vh - 70px);
+            /* Adjust the min-height so that footer is visible at page load */
+            min-height: calc(100vh - 70px - 150px);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -141,7 +165,7 @@
             align-items: center;
         }
         .profile-photo {
-            margin: 0 20px 0 20px;
+            margin: 0 20px;
         }
         .intro-text {
             margin: 20px;
@@ -242,7 +266,8 @@
             const introText = document.querySelector(".intro-text");
             const balls = [];
             const headerHeight = document.querySelector('.header').offsetHeight;
-            const footerTop = window.innerHeight - footer.offsetHeight + 70;
+            // Using a fixed footer height of 150px for layout calculations
+            const footerHeight = 150; 
 
             gravityBtn.addEventListener("click", () => {
                 dropBall();
@@ -340,13 +365,12 @@
                     let newTop = currentTop + ball.velocityY;
                     let newLeft = currentLeft + ball.velocityX;
 
-                    // Bounce off floor at 30px lower than 
-                    const footerTop = footer.getBoundingClientRect().top + window.scrollY + 10;
+                    // Bounce off floor at 10px above footer (footer is below content)
+                    const footerTop = footer.getBoundingClientRect().top + window.scrollY - 10;
                     if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
                         newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
                         ball.velocityY *= -ball.friction;
 
-                        // Apply velocity cutoff
                         if (Math.abs(ball.velocityY) < velocityCutoff) {
                             ball.velocityY = 0;
                         }
@@ -359,17 +383,14 @@
                         newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
                         ball.velocityX *= -1;
 
-                        // Apply velocity cutoff
                         if (Math.abs(ball.velocityX) < velocityCutoff) {
                             ball.velocityX = 0;
                         }
                     }
 
-                    // Stop small movements from jittering
                     if (Math.abs(ball.velocityX) < velocityCutoff) ball.velocityX = 0;
                     if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
 
-                    // Update position
                     ball.style.top = newTop + "px";
                     ball.style.left = newLeft + "px";
                 });
@@ -379,8 +400,8 @@
             }
 
             function handleBallCollisions() {
-                const velocityCutoff = 0.01; // Minimum velocity to consider as motion
-                const dampingFactor = 0.4; // Factor for damping collision response
+                const velocityCutoff = 0.01;
+                const dampingFactor = 0.4;
 
                 try {
                     for (let i = 0; i < balls.length; i++) {
@@ -395,39 +416,30 @@
                             const xB = parseFloat(ballB.style.left) + radiusB;
                             const yB = parseFloat(ballB.style.top) + radiusB;
 
-                            // Calculate the distance between ball centers
                             const dx = xA - xB;
                             const dy = yA - yB;
                             const distance = Math.sqrt(dx * dx + dy * dy);
 
-                            // Check if the balls are colliding
                             if (distance < radiusA + radiusB) {
-                                // Normalize the collision vector
                                 const nx = dx / distance;
                                 const ny = dy / distance;
 
-                                // Calculate relative velocity along the collision axis
                                 const dvx = ballA.velocityX - ballB.velocityX;
                                 const dvy = ballA.velocityY - ballB.velocityY;
                                 const impactSpeed = dvx * nx + dvy * ny;
 
-                                // Resolve only if balls are moving towards each other
                                 if (impactSpeed < 0) {
-                                    // Impulse magnitude
                                     const impulse = (2 * impactSpeed) / (radiusA + radiusB);
 
-                                    // Adjust impulse with damping if velocity is low
                                     const isBallAStopped = Math.abs(ballA.velocityX) < velocityCutoff && Math.abs(ballA.velocityY) < velocityCutoff;
                                     const isBallBStopped = Math.abs(ballB.velocityX) < velocityCutoff && Math.abs(ballB.velocityY) < velocityCutoff;
                                     const adjustedImpulse = (isBallAStopped || isBallBStopped) ? impulse * dampingFactor : impulse;
 
-                                    // Apply the impulse to velocities
                                     ballA.velocityX -= adjustedImpulse * radiusB * nx;
                                     ballA.velocityY -= adjustedImpulse * radiusB * ny;
                                     ballB.velocityX += adjustedImpulse * radiusA * nx;
                                     ballB.velocityY += adjustedImpulse * radiusA * ny;
 
-                                    // Apply velocity cutoff to stop balls with low velocity
                                     if (Math.abs(ballA.velocityX) < velocityCutoff) ballA.velocityX = 0;
                                     if (Math.abs(ballA.velocityY) < velocityCutoff) ballA.velocityY = 0;
                                     if (Math.abs(ballB.velocityX) < velocityCutoff) ballB.velocityX = 0;
@@ -445,18 +457,17 @@
 
             window.addEventListener('scroll', () => {
                 const scrollTop = window.scrollY;
-                const scrollDirection = scrollTop > lastScrollTop ? 1 : -1; // 1 for down, -1 for up
+                const scrollDirection = scrollTop > lastScrollTop ? 1 : -1;
                 lastScrollTop = scrollTop;
 
-                // Apply gravity effect to each ball based on scroll direction
                 balls.forEach(ball => {
-                    ball.velocityY += scrollDirection * 0.5; // Adjust this value for stronger or weaker gravity effect
+                    ball.velocityY += scrollDirection * 0.5;
                 });
             });
 
             updateBalls();
 
-            // Falling Quotes Background Feature
+            // Falling Quotes Background Feature with Horizontal Movement and Cascade Effect
             (function() {
                 const quotes = [
                     "Life isn’t about what you know, It’s about what you’re able to figure out.",
@@ -473,19 +484,13 @@
                     const quoteElem = document.createElement("div");
                     quoteElem.className = "falling-quote";
                     quoteElem.innerText = quoteText;
-                    // Set initial random horizontal position (ensuring it stands out)
+                    // Set a random horizontal starting position, ensuring quotes don't overflow the viewport
                     quoteElem.style.left = Math.random() * (window.innerWidth - 300) + "px";
                     // Start above the viewport
                     quoteElem.style.top = "-60px";
-                    // Reset any transform
-                    quoteElem.style.transform = "translateY(0)";
+                    // Apply the falling animation with horizontal oscillation
+                    quoteElem.style.animation = "fall 12s linear forwards";
                     quoteContainer.appendChild(quoteElem);
-                    // Force reflow to ensure transition starts
-                    quoteElem.offsetWidth;
-                    // Animate the quote falling down; using a 12s duration for more presence
-                    quoteElem.style.transition = "transform 12s linear, opacity 12s linear";
-                    quoteElem.style.transform = "translateY(" + (window.innerHeight + 100) + "px)";
-                    quoteElem.style.opacity = "0";
                     // Remove the element after animation completes
                     setTimeout(() => {
                         if (quoteElem.parentElement === quoteContainer) {
@@ -494,7 +499,7 @@
                     }, 12100);
                 }
 
-                // Cycle quotes: ensure up to 2 quotes are visible at any time
+                // Ensure two quotes are visible at a time by checking every 4 seconds
                 setInterval(() => {
                     if (quoteContainer.childElementCount < 2) {
                         createFallingQuote();
