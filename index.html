@@ -389,7 +389,7 @@
             }
             
             // Floor collision using footer as reference.
-            const footerTop = footer.getBoundingClientRect().top + window.scrollY - 20;
+            const footerTop = footer.getBoundingClientRect().top + window.scrollY;
             if (newTop + ball.radius * 2 >= footerTop) {
               newTop = footerTop - ball.radius * 2;
               ball.velocityY = -ball.velocityY * RESTITUTION;
