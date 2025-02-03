@@ -73,7 +73,7 @@
       border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
     .card h2 {
       margin-bottom: 0.5rem;
@@ -88,7 +88,7 @@
       font-size: 0.9rem;
       color: #777;
     }
-    /* A cool pulse animation for status indicators */
+    /* Pulse animation for status indicators */
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(255,204,0,0.7); }
       70% { box-shadow: 0 0 0 10px rgba(255,204,0,0); }
@@ -134,7 +134,7 @@
     <div class="sidebar">
       <a href="#dashboard">Dashboard</a>
       <a href="#users">User Management</a>
-      <a href="#logs">Access Logs</a>
+      <a href="#logs">Index Traffic Logs</a>
       <a href="#reports">Reports</a>
       <a href="#settings">Settings</a>
       <a href="#logout">Logout</a>
@@ -142,16 +142,16 @@
     <div class="main-content">
       <div class="card" id="dashboard">
         <h2>Dashboard <span class="pulse"></span></h2>
-        <p>Welcome, Admin! Here you can view the latest activity, system stats, and more. Use the sidebar to navigate through various sections.</p>
+        <p>Welcome, Admin! Monitor all website activity from the dashboard.</p>
       </div>
       <div class="card" id="analytics">
         <h2>Analytics</h2>
-        <p>Monitor your website's traffic, user engagement, and performance metrics. (Insert dynamic charts here with your favorite library.)</p>
+        <p>View real-time statistics and performance metrics for your site.</p>
       </div>
       <div class="card" id="logs">
-        <h2>Access Logs</h2>
-        <p>This section is intended to show access logs. <em>Note:</em> Actual IP tracking requires server‑side implementation and user consent.</p>
-        <!-- Placeholder table for logs -->
+        <h2>Index Traffic Logs</h2>
+        <p>This section displays a log of visitor IPs accessing the index page. (Actual IP logging is handled server-side.)</p>
+        <!-- Placeholder table for IP logs -->
         <table border="1" style="width:100%; background:#222; color:#e0e0e0; text-align:left; border-collapse: collapse;">
           <thead>
             <tr>
@@ -164,15 +164,15 @@
             <tr>
               <td style="padding: 0.5rem;">2024-02-03 12:34</td>
               <td style="padding: 0.5rem;">192.168.1.1</td>
-              <td style="padding: 0.5rem;">Login</td>
+              <td style="padding: 0.5rem;">Visited Index</td>
             </tr>
-            <!-- More rows can be added here dynamically -->
+            <!-- Additional rows would be populated dynamically from server logs -->
           </tbody>
         </table>
       </div>
       <div class="card" id="settings">
         <h2>Settings</h2>
-        <p>Manage website settings, update preferences, and configure system options.</p>
+        <p>Manage website settings and configure system options.</p>
       </div>
     </div>
   </div>
@@ -180,8 +180,8 @@
     &copy; 2024 Mark Palkimas. All rights reserved.
   </footer>
   <script>
-    // You can add interactive features here, such as real-time notifications or dynamic chart updates.
-    // Note: For any sensitive tracking (like logging IP addresses), you must implement server-side solutions with proper security and user consent.
+    // Note: Real-time tracking of visitor IPs from index.html must be implemented on the server.
+    // This dashboard simply displays placeholder data for illustrative purposes.
   </script>
 </body>
 </html>
