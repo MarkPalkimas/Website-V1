@@ -86,6 +86,7 @@
       transition: transform 0.3s, box-shadow 0.3s;
       cursor: pointer;
     }
+    /* Only the hovered project-card reacts */
     .project-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -110,6 +111,7 @@
       transform: translateY(10px);
       transition: opacity 0.3s, transform 0.3s;
     }
+    /* Only affect the hovered card’s text */
     .project-card:hover h3 {
       font-size: 1rem;
       transform: translateY(-20px);
@@ -137,7 +139,7 @@
       margin-bottom: 0;
     }
     .social-links img {
-      width: 60px;  /* Updated to match index (uniform sizing) */
+      width: 60px;
       height: 60px;
       transition: transform 0.3s, filter 0.3s;
     }
@@ -150,7 +152,7 @@
       font-size: 0.85rem;
       color: rgba(140, 140, 140, 0.7);
     }
-    /* Popup and Dimmed Overlay Styles (exactly like index.html) */
+    /* Popup and Dimmed Overlay Styles (matching index.html) */
     .dimmed {
       position: fixed;
       top: 0;
@@ -182,6 +184,10 @@
       gap: 30px;
       text-align: center;
     }
+    .social-popup-content p, .about-popup-content p {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
     .social-popup-content img, .about-popup-content img {
       width: 60px;
       height: 60px;
@@ -208,7 +214,7 @@
         <h3>Website Full File</h3>
         <p>My first website showcasing innovative projects, creative solutions, and technical expertise in software development.</p>
       </div>
-      <div class="project-card" onclick="window.open('https://github.com/MarkPalkimas/MonOP_SmartContracts_V1-V5', '_blank')">
+      <div class="project-card" onclick="window.open('https://github.com/MarkPalkimas/MonOP_SmartContracts_V1-V4', '_blank')">
         <img src="project2.png" alt="Project 2">
         <h3>MonOP SmartContracts V1-4</h3>
         <p>Four versions of my Solidity smart contract, each focused on security, encryption, speed, and optimization.</p>
@@ -249,7 +255,7 @@
   <!-- Social Popup -->
   <div class="social-popup">
     <div class="social-popup-content">
-      <p>Contact Links:</p>
+      <p>Contact Me:</p>
       <div class="popup-social-links">
         <!-- Social links will be cloned here -->
       </div>
@@ -266,7 +272,7 @@
 
       contactLink.addEventListener("click", (e) => {
         e.preventDefault();
-        // Hide the original social links (if needed)
+        // Hide the original social links if needed
         socialLinks.classList.add("hidden");
         // Display the popup and overlay
         popup.style.display = "flex";
@@ -278,7 +284,7 @@
       dimmedOverlay.addEventListener("click", () => {
         popup.style.display = "none";
         dimmedOverlay.style.display = "none";
-        // Restore the social links visibility
+        // Restore the original social links visibility
         socialLinks.classList.remove("hidden");
       });
     });
