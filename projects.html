@@ -137,8 +137,8 @@
       margin-bottom: 0;
     }
     .social-links img {
-      width: 36px;
-      height: 36px;
+      width: 60px;  /* Updated to match index (uniform sizing) */
+      height: 60px;
       transition: transform 0.3s, filter 0.3s;
     }
     .social-links img:hover {
@@ -150,7 +150,7 @@
       font-size: 0.85rem;
       color: rgba(140, 140, 140, 0.7);
     }
-    /* Popup and Dimmed Overlay Styles */
+    /* Popup and Dimmed Overlay Styles (exactly like index.html) */
     .dimmed {
       position: fixed;
       top: 0;
@@ -158,10 +158,11 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.6);
-      z-index: 100;
+      z-index: 1005;
       display: none;
     }
-    .social-popup {
+    .social-popup, .about-popup {
+      display: none;
       position: fixed;
       top: 50%;
       left: 50%;
@@ -170,25 +171,21 @@
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-      z-index: 101;
-      display: none;
+      z-index: 1010;
       text-align: center;
       max-width: 600px;
       width: 90%;
     }
-    .social-popup-content {
+    .social-popup-content, .about-popup-content {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 30px;
+      text-align: center;
     }
-    .social-popup-content p {
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-    .popup-social-links {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
+    .social-popup-content img, .about-popup-content img {
+      width: 60px;
+      height: 60px;
+      margin: 0 15px;
     }
   </style>
 </head>
