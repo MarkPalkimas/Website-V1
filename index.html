@@ -63,12 +63,11 @@
         z-index: 1005;
         display: none;
       }
+      /* Restore the original footer style */
       .footer {
         position: relative;
         bottom: 0;
-        /* Added background and higher stacking order so quotes don’t show through */
-        background-color: #fff;
-        z-index: 1010;
+        /* No background color here so that it looks like your original design */
       }
       .intro-text.hidden {
         display: none;
@@ -102,13 +101,13 @@
         pointer-events: none;
       }
       /* --- New: Falling Quotes Styles --- */
-      /* The quote container is placed behind the main content (z-index: -1) */
+      /* The quote container is placed behind the main content (z-index: -1) but we will limit its height so it stops at the footer */
       #quote-container {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100vh;
+        /* The height will be set dynamically to stop at the footer */
         pointer-events: none;
         z-index: -1;
         overflow: hidden;
@@ -122,7 +121,7 @@
         white-space: nowrap;
         transition: transform 0.3s;
       }
-      /* We'll animate only the vertical position via CSS; horizontal oscillation is done in JS */
+      /* Animate vertical position; horizontal oscillation is updated in JS */
       @keyframes fall {
         from { top: -50px; }
         to { top: 110vh; }
@@ -134,7 +133,7 @@
     <!-- Dimming Overlay -->
     <div class="dimmed"></div>
 
-    <!-- Quote Container (initially empty) -->
+    <!-- Quote Container (its height will be adjusted so quotes never appear in the footer) -->
     <div id="quote-container"></div>
 
     <header class="header">
@@ -223,6 +222,14 @@
         const introText = document.querySelector(".intro-text");
         const balls = [];
         const headerHeight = document.querySelector('.header').offsetHeight;
+        const quoteContainer = document.getElementById("quote-container");
+        
+        // Adjust the quote container height so it doesn't extend into the footer area.
+        function updateQuoteContainerHeight() {
+          quoteContainer.style.height = (window.innerHeight - footer.offsetHeight) + "px";
+        }
+        updateQuoteContainerHeight();
+        window.addEventListener("resize", updateQuoteContainerHeight);
         
         // NEW: Falling quotes will only start when a ball is dropped.
         let quotesStarted = false;
@@ -232,7 +239,6 @@
         profilePic.addEventListener("click", () => {
           aboutPopup.style.display = "flex";
           dimmedOverlay.style.display = "block";
-          // Add the enlargement so the profile image pops up as before.
           profilePic.classList.add("enlarged");
           introText.classList.add("hidden");
         });
@@ -296,7 +302,6 @@
           ball.velocityX = Math.random() * 2 - 1;
           ball.friction = 0.8;
           ball.bounceOffset = 10; // Lower bounce height
-          // Initialize top if not set
           ball.style.top = "0px";
           document.body.appendChild(ball);
           balls.push(ball);
@@ -343,14 +348,13 @@
           const initLeft = Math.random() * (window.innerWidth - 300);
           quoteElem.dataset.initialLeft = initLeft;
           // Also assign a random oscillation amplitude and phase
-          quoteElem.dataset.amp = (Math.random() * 20 + 10); // amplitude in pixels
+          quoteElem.dataset.amp = (Math.random() * 20 + 10);
           quoteElem.dataset.phase = Math.random() * 2 * Math.PI;
-          // Set initial position
           quoteElem.style.left = initLeft + "px";
           quoteElem.style.top = "-50px";
-          // Use the keyframes "fall" to animate vertical motion over 20s
+          // Animate vertical motion over 20s using keyframes
           quoteElem.style.animation = "fall 20s linear forwards";
-          document.getElementById("quote-container").appendChild(quoteElem);
+          quoteContainer.appendChild(quoteElem);
           // Remove the quote after animation ends
           setTimeout(() => {
             if (quoteElem.parentElement)
@@ -366,8 +370,7 @@
             const initLeft = parseFloat(quote.dataset.initialLeft) || 0;
             const amp = parseFloat(quote.dataset.amp) || 0;
             const phase = parseFloat(quote.dataset.phase) || 0;
-            // Use time to calculate an oscillation (sine wave)
-            const t = (now - quoteStartTime) / 1000; // time in seconds
+            const t = (now - quoteStartTime) / 1000;
             const offset = amp * Math.sin(t + phase);
             quote.style.left = (initLeft + offset) + "px";
           });
@@ -376,7 +379,7 @@
         
         // --- Update Balls and Handle Collisions ---
         function updateBalls() {
-          const velocityCutoff = 0.01; // Threshold for stopping jittering
+          const velocityCutoff = 0.01;
           balls.forEach(ball => {
             let currentTop = parseFloat(ball.style.top) || 0;
             let currentLeft = parseFloat(ball.style.left) || 0;
@@ -392,7 +395,7 @@
                 ball.velocityY = 0;
               }
             } else {
-              ball.velocityY += 0.3; // Gravity effect
+              ball.velocityY += 0.3;
             }
             
             // Bounce off walls
@@ -413,12 +416,11 @@
           
           // Handle collisions between balls and quotes (only from above)
           handleBallQuoteCollisions();
-          
           handleBallCollisions();
           requestAnimationFrame(updateBalls);
         }
         
-        // --- Handle Ball–Ball Collisions (as before) ---
+        // --- Handle Ball–Ball Collisions ---
         function handleBallCollisions() {
           const velocityCutoff = 0.01;
           const dampingFactor = 0.4;
@@ -479,17 +481,14 @@
               const quoteHeight = rect.height;
               // Only allow collision if the ball is falling from above the quote
               if (ball.velocityY > 0 && ballY < quoteY) {
-                // Find closest point on the quote's rectangle to the ball's center.
                 const closestX = Math.max(quoteX, Math.min(ballX, quoteX + quoteWidth));
                 const closestY = Math.max(quoteY, Math.min(ballY, quoteY + quoteHeight));
                 const distanceX = ballX - closestX;
                 const distanceY = ballY - closestY;
                 const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
                 if (distance < ballRadius) {
-                  // Reflect ball's velocity (with damping)
                   ball.velocityX = -ball.velocityX * 0.8;
                   ball.velocityY = -ball.velocityY * 0.8;
-                  // Make the quote react: temporarily scale up.
                   quote.style.transform = "scale(1.2)";
                   setTimeout(() => {
                     quote.style.transform = "scale(1)";
@@ -501,7 +500,7 @@
         }
         
         let lastScrollTop = window.scrollY;
-        window.addEventListener('scroll', () => {
+        window.addEventListener("scroll", () => {
           const scrollTop = window.scrollY;
           const scrollDirection = scrollTop > lastScrollTop ? 1 : -1;
           lastScrollTop = scrollTop;
