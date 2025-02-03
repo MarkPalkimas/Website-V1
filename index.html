@@ -102,6 +102,29 @@
             z-index: 1000;
             pointer-events: none;
         }
+        
+        /* New styles for falling quotes */
+        .falling-quote {
+            position: fixed;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-size: 1.2rem;
+            color: rgba(0, 0, 0, 0.1);
+            opacity: 0.3;
+            z-index: -1;
+            white-space: nowrap;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .falling-quote.active {
+            opacity: 0.3;
+        }
+        .falling-quote.fade-out {
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -180,7 +203,6 @@
     <button class="reset-btn">Reset</button>
 
     <script>
-
         document.addEventListener("DOMContentLoaded", function () {
             const profilePic = document.querySelector(".profile-photo");
             const aboutSection = document.querySelector(".about-popup");
@@ -198,6 +220,47 @@
             const balls = [];
             const headerHeight = document.querySelector('.header').offsetHeight;
             const footerTop = window.innerHeight - footer.offsetHeight + 70;
+
+            // New quote system
+            const quotes = [
+                "Life isn't about what you know, It's about what you're able to figure out.",
+                "The best time to plant a tree is 20 years ago, the second best time is today.",
+                "The rich get richer because the poor see every opportunity as a scam",
+                "Money is not the key to happiness, it is the key to pursuing opportunities.",
+                "Cold water feels warm when your hands are freezing.",
+                "Regret is proof you cared. But growth is proof you learned."
+            ];
+
+            function createFallingQuote() {
+                const quote = document.createElement('div');
+                quote.classList.add('falling-quote');
+                quote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+                document.body.appendChild(quote);
+
+                // Random horizontal position
+                quote.style.left = `${Math.random() * (window.innerWidth - 200)}px`;
+
+                // Animate falling
+                let topPosition = -100;
+                const animateFall = () => {
+                    topPosition += 1;
+                    quote.style.top = `${topPosition}px`;
+
+                    if (topPosition > window.innerHeight) {
+                        quote.classList.add('fade-out');
+                        setTimeout(() => {
+                            document.body.removeChild(quote);
+                        }, 500);
+                    } else {
+                        requestAnimationFrame(animateFall);
+                    }
+                };
+
+                animateFall();
+            }
+
+            // Start quote falling system
+            setInterval(createFallingQuote, 5000);
 
             gravityBtn.addEventListener("click", () => {
                 dropBall();
@@ -286,132 +349,60 @@
                 }
                 return color;
             }
+
             function updateBalls() {
-    const velocityCutoff = 0.01; // Threshold for stopping jittering
+                const velocityCutoff = 0.01; // Threshold for stopping jittering
 
-    balls.forEach((ball, index) => {
-        let currentTop = parseFloat(ball.style.top) || 0;
-        let currentLeft = parseFloat(ball.style.left) || 0;
-        let newTop = currentTop + ball.velocityY;
-        let newLeft = currentLeft + ball.velocityX;
+                balls.forEach((ball, index) => {
+                    let currentTop = parseFloat(ball.style.top) || 0;
+                    let currentLeft = parseFloat(ball.style.left) || 0;
+                    let newTop = currentTop + ball.velocityY;
+                    let newLeft = currentLeft + ball.velocityX;
 
-        // Bounce off floor at 30px lower than 
-        const footerTop = footer.getBoundingClientRect().top + window.scrollY + 10;
-        if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
-            newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
-            ball.velocityY *= -ball.friction;
+                    // Bounce off floor at 30px lower than 
+                    const footerTop = footer.getBoundingClientRect().top + window.scrollY + 10;
+                    if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
+                        newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
+                        ball.velocityY *= -ball.friction;
 
-            // Apply velocity cutoff
-            if (Math.abs(ball.velocityY) < velocityCutoff) {
-                ball.velocityY = 0;
-            }
-        } else {
-            ball.velocityY += 0.3; // Gravity effect
-        }
-
-        // Bounce off walls
-        if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
-            newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
-            ball.velocityX *= -1;
-
-            // Apply velocity cutoff
-            if (Math.abs(ball.velocityX) < velocityCutoff) {
-                ball.velocityX = 0;
-            }
-        }
-
-        // Stop small movements from jittering
-        if (Math.abs(ball.velocityX) < velocityCutoff) ball.velocityX = 0;
-        if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
-
-        // Update position
-        ball.style.top = newTop + "px";
-        ball.style.left = newLeft + "px";
-    });
-
-    handleBallCollisions();
-    requestAnimationFrame(updateBalls);
-}
-
-function handleBallCollisions() {
-    const velocityCutoff = 0.01; // Minimum velocity to consider as motion
-    const dampingFactor = 0.4; // Factor for damping collision response
-
-    try {
-        for (let i = 0; i < balls.length; i++) {
-            const ballA = balls[i];
-            const radiusA = parseFloat(ballA.style.width) / 2;
-            const xA = parseFloat(ballA.style.left) + radiusA;
-            const yA = parseFloat(ballA.style.top) + radiusA;
-
-            for (let j = i + 1; j < balls.length; j++) {
-                const ballB = balls[j];
-                const radiusB = parseFloat(ballB.style.width) / 2;
-                const xB = parseFloat(ballB.style.left) + radiusB;
-                const yB = parseFloat(ballB.style.top) + radiusB;
-
-                // Calculate the distance between ball centers
-                const dx = xA - xB;
-                const dy = yA - yB;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                // Check if the balls are colliding
-                if (distance < radiusA + radiusB) {
-                    // Normalize the collision vector
-                    const nx = dx / distance;
-                    const ny = dy / distance;
-
-                    // Calculate relative velocity along the collision axis
-                    const dvx = ballA.velocityX - ballB.velocityX;
-                    const dvy = ballA.velocityY - ballB.velocityY;
-                    const impactSpeed = dvx * nx + dvy * ny;
-
-                    // Resolve only if balls are moving towards each other
-                    if (impactSpeed < 0) {
-                        // Impulse magnitude
-                        const impulse = (2 * impactSpeed) / (radiusA + radiusB);
-
-                        // Adjust impulse with damping if velocity is low
-                        const isBallAStopped = Math.abs(ballA.velocityX) < velocityCutoff && Math.abs(ballA.velocityY) < velocityCutoff;
-                        const isBallBStopped = Math.abs(ballB.velocityX) < velocityCutoff && Math.abs(ballB.velocityY) < velocityCutoff;
-                        const adjustedImpulse = (isBallAStopped || isBallBStopped) ? impulse * dampingFactor : impulse;
-
-                        // Apply the impulse to velocities
-                        ballA.velocityX -= adjustedImpulse * radiusB * nx;
-                        ballA.velocityY -= adjustedImpulse * radiusB * ny;
-                        ballB.velocityX += adjustedImpulse * radiusA * nx;
-                        ballB.velocityY += adjustedImpulse * radiusA * ny;
-
-                        // Apply velocity cutoff to stop balls with low velocity
-                        if (Math.abs(ballA.velocityX) < velocityCutoff) ballA.velocityX = 0;
-                        if (Math.abs(ballA.velocityY) < velocityCutoff) ballA.velocityY = 0;
-                        if (Math.abs(ballB.velocityX) < velocityCutoff) ballB.velocityX = 0;
-                        if (Math.abs(ballB.velocityY) < velocityCutoff) ballB.velocityY = 0;
+                        // Apply velocity cutoff
+                        if (Math.abs(ball.velocityY) < velocityCutoff) {
+                            ball.velocityY = 0;
+                        }
+                    } else {
+                        ball.velocityY += 0.3; // Gravity effect
                     }
-                }
+
+                    // Bounce off walls
+                    if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
+                        newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
+                        ball.velocityX *= -1;
+
+                        // Apply velocity cutoff
+                        if (Math.abs(ball.velocityX) < velocityCutoff) {
+                            ball.velocityX = 0;
+                        }
+                    }
+
+                    // Stop small movements from jittering
+                    if (Math.abs(ball.velocityX) < velocityCutoff) ball.velocityX = 0;
+                    if (Math.abs(ball.velocityY) < velocityCutoff) ball.velocityY = 0;
+
+                    // Update position
+                    ball.style.top = newTop + "px";
+                    ball.style.left = newLeft + "px";
+                });
+
+                handleBallCollisions();
+                requestAnimationFrame(updateBalls);
             }
-        }
-    } catch (error) {
-        console.error('Error handling collisions:', error);
-    }
-}
-            
-let lastScrollTop = window.scrollY;
 
-window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const scrollDirection = scrollTop > lastScrollTop ? 1 : -1; // 1 for down, -1 for up
-    lastScrollTop = scrollTop;
+            function handleBallCollisions() {
+                const velocityCutoff = 0.01; // Minimum velocity to consider as motion
+                const dampingFactor = 0.4; // Factor for damping collision response
 
-    // Apply gravity effect to each ball based on scroll direction
-    balls.forEach(ball => {
-        ball.velocityY += scrollDirection * 0.5; // Adjust this value for stronger or weaker gravity effect
-    });
-});
-
-
-            updateBalls();
-        });
-    </script>
-</body>
-</html>
+                try {
+                    for (let i = 0; i < balls.length; i++) {
+                        const ballA = balls[i];
+                        const radiusA = parseFloat(ballA.style.width) / 2;
+                        const xA = parseFloat(ballA.style.left) + radiusA;
