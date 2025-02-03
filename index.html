@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,36 +103,34 @@
             z-index: 1000;
             pointer-events: none;
         }
-        
-        /* New styles for falling quotes */
-        .falling-quote {
+        /* Falling Quotes Styles */
+        .quote-container {
             position: fixed;
-            top: -100px;
+            top: 0;
             left: 0;
             width: 100%;
-            text-align: center;
-            font-family: 'Arial', sans-serif;
-            font-size: 1.2rem;
-            color: rgba(0, 0, 0, 0.1);
-            opacity: 0.3;
-            z-index: -1;
-            white-space: nowrap;
+            height: 100vh;
             pointer-events: none;
-            transition: opacity 0.5s ease;
+            overflow: hidden;
+            z-index: -1;
         }
-        .falling-quote.active {
-            opacity: 0.3;
-        }
-        .falling-quote.fade-out {
-            opacity: 0;
+        .falling-quote {
+            position: absolute;
+            font-size: 1.2rem;
+            font-family: 'Poppins', sans-serif;
+            color: rgba(0, 0, 0, 0.15);
+            opacity: 0.5;
+            white-space: nowrap;
         }
     </style>
 </head>
 <body>
 
     <!-- Dimming Overlay -->
-
     <div class="dimmed"></div>
+
+    <!-- Quote Container for Falling Quotes Background -->
+    <div class="quote-container"></div>
 
     <header class="header">
         <div class="nav-bar">
@@ -221,47 +220,6 @@
             const headerHeight = document.querySelector('.header').offsetHeight;
             const footerTop = window.innerHeight - footer.offsetHeight + 70;
 
-            // New quote system
-            const quotes = [
-                "Life isn't about what you know, It's about what you're able to figure out.",
-                "The best time to plant a tree is 20 years ago, the second best time is today.",
-                "The rich get richer because the poor see every opportunity as a scam",
-                "Money is not the key to happiness, it is the key to pursuing opportunities.",
-                "Cold water feels warm when your hands are freezing.",
-                "Regret is proof you cared. But growth is proof you learned."
-            ];
-
-            function createFallingQuote() {
-                const quote = document.createElement('div');
-                quote.classList.add('falling-quote');
-                quote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
-                document.body.appendChild(quote);
-
-                // Random horizontal position
-                quote.style.left = `${Math.random() * (window.innerWidth - 200)}px`;
-
-                // Animate falling
-                let topPosition = -100;
-                const animateFall = () => {
-                    topPosition += 1;
-                    quote.style.top = `${topPosition}px`;
-
-                    if (topPosition > window.innerHeight) {
-                        quote.classList.add('fade-out');
-                        setTimeout(() => {
-                            document.body.removeChild(quote);
-                        }, 500);
-                    } else {
-                        requestAnimationFrame(animateFall);
-                    }
-                };
-
-                animateFall();
-            }
-
-            // Start quote falling system
-            setInterval(createFallingQuote, 5000);
-
             gravityBtn.addEventListener("click", () => {
                 dropBall();
                 resetBtn.style.display = "block";
@@ -349,7 +307,6 @@
                 }
                 return color;
             }
-
             function updateBalls() {
                 const velocityCutoff = 0.01; // Threshold for stopping jittering
 
@@ -406,3 +363,122 @@
                         const ballA = balls[i];
                         const radiusA = parseFloat(ballA.style.width) / 2;
                         const xA = parseFloat(ballA.style.left) + radiusA;
+                        const yA = parseFloat(ballA.style.top) + radiusA;
+
+                        for (let j = i + 1; j < balls.length; j++) {
+                            const ballB = balls[j];
+                            const radiusB = parseFloat(ballB.style.width) / 2;
+                            const xB = parseFloat(ballB.style.left) + radiusB;
+                            const yB = parseFloat(ballB.style.top) + radiusB;
+
+                            // Calculate the distance between ball centers
+                            const dx = xA - xB;
+                            const dy = yA - yB;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+
+                            // Check if the balls are colliding
+                            if (distance < radiusA + radiusB) {
+                                // Normalize the collision vector
+                                const nx = dx / distance;
+                                const ny = dy / distance;
+
+                                // Calculate relative velocity along the collision axis
+                                const dvx = ballA.velocityX - ballB.velocityX;
+                                const dvy = ballA.velocityY - ballB.velocityY;
+                                const impactSpeed = dvx * nx + dvy * ny;
+
+                                // Resolve only if balls are moving towards each other
+                                if (impactSpeed < 0) {
+                                    // Impulse magnitude
+                                    const impulse = (2 * impactSpeed) / (radiusA + radiusB);
+
+                                    // Adjust impulse with damping if velocity is low
+                                    const isBallAStopped = Math.abs(ballA.velocityX) < velocityCutoff && Math.abs(ballA.velocityY) < velocityCutoff;
+                                    const isBallBStopped = Math.abs(ballB.velocityX) < velocityCutoff && Math.abs(ballB.velocityY) < velocityCutoff;
+                                    const adjustedImpulse = (isBallAStopped || isBallBStopped) ? impulse * dampingFactor : impulse;
+
+                                    // Apply the impulse to velocities
+                                    ballA.velocityX -= adjustedImpulse * radiusB * nx;
+                                    ballA.velocityY -= adjustedImpulse * radiusB * ny;
+                                    ballB.velocityX += adjustedImpulse * radiusA * nx;
+                                    ballB.velocityY += adjustedImpulse * radiusA * ny;
+
+                                    // Apply velocity cutoff to stop balls with low velocity
+                                    if (Math.abs(ballA.velocityX) < velocityCutoff) ballA.velocityX = 0;
+                                    if (Math.abs(ballA.velocityY) < velocityCutoff) ballA.velocityY = 0;
+                                    if (Math.abs(ballB.velocityX) < velocityCutoff) ballB.velocityX = 0;
+                                    if (Math.abs(ballB.velocityY) < velocityCutoff) ballB.velocityY = 0;
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error handling collisions:', error);
+                }
+            }
+
+            let lastScrollTop = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const scrollDirection = scrollTop > lastScrollTop ? 1 : -1; // 1 for down, -1 for up
+                lastScrollTop = scrollTop;
+
+                // Apply gravity effect to each ball based on scroll direction
+                balls.forEach(ball => {
+                    ball.velocityY += scrollDirection * 0.5; // Adjust this value for stronger or weaker gravity effect
+                });
+            });
+
+            updateBalls();
+
+            // Falling Quotes Background Feature
+            (function() {
+                const quotes = [
+                    "Life isn’t about what you know, It’s about what you’re able to figure out.",
+                    "The best time to plant a tree is 20 years ago, the second best time is today.",
+                    "The rich get richer because the poor see every opportunity as a scam",
+                    "Money is not the key to happiness, \nit is the key to pursuing opportunities.",
+                    "Cold water feels warm when your hands are freezing.",
+                    "Regret is proof you cared. But growth is proof you learned."
+                ];
+                const quoteContainer = document.querySelector('.quote-container');
+
+                function createFallingQuote() {
+                    const quoteText = quotes[Math.floor(Math.random() * quotes.length)];
+                    const quoteElem = document.createElement("div");
+                    quoteElem.className = "falling-quote";
+                    quoteElem.innerText = quoteText;
+                    // Set initial random horizontal position
+                    quoteElem.style.left = Math.random() * (window.innerWidth - 300) + "px";
+                    // Start above the viewport
+                    quoteElem.style.top = "-50px";
+                    // Reset any transform
+                    quoteElem.style.transform = "translateY(0)";
+                    quoteContainer.appendChild(quoteElem);
+                    // Force reflow to ensure transition starts
+                    quoteElem.offsetWidth;
+                    // Animate the quote falling down
+                    quoteElem.style.transition = "transform 10s linear, opacity 10s linear";
+                    quoteElem.style.transform = "translateY(" + (window.innerHeight + 100) + "px)";
+                    quoteElem.style.opacity = "0";
+                    // Remove the element after animation completes
+                    setTimeout(() => {
+                        if (quoteElem.parentElement === quoteContainer) {
+                            quoteContainer.removeChild(quoteElem);
+                        }
+                    }, 10100);
+                }
+
+                // Cycle quotes: if less than 2 are visible, add one every 5 seconds
+                setInterval(() => {
+                    if (quoteContainer.childElementCount < 2) {
+                        createFallingQuote();
+                    }
+                }, 5000);
+            })();
+        });
+    </script>
+</body>
+</html>
+```
