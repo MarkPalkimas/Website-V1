@@ -66,6 +66,9 @@
       .footer {
         position: relative;
         bottom: 0;
+        /* Added background and higher stacking order so quotes don’t show through */
+        background-color: #fff;
+        z-index: 1010;
       }
       .intro-text.hidden {
         display: none;
@@ -313,9 +316,7 @@
           return color;
         }
         
-        // NEW: Falling Quotes
-        // Instead of a fixed CSS animation, we animate only the top property via CSS keyframes.
-        // We'll update each quote's horizontal position (oscillation) in JavaScript.
+        // --- Falling Quotes ---
         function startFallingQuotes() {
           // Create a new quote every 10 seconds.
           setInterval(() => {
@@ -410,7 +411,7 @@
             ball.style.left = newLeft + "px";
           });
           
-          // Handle collisions between balls and quotes (and react on the quotes)
+          // Handle collisions between balls and quotes (only from above)
           handleBallQuoteCollisions();
           
           handleBallCollisions();
@@ -476,21 +477,24 @@
               const quoteY = rect.top + window.scrollY;
               const quoteWidth = rect.width;
               const quoteHeight = rect.height;
-              // Find closest point on the quote's rectangle to the ball's center.
-              const closestX = Math.max(quoteX, Math.min(ballX, quoteX + quoteWidth));
-              const closestY = Math.max(quoteY, Math.min(ballY, quoteY + quoteHeight));
-              const distanceX = ballX - closestX;
-              const distanceY = ballY - closestY;
-              const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-              if (distance < ballRadius) {
-                // Reflect ball's velocity (with damping)
-                ball.velocityX = -ball.velocityX * 0.8;
-                ball.velocityY = -ball.velocityY * 0.8;
-                // Make the quote react: temporarily scale up.
-                quote.style.transform = "scale(1.2)";
-                setTimeout(() => {
-                  quote.style.transform = "scale(1)";
-                }, 200);
+              // Only allow collision if the ball is falling from above the quote
+              if (ball.velocityY > 0 && ballY < quoteY) {
+                // Find closest point on the quote's rectangle to the ball's center.
+                const closestX = Math.max(quoteX, Math.min(ballX, quoteX + quoteWidth));
+                const closestY = Math.max(quoteY, Math.min(ballY, quoteY + quoteHeight));
+                const distanceX = ballX - closestX;
+                const distanceY = ballY - closestY;
+                const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                if (distance < ballRadius) {
+                  // Reflect ball's velocity (with damping)
+                  ball.velocityX = -ball.velocityX * 0.8;
+                  ball.velocityY = -ball.velocityY * 0.8;
+                  // Make the quote react: temporarily scale up.
+                  quote.style.transform = "scale(1.2)";
+                  setTimeout(() => {
+                    quote.style.transform = "scale(1)";
+                  }, 200);
+                }
               }
             });
           });
