@@ -22,15 +22,9 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             transition: box-shadow 0.3s;
         }
+        /* Removed the absolute enlargement styling so that the profile image is not moved */
         .profile-photo.enlarged {
-            width: 350px;
-            height: 490px;
-            position: absolute;
-            top: 30%;
-            left: -10%;
-            transform: translateY(-50%);
-            border-radius: 50%;
-            z-index: 1015;
+            /* No longer used in this implementation */
         }
         .social-popup, .about-popup {
             display: none;
@@ -46,7 +40,29 @@
             text-align: center;
             max-width: 600px;
         }
-        .social-popup-content, .about-popup-content {
+        /* New About Popup styling: display profile image and text side by side */
+        .about-popup-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            text-align: left;
+        }
+        .about-popup-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid #000;
+            flex-shrink: 0;
+        }
+        .about-popup-text {
+            max-width: 350px;
+        }
+        .about-popup-text h2 {
+            margin-bottom: 10px;
+        }
+        .social-popup-content {
             display: flex;
             flex-direction: column;
             gap: 30px;
@@ -71,6 +87,7 @@
             position: relative;
             bottom: 0;
             background-color: rgba(171, 171, 171, 1);
+            width: 100%;
         }
         .intro-text.hidden {
             display: none;
@@ -125,31 +142,32 @@
         }
         @keyframes fall {
             0% {
-                transform: translate(0, -60px);
+                transform: translate(0, 0);
                 opacity: 0.9;
             }
             25% {
                 transform: translate(20px, 25%);
-                opacity: 0.8;
+                opacity: 0.85;
             }
             50% {
                 transform: translate(-20px, 50%);
-                opacity: 0.7;
+                opacity: 0.8;
             }
             75% {
                 transform: translate(20px, 75%);
-                opacity: 0.5;
+                opacity: 0.75;
             }
             100% {
-                transform: translate(0, 110vh);
+                transform: translate(0, 105vh);
                 opacity: 0;
             }
         }
         /* New Layout Adjustments for Modern Full-Window Sizing */
+        /* The initial view is 100vh so that the footer contacts are visible.
+           The extra content (footer-bottom with drop ball and admin) is revealed on scroll. */
         .content {
             padding-top: 70px;
-            /* Adjust the min-height so that footer is visible at page load */
-            min-height: calc(100vh - 70px - 150px);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -166,9 +184,31 @@
         }
         .profile-photo {
             margin: 0 20px;
+            width: 280px;
+            height: 380px;
+            border-radius: 50%;
+            border: 8px solid #000;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         .intro-text {
             margin: 20px;
+        }
+        /* Footer Contacts visible always; Footer-bottom (drop ball & admin) hidden initially */
+        .footer-bottom {
+            display: none;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding-top: 15px;
+            flex-wrap: wrap;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -197,10 +237,14 @@
             <div class="intro-text">
                 <h2>Hello, I'm Mark Palkimas</h2>
             </div>
+            <!-- Modified About Popup: now includes a cloned profile photo and text side by side -->
             <div class="about-section about-popup">
                 <div class="about-popup-content">
-                    <h2>About Me</h2>
-                    <p>This section contains more detailed information about me and my professional background.</p>
+                    <img src="profile.jpg" alt="Profile Photo" class="about-popup-photo">
+                    <div class="about-popup-text">
+                        <h2>About Me</h2>
+                        <p>This section contains more detailed information about me and my professional background.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -230,6 +274,7 @@
             </a>
         </div>
         
+        <!-- Footer-bottom: initially hidden; will reveal on scroll -->
         <div class="footer-bottom">
             <button class="gravity-btn">Drop Ball</button>
             <button class="admin-btn">Admin</button>
@@ -257,6 +302,7 @@
             const contactLink = document.querySelector(".contact-link");
             const socialLinks = document.querySelector(".social-links");
             const footer = document.querySelector(".footer");
+            const footerBottom = document.querySelector(".footer-bottom");
             const popup = document.querySelector(".social-popup");
             const popupContent = document.querySelector(".popup-social-links");
             const dimmedOverlay = document.querySelector(".dimmed");
@@ -266,8 +312,15 @@
             const introText = document.querySelector(".intro-text");
             const balls = [];
             const headerHeight = document.querySelector('.header').offsetHeight;
-            // Using a fixed footer height of 150px for layout calculations
-            const footerHeight = 150; 
+            
+            // Hide footer-bottom initially; show only when user scrolls down
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 0) {
+                    footerBottom.style.display = "flex";
+                } else {
+                    footerBottom.style.display = "none";
+                }
+            });
 
             gravityBtn.addEventListener("click", () => {
                 dropBall();
@@ -282,34 +335,26 @@
             const togglePopup = (popupElement) => {
                 popupElement.style.display = "flex";
                 dimmedOverlay.style.display = "block";
-                footer.style.display = "none";
             };
 
             const closePopup = (popupElement) => {
                 popupElement.style.display = "none";
                 dimmedOverlay.style.display = "none";
-                profilePic.classList.remove("enlarged");
-                introText.classList.remove("hidden");
-                socialLinks.classList.remove("hidden");
-                footer.style.display = "block";
             };
 
+            // Open About Popup on click of About link or profile image
             profilePic.addEventListener("click", () => {
                 togglePopup(aboutSection);
-                profilePic.classList.add("enlarged");
-                introText.classList.add("hidden");
             });
 
             aboutLink.addEventListener("click", (e) => {
                 e.preventDefault();
                 togglePopup(aboutSection);
-                profilePic.classList.add("enlarged");
-                introText.classList.add("hidden");
             });
 
             contactLink.addEventListener("click", (e) => {
                 e.preventDefault();
-                socialLinks.classList.add("hidden");
+                closePopup(aboutSection);
                 togglePopup(popup);
                 popupContent.innerHTML = socialLinks.innerHTML;
             });
@@ -365,12 +410,11 @@
                     let newTop = currentTop + ball.velocityY;
                     let newLeft = currentLeft + ball.velocityX;
 
-                    // Bounce off floor at 10px above footer (footer is below content)
+                    // Bounce off floor: 10px above footer contacts (which are lower on scroll)
                     const footerTop = footer.getBoundingClientRect().top + window.scrollY - 10;
                     if (newTop + ball.offsetHeight >= footerTop - ball.bounceOffset) {
                         newTop = footerTop - ball.offsetHeight - ball.bounceOffset;
                         ball.velocityY *= -ball.friction;
-
                         if (Math.abs(ball.velocityY) < velocityCutoff) {
                             ball.velocityY = 0;
                         }
@@ -382,7 +426,6 @@
                     if (newLeft <= 0 || newLeft + ball.offsetWidth >= window.innerWidth) {
                         newLeft = newLeft <= 0 ? 0 : window.innerWidth - ball.offsetWidth;
                         ball.velocityX *= -1;
-
                         if (Math.abs(ball.velocityX) < velocityCutoff) {
                             ball.velocityX = 0;
                         }
@@ -402,44 +445,35 @@
             function handleBallCollisions() {
                 const velocityCutoff = 0.01;
                 const dampingFactor = 0.4;
-
                 try {
                     for (let i = 0; i < balls.length; i++) {
                         const ballA = balls[i];
                         const radiusA = parseFloat(ballA.style.width) / 2;
                         const xA = parseFloat(ballA.style.left) + radiusA;
                         const yA = parseFloat(ballA.style.top) + radiusA;
-
                         for (let j = i + 1; j < balls.length; j++) {
                             const ballB = balls[j];
                             const radiusB = parseFloat(ballB.style.width) / 2;
                             const xB = parseFloat(ballB.style.left) + radiusB;
                             const yB = parseFloat(ballB.style.top) + radiusB;
-
                             const dx = xA - xB;
                             const dy = yA - yB;
                             const distance = Math.sqrt(dx * dx + dy * dy);
-
                             if (distance < radiusA + radiusB) {
                                 const nx = dx / distance;
                                 const ny = dy / distance;
-
                                 const dvx = ballA.velocityX - ballB.velocityX;
                                 const dvy = ballA.velocityY - ballB.velocityY;
                                 const impactSpeed = dvx * nx + dvy * ny;
-
                                 if (impactSpeed < 0) {
                                     const impulse = (2 * impactSpeed) / (radiusA + radiusB);
-
                                     const isBallAStopped = Math.abs(ballA.velocityX) < velocityCutoff && Math.abs(ballA.velocityY) < velocityCutoff;
                                     const isBallBStopped = Math.abs(ballB.velocityX) < velocityCutoff && Math.abs(ballB.velocityY) < velocityCutoff;
                                     const adjustedImpulse = (isBallAStopped || isBallBStopped) ? impulse * dampingFactor : impulse;
-
                                     ballA.velocityX -= adjustedImpulse * radiusB * nx;
                                     ballA.velocityY -= adjustedImpulse * radiusB * ny;
                                     ballB.velocityX += adjustedImpulse * radiusA * nx;
                                     ballB.velocityY += adjustedImpulse * radiusA * ny;
-
                                     if (Math.abs(ballA.velocityX) < velocityCutoff) ballA.velocityX = 0;
                                     if (Math.abs(ballA.velocityY) < velocityCutoff) ballA.velocityY = 0;
                                     if (Math.abs(ballB.velocityX) < velocityCutoff) ballB.velocityX = 0;
@@ -454,12 +488,10 @@
             }
 
             let lastScrollTop = window.scrollY;
-
             window.addEventListener('scroll', () => {
                 const scrollTop = window.scrollY;
                 const scrollDirection = scrollTop > lastScrollTop ? 1 : -1;
                 lastScrollTop = scrollTop;
-
                 balls.forEach(ball => {
                     ball.velocityY += scrollDirection * 0.5;
                 });
@@ -467,7 +499,7 @@
 
             updateBalls();
 
-            // Falling Quotes Background Feature with Horizontal Movement and Cascade Effect
+            // Falling Quotes Background Feature with slow, cascading motion and horizontal oscillation.
             (function() {
                 const quotes = [
                     "Life isn’t about what you know, It’s about what you’re able to figure out.",
@@ -478,33 +510,30 @@
                     "Regret is proof you cared. But growth is proof you learned."
                 ];
                 const quoteContainer = document.querySelector('.quote-container');
-
                 function createFallingQuote() {
                     const quoteText = quotes[Math.floor(Math.random() * quotes.length)];
                     const quoteElem = document.createElement("div");
                     quoteElem.className = "falling-quote";
                     quoteElem.innerText = quoteText;
-                    // Set a random horizontal starting position, ensuring quotes don't overflow the viewport
+                    // Position the quote so that it is fully visible horizontally.
                     quoteElem.style.left = Math.random() * (window.innerWidth - 300) + "px";
-                    // Start above the viewport
-                    quoteElem.style.top = "-60px";
-                    // Apply the falling animation with horizontal oscillation
-                    quoteElem.style.animation = "fall 12s linear forwards";
+                    // Start at the top of the container (fully visible)
+                    quoteElem.style.top = "0px";
+                    // Apply a slower falling animation (30s duration) with horizontal oscillation.
+                    quoteElem.style.animation = "fall 30s linear forwards";
                     quoteContainer.appendChild(quoteElem);
-                    // Remove the element after animation completes
                     setTimeout(() => {
                         if (quoteElem.parentElement === quoteContainer) {
                             quoteContainer.removeChild(quoteElem);
                         }
-                    }, 12100);
+                    }, 31000);
                 }
-
-                // Ensure two quotes are visible at a time by checking every 4 seconds
+                // Always have two quotes on screen; check every 5 seconds.
                 setInterval(() => {
                     if (quoteContainer.childElementCount < 2) {
                         createFallingQuote();
                     }
-                }, 4000);
+                }, 5000);
             })();
         });
     </script>
