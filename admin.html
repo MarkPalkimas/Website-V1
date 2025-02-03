@@ -1,25 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Personal Website</title>
-    <link rel="stylesheet" href="app.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Mark Palkimas</title>
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #121212;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+    header {
+      background: #1f1f1f;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+    }
+    nav ul li a {
+      color: #e0e0e0;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover {
+      color: #ffcc00;
+    }
+    .container {
+      display: flex;
+      height: calc(100vh - 70px);
+    }
+    .sidebar {
+      background: #1f1f1f;
+      width: 250px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .sidebar a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+    }
+    .sidebar a:hover {
+      color: #ffcc00;
+    }
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    .card {
+      background: #1f1f1f;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .card h2 {
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      line-height: 1.5;
+    }
+    .footer {
+      background: #1f1f1f;
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+    /* A cool pulse animation for status indicators */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,204,0,0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(255,204,0,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,204,0,0); }
+    }
+    .pulse {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #ffcc00;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+      margin-left: 0.5rem;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+      .main-content {
+        padding: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <div class="nav-bar">
-            <div class="logo">My Website</div>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </header>
-
-    <section id="about" class="section">
-
-    <script src="app.js"></script>
+  <header>
+    <div class="logo">Admin Dashboard</div>
+    <nav>
+      <ul>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#analytics">Analytics</a></li>
+        <li><a href="#settings">Settings</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="container">
+    <div class="sidebar">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#users">User Management</a>
+      <a href="#logs">Access Logs</a>
+      <a href="#reports">Reports</a>
+      <a href="#settings">Settings</a>
+      <a href="#logout">Logout</a>
+    </div>
+    <div class="main-content">
+      <div class="card" id="dashboard">
+        <h2>Dashboard <span class="pulse"></span></h2>
+        <p>Welcome, Admin! Here you can view the latest activity, system stats, and more. Use the sidebar to navigate through various sections.</p>
+      </div>
+      <div class="card" id="analytics">
+        <h2>Analytics</h2>
+        <p>Monitor your website's traffic, user engagement, and performance metrics. (Insert dynamic charts here with your favorite library.)</p>
+      </div>
+      <div class="card" id="logs">
+        <h2>Access Logs</h2>
+        <p>This section is intended to show access logs. <em>Note:</em> Actual IP tracking requires server‑side implementation and user consent.</p>
+        <!-- Placeholder table for logs -->
+        <table border="1" style="width:100%; background:#222; color:#e0e0e0; text-align:left; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th style="padding: 0.5rem;">Timestamp</th>
+              <th style="padding: 0.5rem;">IP Address</th>
+              <th style="padding: 0.5rem;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 0.5rem;">2024-02-03 12:34</td>
+              <td style="padding: 0.5rem;">192.168.1.1</td>
+              <td style="padding: 0.5rem;">Login</td>
+            </tr>
+            <!-- More rows can be added here dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div class="card" id="settings">
+        <h2>Settings</h2>
+        <p>Manage website settings, update preferences, and configure system options.</p>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+    &copy; 2024 Mark Palkimas. All rights reserved.
+  </footer>
+  <script>
+    // You can add interactive features here, such as real-time notifications or dynamic chart updates.
+    // Note: For any sensitive tracking (like logging IP addresses), you must implement server-side solutions with proper security and user consent.
+  </script>
 </body>
 </html>
