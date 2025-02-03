@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,11 +115,36 @@
         }
         .falling-quote {
             position: absolute;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-family: 'Poppins', sans-serif;
-            color: rgba(0, 0, 0, 0.15);
-            opacity: 0.5;
+            color: rgba(0, 0, 0, 0.4);
+            opacity: 0.7;
             white-space: nowrap;
+            text-shadow: 1px 1px 3px rgba(255,255,255,0.8);
+        }
+        /* New Layout Adjustments for Modern Full-Window Sizing */
+        .content {
+            padding-top: 70px;
+            min-height: calc(100vh - 70px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Adjust the About section to center properly */
+        #about {
+            margin: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .profile-photo {
+            margin: 0 20px 0 20px;
+        }
+        .intro-text {
+            margin: 20px;
         }
     </style>
 </head>
@@ -449,17 +473,17 @@
                     const quoteElem = document.createElement("div");
                     quoteElem.className = "falling-quote";
                     quoteElem.innerText = quoteText;
-                    // Set initial random horizontal position
+                    // Set initial random horizontal position (ensuring it stands out)
                     quoteElem.style.left = Math.random() * (window.innerWidth - 300) + "px";
                     // Start above the viewport
-                    quoteElem.style.top = "-50px";
+                    quoteElem.style.top = "-60px";
                     // Reset any transform
                     quoteElem.style.transform = "translateY(0)";
                     quoteContainer.appendChild(quoteElem);
                     // Force reflow to ensure transition starts
                     quoteElem.offsetWidth;
-                    // Animate the quote falling down
-                    quoteElem.style.transition = "transform 10s linear, opacity 10s linear";
+                    // Animate the quote falling down; using a 12s duration for more presence
+                    quoteElem.style.transition = "transform 12s linear, opacity 12s linear";
                     quoteElem.style.transform = "translateY(" + (window.innerHeight + 100) + "px)";
                     quoteElem.style.opacity = "0";
                     // Remove the element after animation completes
@@ -467,15 +491,15 @@
                         if (quoteElem.parentElement === quoteContainer) {
                             quoteContainer.removeChild(quoteElem);
                         }
-                    }, 10100);
+                    }, 12100);
                 }
 
-                // Cycle quotes: if less than 2 are visible, add one every 5 seconds
+                // Cycle quotes: ensure up to 2 quotes are visible at any time
                 setInterval(() => {
                     if (quoteContainer.childElementCount < 2) {
                         createFallingQuote();
                     }
-                }, 5000);
+                }, 4000);
             })();
         });
     </script>
