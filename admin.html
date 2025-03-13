@@ -29,44 +29,16 @@
       font-weight: bold;
       color: #ffcc00;
     }
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1rem;
-    }
-    nav ul li a {
-      color: #e0e0e0;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    nav ul li a:hover {
-      color: #ffcc00;
-    }
-    .container {
-      display: flex;
-      height: calc(100vh - 70px);
-    }
-    .sidebar {
-      background: #1f1f1f;
-      width: 250px;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .sidebar a {
+    header a.logout {
       color: #e0e0e0;
       text-decoration: none;
       font-size: 1.1rem;
-      transition: color 0.3s;
     }
-    .sidebar a:hover {
+    header a.logout:hover {
       color: #ffcc00;
     }
-    .main-content {
-      flex: 1;
+    .container {
       padding: 2rem;
-      overflow-y: auto;
     }
     .card {
       background: #1f1f1f;
@@ -78,22 +50,6 @@
     .card h2 {
       margin-bottom: 0.5rem;
     }
-    .card p {
-      line-height: 1.5;
-    }
-    .footer {
-      background: #1f1f1f;
-      text-align: center;
-      padding: 0.5rem;
-      font-size: 0.9rem;
-      color: #777;
-    }
-    /* Pulse animation for status indicators */
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,204,0,0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(255,204,0,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,204,0,0); }
-    }
     .pulse {
       display: inline-block;
       width: 10px;
@@ -103,21 +59,11 @@
       animation: pulse 2s infinite;
       margin-left: 0.5rem;
     }
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .main-content {
-        padding: 1rem;
-      }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,204,0,0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(255,204,0,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,204,0,0); }
     }
-    /* Table styling */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -133,65 +79,36 @@
 </head>
 <body>
   <header>
-    <div class="logo">Admin Dashboard</div>
-    <nav>
-      <ul>
-        <li><a href="#dashboard">Dashboard</a></li>
-        <li><a href="#analytics">Analytics</a></li>
-        <li><a href="#logs">Index Traffic Logs</a></li>
-        <li><a href="#reports">Reports</a></li>
-        <li><a href="#settings">Settings</a></li>
-        <li><a href="#logout">Logout</a></li>
-      </ul>
-    </nav>
+    <div class="logo">Admin Dashboard <span class="pulse"></span></div>
+    <a href="https://markpalkimas.com" class="logout">Logout</a>
   </header>
   <div class="container">
-    <div class="sidebar">
-      <a href="#dashboard">Dashboard</a>
-      <a href="#users">User Management</a>
-      <a href="#logs">Index Traffic Logs</a>
-      <a href="#reports">Reports</a>
-      <a href="#settings">Settings</a>
-      <a href="#logout">Logout</a>
-    </div>
-    <div class="main-content">
-      <div class="card" id="dashboard">
-        <h2>Dashboard <span class="pulse"></span></h2>
-        <p>Welcome, Admin! Monitor all website activity from the dashboard.</p>
-      </div>
-      <div class="card" id="analytics">
-        <h2>Analytics</h2>
-        <p>View real-time statistics and performance metrics for your site.</p>
-      </div>
-      <div class="card" id="logs">
-        <h2>Index Traffic Logs</h2>
-        <p>This section displays a log of visitor IPs accessing the index page.</p>
-        <table id="visitor-logs">
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>IP Address</th>
-              <th>Location</th>
-              <th>User Agent</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Visitor log rows will be inserted here dynamically -->
-          </tbody>
-        </table>
-      </div>
-      <div class="card" id="settings">
-        <h2>Settings</h2>
-        <p>Manage website settings and configure system options.</p>
-      </div>
+    <div class="card" id="logs">
+      <h2>Index Traffic Logs</h2>
+      <table id="visitor-logs">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>IP Address</th>
+            <th>Location</th>
+            <th>Device</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Visitor log rows will be inserted here dynamically -->
+        </tbody>
+      </table>
     </div>
   </div>
-  <footer class="footer">
-    &copy; 2024 Mark Palkimas. All rights reserved.
-  </footer>
-  
   <script>
+    // Simple function to parse device type from user agent
+    function parseDevice(userAgent) {
+      if (/Mobi|Android/i.test(userAgent)) {
+        return "Mobile";
+      }
+      return "Desktop";
+    }
+    
     // Fetch visitor logs from the server endpoint and populate the table
     function fetchVisitorLogs() {
       fetch('/api/getVisitorLogs')
@@ -201,14 +118,13 @@
           tbody.innerHTML = '';
           logs.forEach(log => {
             const tr = document.createElement('tr');
-            // If location not provided, show "Denied"
             const location = (log.latitude && log.longitude) ? `${log.latitude}, ${log.longitude}` : 'Denied';
+            const device = parseDevice(log.userAgent || '');
             tr.innerHTML = `
               <td>${new Date(log.timestamp).toLocaleString()}</td>
               <td>${log.ip}</td>
               <td>${location}</td>
-              <td>${log.userAgent}</td>
-              <td>${log.action || 'Visited Index'}</td>
+              <td>${device}</td>
             `;
             tbody.appendChild(tr);
           });
