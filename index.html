@@ -77,6 +77,13 @@
         z-index: 1005;
         display: none;
       }
+      /* Extra CSS to hide/show elements as in the original */
+      .intro-text.hidden {
+        display: none;
+      }
+      .social-links.hidden {
+        display: none;
+      }
       /* Footer */
       .footer {
         background-color: #222;
@@ -119,6 +126,7 @@
         height: 100%;
         pointer-events: none;
         z-index: -2;
+        transition: background 2s ease;
       }
       /* Content */
       .content {
@@ -169,12 +177,39 @@
         from { top: -50px; }
         to { top: 110vh; }
       }
-      /* Ball style */
+      /* Ball style: Added box-shadow for visibility */
       .ball {
         position: absolute;
         border-radius: 50%;
         z-index: 1000;
         pointer-events: none;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+      }
+      /* Admin Popup Styles */
+      .admin-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(20, 20, 20, 0.95);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);
+        z-index: 1015;
+        text-align: center;
+        max-width: 400px;
+      }
+      .admin-popup-content input {
+        width: 80%;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 16px;
+      }
+      .admin-popup-content button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
       }
     </style>
   </head>
@@ -205,6 +240,7 @@
         <div class="intro-text">
           <h2>Hello, I'm Mark Palkimas</h2>
         </div>
+        <!-- About Popup: When triggered, displays the about text -->
         <div class="about-section about-popup">
           <div class="about-popup-content">
             <h2>About Me</h2>
@@ -221,6 +257,7 @@
     
     <footer class="footer">
       <p>Contact Me</p>
+      <!-- Social links that will be cloned into the contact popup -->
       <div class="social-links">
         <a href="https://www.instagram.com/ya.boimark" target="_blank">
           <img src="iconmonstr-instagram-11-240.png" alt="Instagram" />
@@ -245,12 +282,25 @@
       </div>
     </footer>
     
+    <!-- Social Popup for Contact Links -->
     <div class="social-popup">
       <div class="social-popup-content">
         <p>Contact Links:</p>
         <div class="popup-social-links">
           <!-- Social links will be cloned here dynamically -->
         </div>
+      </div>
+    </div>
+    
+    <!-- Admin Popup for Password Entry -->
+    <div class="admin-popup">
+      <div class="admin-popup-content">
+        <h2>Enter Admin Password</h2>
+        <input type="password" id="admin-password" placeholder="Password" />
+        <button id="toggle-password">Show</button>
+        <br />
+        <button id="submit-password">Submit</button>
+        <button id="cancel-password">Cancel</button>
       </div>
     </div>
     
