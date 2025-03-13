@@ -1,30 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // --- Neon Glow Effect Covering the Entire Background ---
+  // --- Neon Glow Effect Covering Entire Background ---
   const neonContainer = document.getElementById("neon-container");
   let mouseX = window.innerWidth / 2;
   let mouseY = window.innerHeight / 2;
   // Curated modern neon colors
   const glowColors = ["#00d084", "#3498db", "#8e44ad", "#f39c12"];
   let glowIndex = 0;
-
+  
   function updateNeonBackground() {
-    neonContainer.style.background = `radial-gradient(circle at ${mouseX}px ${mouseY}px, ${glowColors[glowIndex]}, transparent 50%)`;
+    // Use a radial gradient centered at the mouse with a smooth cutoff
+    neonContainer.style.background = `radial-gradient(circle at ${mouseX}px ${mouseY}px, ${glowColors[glowIndex]}, transparent 70%)`;
   }
   updateNeonBackground();
-
+  
   document.addEventListener("mousemove", function (event) {
     mouseX = event.clientX;
     mouseY = event.clientY;
     updateNeonBackground();
   });
-
+  
   // Cycle through glow colors every 4 seconds.
   setInterval(() => {
     glowIndex = (glowIndex + 1) % glowColors.length;
     updateNeonBackground();
   }, 4000);
-
-  // --- Elements & Variables ---
+  
+  // --- Elements & Variables for UI and Physics ---
   const profilePic = document.querySelector(".profile-photo");
   const aboutPopup = document.querySelector(".about-popup");
   const aboutLink = document.querySelector(".about-link");
@@ -40,21 +41,21 @@ document.addEventListener("DOMContentLoaded", function () {
   const introText = document.querySelector(".intro-text");
   const balls = [];
   const quoteContainer = document.getElementById("quote-container");
-
+  
   // Physics parameters.
   const GRAVITY = 0.3;
   const RESTITUTION = 0.8;
-
+  
   // Adjust quote container height so falling quotes stop above the footer.
   function updateQuoteContainerHeight() {
     quoteContainer.style.height = (window.innerHeight - footer.offsetHeight) + "px";
   }
   updateQuoteContainerHeight();
   window.addEventListener("resize", updateQuoteContainerHeight);
-
+  
   let quotesStarted = false;
   let quoteStartTime = Date.now();
-
+  
   // --- Popup Controls ---
   profilePic.addEventListener("click", () => {
     aboutPopup.style.display = "flex";
@@ -92,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("Denied.");
     }
   });
-
+  
   // --- Ball Physics and Collision ---
   gravityBtn.addEventListener("click", () => {
     dropBall();
@@ -106,35 +107,30 @@ document.addEventListener("DOMContentLoaded", function () {
     resetBalls();
     resetBtn.style.display = "none";
   });
-
+  
   function dropBall() {
     const ball = document.createElement("div");
     ball.className = "ball";
     ball.style.backgroundColor = getRandomColor();
-    // Random diameter between 40 and 70px.
-    const diameter = Math.random() * 30 + 40;
+    const diameter = Math.random() * 30 + 40; // Random diameter between 40 and 70px.
     ball.style.width = diameter + "px";
     ball.style.height = diameter + "px";
-    // Set initial position.
     ball.style.left = Math.random() * (window.innerWidth - diameter) + "px";
     ball.style.top = "0px";
-    // Set up physics properties.
     ball.radius = diameter / 2;
     ball.mass = Math.pow(ball.radius, 2);
     ball.velocityX = Math.random() * 2 - 1;
     ball.velocityY = Math.random() * 4 + 1;
-    // Append to body and add to our simulation array.
     document.body.appendChild(ball);
     balls.push(ball);
   }
-
+  
   function resetBalls() {
     balls.forEach(ball => ball.remove());
     balls.length = 0;
   }
-
+  
   function getRandomColor() {
-    // Generate bright colors by ensuring high values in hex digits.
     const letters = "89ABCDEF";
     let color = "#";
     for (let i = 0; i < 6; i++) {
@@ -142,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     return color;
   }
-
+  
   // --- Falling Quotes ---
   function startFallingQuotes() {
     setInterval(() => {
@@ -188,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     requestAnimationFrame(updateQuotes);
   }
-
+  
   // --- Update Balls & Handle Collisions ---
   function updateBalls() {
     balls.forEach(ball => {
@@ -306,4 +302,61 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   updateBalls();
+  
+  // --- Visitor Tracking ---
+  // This function retrieves the visitor's public IP using ipify, gathers the user agent,
+  // and (if allowed) their geolocation, then sends it to a server endpoint.
+  function logVisitor() {
+    const userAgent = navigator.userAgent;
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        const ip = data.ip;
+        // Try to get geolocation if available
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            const visitorData = {
+              ip,
+              userAgent,
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              timestamp: new Date().toISOString()
+            };
+            // Send the data to your server-side logging endpoint.
+            fetch('/api/logVisitor', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(visitorData)
+            });
+          }, function(error) {
+            // On error (or if the user denies permission), send without location data.
+            const visitorData = {
+              ip,
+              userAgent,
+              timestamp: new Date().toISOString()
+            };
+            fetch('/api/logVisitor', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(visitorData)
+            });
+          });
+        } else {
+          const visitorData = {
+            ip,
+            userAgent,
+            timestamp: new Date().toISOString()
+          };
+          fetch('/api/logVisitor', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(visitorData)
+          });
+        }
+      })
+      .catch(err => console.error('Error fetching IP:', err));
+  }
+  
+  // Call logVisitor on page load.
+  logVisitor();
 });
