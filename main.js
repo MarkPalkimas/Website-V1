@@ -4,16 +4,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const glow = document.createElement("div");
   glow.className = "neon-glow";
   neonContainer.appendChild(glow);
-  neonContainer.addEventListener("mousemove", function(event) {
-    const rect = neonContainer.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    // Update CSS variables for the glow’s center
-    glow.style.setProperty('--mouse-x', `${x}px`);
-    glow.style.setProperty('--mouse-y', `${y}px`);
+  
+  // Listen on the entire document so the glow always follows the mouse
+  document.addEventListener("mousemove", function (event) {
+    const x = event.clientX;
+    const y = event.clientY;
+    glow.style.setProperty("--mouse-x", `${x}px`);
+    glow.style.setProperty("--mouse-y", `${y}px`);
   });
-
-  // --- Elements and Variables ---
+  
+  // --- Elements & Variables ---
   const profilePic = document.querySelector(".profile-photo");
   const aboutPopup = document.querySelector(".about-popup");
   const aboutLink = document.querySelector(".about-link");
@@ -29,22 +29,21 @@ document.addEventListener("DOMContentLoaded", function () {
   const introText = document.querySelector(".intro-text");
   const balls = [];
   const quoteContainer = document.getElementById("quote-container");
-
+  
   // Physics parameters.
-  const GRAVITY = 0.3;     // gravitational acceleration per frame
-  const RESTITUTION = 0.8; // bounciness for collisions
-
+  const GRAVITY = 0.3;
+  const RESTITUTION = 0.8;
+  
   // Adjust quote container height so falling quotes stop above the footer.
   function updateQuoteContainerHeight() {
     quoteContainer.style.height = (window.innerHeight - footer.offsetHeight) + "px";
   }
   updateQuoteContainerHeight();
   window.addEventListener("resize", updateQuoteContainerHeight);
-
-  // Falling quotes start only when a ball is dropped.
+  
   let quotesStarted = false;
-  let quoteStartTime = Date.now(); // used for oscillation
-
+  let quoteStartTime = Date.now();
+  
   // --- Popup Controls ---
   profilePic.addEventListener("click", () => {
     aboutPopup.style.display = "flex";
@@ -82,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("Denied.");
     }
   });
-
+  
   // --- Ball Physics and Collision ---
   gravityBtn.addEventListener("click", () => {
     dropBall();
@@ -96,33 +95,29 @@ document.addEventListener("DOMContentLoaded", function () {
     resetBalls();
     resetBtn.style.display = "none";
   });
-
+  
   function dropBall() {
     const ball = document.createElement("div");
     ball.className = "ball";
     ball.style.backgroundColor = getRandomColor();
-    // Random diameter between 40 and 70px.
     const diameter = Math.random() * 30 + 40;
     ball.style.width = diameter + "px";
     ball.style.height = diameter + "px";
-    // Set initial position.
     ball.style.left = Math.random() * (window.innerWidth - diameter) + "px";
     ball.style.top = "0px";
-    // Set up physics properties.
     ball.radius = diameter / 2;
-    ball.mass = Math.pow(ball.radius, 2);  // mass proportional to area
+    ball.mass = Math.pow(ball.radius, 2);
     ball.velocityX = Math.random() * 2 - 1;
     ball.velocityY = Math.random() * 4 + 1;
-    // Append to body and add to our simulation array.
     document.body.appendChild(ball);
     balls.push(ball);
   }
-
+  
   function resetBalls() {
     balls.forEach(ball => ball.remove());
     balls.length = 0;
   }
-
+  
   function getRandomColor() {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -131,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     return color;
   }
-
+  
   // --- Falling Quotes ---
   function startFallingQuotes() {
     setInterval(() => {
@@ -139,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 10000);
     updateQuotes();
   }
+  
   function createFallingQuote() {
     const quotes = [
       "Life isn’t about what you know, It’s about what you’re able to figure out.",
@@ -164,6 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (quoteElem.parentElement) quoteElem.parentElement.removeChild(quoteElem);
     }, 21000);
   }
+  
   function updateQuotes() {
     const now = Date.now();
     const quotes = document.querySelectorAll(".falling-quote");
@@ -177,21 +174,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     requestAnimationFrame(updateQuotes);
   }
-
+  
   // --- Update Balls & Handle Collisions ---
   function updateBalls() {
-    // Update each ball's position and velocity.
     balls.forEach(ball => {
-      // Update vertical velocity with gravity.
       ball.velocityY += GRAVITY;
-      
-      // Update position.
       let currentTop = parseFloat(ball.style.top);
       let currentLeft = parseFloat(ball.style.left);
       let newTop = currentTop + ball.velocityY;
       let newLeft = currentLeft + ball.velocityX;
       
-      // Check for collision with walls.
       if (newLeft <= 0) {
         newLeft = 0;
         ball.velocityX = -ball.velocityX * RESTITUTION;
@@ -201,12 +193,10 @@ document.addEventListener("DOMContentLoaded", function () {
         ball.velocityX = -ball.velocityX * RESTITUTION;
       }
       
-      // Floor collision using footer as reference.
       const footerTop = footer.getBoundingClientRect().top + window.scrollY;
       if (newTop + ball.radius * 2 >= footerTop) {
         newTop = footerTop - ball.radius * 2;
         ball.velocityY = -ball.velocityY * RESTITUTION;
-        // Damp horizontal energy slightly.
         ball.velocityX *= RESTITUTION;
       }
       
@@ -214,14 +204,12 @@ document.addEventListener("DOMContentLoaded", function () {
       ball.style.left = newLeft + "px";
     });
     
-    // Handle collisions: ball-ball and ball-quote.
     handleBallCollisions();
     handleBallQuoteCollisions();
     
     requestAnimationFrame(updateBalls);
   }
   
-  // --- Handle Ball–Ball Collisions Using 2D Elastic Collision Equations ---
   function handleBallCollisions() {
     for (let i = 0; i < balls.length; i++) {
       const ballA = balls[i];
@@ -235,29 +223,24 @@ document.addEventListener("DOMContentLoaded", function () {
         const dy = yB - yA;
         const dist = Math.hypot(dx, dy);
         if (dist < ballA.radius + ballB.radius && dist > 0) {
-          // Overlap detected. Calculate unit normal and unit tangent vectors.
           const nx = dx / dist;
           const ny = dy / dist;
           const tx = -ny;
           const ty = nx;
           
-          // Project the velocities onto the normal and tangent vectors.
           const vA_n = ballA.velocityX * nx + ballA.velocityY * ny;
           const vA_t = ballA.velocityX * tx + ballA.velocityY * ty;
           const vB_n = ballB.velocityX * nx + ballB.velocityY * ny;
           const vB_t = ballB.velocityX * tx + ballB.velocityY * ty;
           
-          // Compute new normal velocities (1D elastic collision in normal direction).
           const vA_n_after = (vA_n * (ballA.mass - ballB.mass) + 2 * ballB.mass * vB_n) / (ballA.mass + ballB.mass);
           const vB_n_after = (vB_n * (ballB.mass - ballA.mass) + 2 * ballA.mass * vA_n) / (ballA.mass + ballB.mass);
           
-          // Convert scalar normal and tangent velocities into vectors.
           ballA.velocityX = vA_n_after * nx + vA_t * tx;
           ballA.velocityY = vA_n_after * ny + vA_t * ty;
           ballB.velocityX = vB_n_after * nx + vB_t * tx;
           ballB.velocityY = vB_n_after * ny + vB_t * ty;
           
-          // Separate the balls so they do not overlap.
           const overlap = ballA.radius + ballB.radius - dist;
           const separationX = nx * (overlap / 2);
           const separationY = ny * (overlap / 2);
@@ -270,7 +253,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
   
-  // --- Handle Collisions Between Balls and Falling Quotes (only from above) ---
   function handleBallQuoteCollisions() {
     const quoteElements = document.querySelectorAll(".falling-quote");
     balls.forEach(ball => {
@@ -283,7 +265,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const quoteY = rect.top + window.scrollY;
         const quoteWidth = rect.width;
         const quoteHeight = rect.height;
-        // Only check collision if the ball is coming from above.
         if (ball.velocityY > 0 && ballY < quoteY) {
           const closestX = Math.max(quoteX, Math.min(ballX, quoteX + quoteWidth));
           const closestY = Math.max(quoteY, Math.min(ballY, quoteY + quoteHeight));
@@ -292,7 +273,9 @@ document.addEventListener("DOMContentLoaded", function () {
             ball.velocityX = -ball.velocityX * RESTITUTION;
             ball.velocityY = -ball.velocityY * RESTITUTION;
             quote.style.transform = "scale(1.2)";
-            setTimeout(() => { quote.style.transform = "scale(1)"; }, 200);
+            setTimeout(() => {
+              quote.style.transform = "scale(1)";
+            }, 200);
           }
         }
       });
@@ -300,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   let lastScrollTop = window.scrollY;
-  window.addEventListener('scroll', () => {
+  window.addEventListener("scroll", () => {
     const scrollTop = window.scrollY;
     const scrollDirection = scrollTop > lastScrollTop ? 1 : -1;
     lastScrollTop = scrollTop;
