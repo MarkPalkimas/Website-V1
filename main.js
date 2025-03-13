@@ -1,18 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // --- Neon Glow Effect ---
+  // --- Neon Glow Effect Covering the Entire Background ---
   const neonContainer = document.getElementById("neon-container");
-  const glow = document.createElement("div");
-  glow.className = "neon-glow";
-  neonContainer.appendChild(glow);
-  
-  // Listen on the entire document so the glow always follows the mouse
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  // Curated modern neon colors
+  const glowColors = ["#00d084", "#3498db", "#8e44ad", "#f39c12"];
+  let glowIndex = 0;
+
+  function updateNeonBackground() {
+    neonContainer.style.background = `radial-gradient(circle at ${mouseX}px ${mouseY}px, ${glowColors[glowIndex]}, transparent 50%)`;
+  }
+  updateNeonBackground();
+
   document.addEventListener("mousemove", function (event) {
-    const x = event.clientX;
-    const y = event.clientY;
-    glow.style.setProperty("--mouse-x", `${x}px`);
-    glow.style.setProperty("--mouse-y", `${y}px`);
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+    updateNeonBackground();
   });
-  
+
+  // Cycle through glow colors every 4 seconds.
+  setInterval(() => {
+    glowIndex = (glowIndex + 1) % glowColors.length;
+    updateNeonBackground();
+  }, 4000);
+
   // --- Elements & Variables ---
   const profilePic = document.querySelector(".profile-photo");
   const aboutPopup = document.querySelector(".about-popup");
@@ -29,21 +40,21 @@ document.addEventListener("DOMContentLoaded", function () {
   const introText = document.querySelector(".intro-text");
   const balls = [];
   const quoteContainer = document.getElementById("quote-container");
-  
+
   // Physics parameters.
   const GRAVITY = 0.3;
   const RESTITUTION = 0.8;
-  
+
   // Adjust quote container height so falling quotes stop above the footer.
   function updateQuoteContainerHeight() {
     quoteContainer.style.height = (window.innerHeight - footer.offsetHeight) + "px";
   }
   updateQuoteContainerHeight();
   window.addEventListener("resize", updateQuoteContainerHeight);
-  
+
   let quotesStarted = false;
   let quoteStartTime = Date.now();
-  
+
   // --- Popup Controls ---
   profilePic.addEventListener("click", () => {
     aboutPopup.style.display = "flex";
@@ -81,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("Denied.");
     }
   });
-  
+
   // --- Ball Physics and Collision ---
   gravityBtn.addEventListener("click", () => {
     dropBall();
@@ -95,38 +106,43 @@ document.addEventListener("DOMContentLoaded", function () {
     resetBalls();
     resetBtn.style.display = "none";
   });
-  
+
   function dropBall() {
     const ball = document.createElement("div");
     ball.className = "ball";
     ball.style.backgroundColor = getRandomColor();
+    // Random diameter between 40 and 70px.
     const diameter = Math.random() * 30 + 40;
     ball.style.width = diameter + "px";
     ball.style.height = diameter + "px";
+    // Set initial position.
     ball.style.left = Math.random() * (window.innerWidth - diameter) + "px";
     ball.style.top = "0px";
+    // Set up physics properties.
     ball.radius = diameter / 2;
     ball.mass = Math.pow(ball.radius, 2);
     ball.velocityX = Math.random() * 2 - 1;
     ball.velocityY = Math.random() * 4 + 1;
+    // Append to body and add to our simulation array.
     document.body.appendChild(ball);
     balls.push(ball);
   }
-  
+
   function resetBalls() {
     balls.forEach(ball => ball.remove());
     balls.length = 0;
   }
-  
+
   function getRandomColor() {
-    const letters = "0123456789ABCDEF";
+    // Generate bright colors by ensuring high values in hex digits.
+    const letters = "89ABCDEF";
     let color = "#";
     for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+      color += letters[Math.floor(Math.random() * letters.length)];
     }
     return color;
   }
-  
+
   // --- Falling Quotes ---
   function startFallingQuotes() {
     setInterval(() => {
@@ -134,7 +150,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 10000);
     updateQuotes();
   }
-  
   function createFallingQuote() {
     const quotes = [
       "Life isn’t about what you know, It’s about what you’re able to figure out.",
@@ -160,7 +175,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (quoteElem.parentElement) quoteElem.parentElement.removeChild(quoteElem);
     }, 21000);
   }
-  
   function updateQuotes() {
     const now = Date.now();
     const quotes = document.querySelectorAll(".falling-quote");
@@ -174,11 +188,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     requestAnimationFrame(updateQuotes);
   }
-  
+
   // --- Update Balls & Handle Collisions ---
   function updateBalls() {
     balls.forEach(ball => {
       ball.velocityY += GRAVITY;
+      
       let currentTop = parseFloat(ball.style.top);
       let currentLeft = parseFloat(ball.style.left);
       let newTop = currentTop + ball.velocityY;
@@ -273,9 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ball.velocityX = -ball.velocityX * RESTITUTION;
             ball.velocityY = -ball.velocityY * RESTITUTION;
             quote.style.transform = "scale(1.2)";
-            setTimeout(() => {
-              quote.style.transform = "scale(1)";
-            }, 200);
+            setTimeout(() => { quote.style.transform = "scale(1)"; }, 200);
           }
         }
       });
