@@ -3,12 +3,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const neonContainer = document.getElementById("neon-container");
   let mouseX = window.innerWidth / 2;
   let mouseY = window.innerHeight / 2;
-  // Curated modern neon colors
   const glowColors = ["#00d084", "#3498db", "#8e44ad", "#f39c12"];
   let glowIndex = 0;
   
   function updateNeonBackground() {
-    // Use a radial gradient centered at the mouse with a smooth cutoff
     neonContainer.style.background = `radial-gradient(circle at ${mouseX}px ${mouseY}px, ${glowColors[glowIndex]}, transparent 70%)`;
   }
   updateNeonBackground();
@@ -19,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateNeonBackground();
   });
   
-  // Cycle through glow colors every 4 seconds.
+  // Cycle through glow colors every 4 seconds (smooth fade due to CSS transition)
   setInterval(() => {
     glowIndex = (glowIndex + 1) % glowColors.length;
     updateNeonBackground();
@@ -42,11 +40,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const balls = [];
   const quoteContainer = document.getElementById("quote-container");
   
+  // --- Admin Popup Elements ---
+  const adminPopup = document.querySelector(".admin-popup");
+  const adminPasswordInput = document.getElementById("admin-password");
+  const togglePasswordBtn = document.getElementById("toggle-password");
+  const submitPasswordBtn = document.getElementById("submit-password");
+  const cancelPasswordBtn = document.getElementById("cancel-password");
+  
   // Physics parameters.
   const GRAVITY = 0.3;
   const RESTITUTION = 0.8;
   
-  // Adjust quote container height so falling quotes stop above the footer.
   function updateQuoteContainerHeight() {
     quoteContainer.style.height = (window.innerHeight - footer.offsetHeight) + "px";
   }
@@ -85,13 +89,32 @@ document.addEventListener("DOMContentLoaded", function () {
     introText.classList.remove("hidden");
     socialLinks.classList.remove("hidden");
   });
+  // --- Admin Popup Controls ---
   adminBtn.addEventListener("click", () => {
-    const password = prompt("Enter password:");
-    if (password === "mark2005") {
+    adminPopup.style.display = "block";
+    adminPasswordInput.value = "";
+    adminPasswordInput.type = "password";
+    togglePasswordBtn.textContent = "Show";
+  });
+  togglePasswordBtn.addEventListener("click", () => {
+    if (adminPasswordInput.type === "password") {
+      adminPasswordInput.type = "text";
+      togglePasswordBtn.textContent = "Hide";
+    } else {
+      adminPasswordInput.type = "password";
+      togglePasswordBtn.textContent = "Show";
+    }
+  });
+  submitPasswordBtn.addEventListener("click", () => {
+    if (adminPasswordInput.value === "mark2005") {
       window.location.href = "admin.html";
     } else {
       alert("Denied.");
+      adminPopup.style.display = "none";
     }
+  });
+  cancelPasswordBtn.addEventListener("click", () => {
+    adminPopup.style.display = "none";
   });
   
   // --- Ball Physics and Collision ---
@@ -112,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const ball = document.createElement("div");
     ball.className = "ball";
     ball.style.backgroundColor = getRandomColor();
-    const diameter = Math.random() * 30 + 40; // Random diameter between 40 and 70px.
+    const diameter = Math.random() * 30 + 40;
     ball.style.width = diameter + "px";
     ball.style.height = diameter + "px";
     ball.style.left = Math.random() * (window.innerWidth - diameter) + "px";
@@ -304,15 +327,12 @@ document.addEventListener("DOMContentLoaded", function () {
   updateBalls();
   
   // --- Visitor Tracking ---
-  // This function retrieves the visitor's public IP using ipify, gathers the user agent,
-  // and (if allowed) their geolocation, then sends it to a server endpoint.
   function logVisitor() {
     const userAgent = navigator.userAgent;
     fetch('https://api.ipify.org?format=json')
       .then(response => response.json())
       .then(data => {
         const ip = data.ip;
-        // Try to get geolocation if available
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
             const visitorData = {
@@ -322,17 +342,16 @@ document.addEventListener("DOMContentLoaded", function () {
               longitude: position.coords.longitude,
               timestamp: new Date().toISOString()
             };
-            // Send the data to your server-side logging endpoint.
             fetch('/api/logVisitor', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(visitorData)
             });
           }, function(error) {
-            // On error (or if the user denies permission), send without location data.
             const visitorData = {
               ip,
               userAgent,
+              location: "Denied",
               timestamp: new Date().toISOString()
             };
             fetch('/api/logVisitor', {
@@ -357,6 +376,5 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch(err => console.error('Error fetching IP:', err));
   }
   
-  // Call logVisitor on page load.
   logVisitor();
 });
