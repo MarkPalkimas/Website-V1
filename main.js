@@ -5,10 +5,12 @@ document.addEventListener("DOMContentLoaded", function () {
   glow.className = "neon-glow";
   neonContainer.appendChild(glow);
   neonContainer.addEventListener("mousemove", function(event) {
-      const rect = neonContainer.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      glow.style.background = `radial-gradient(circle at ${x}px ${y}px, #0ff, transparent 70%)`;
+    const rect = neonContainer.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    // Update CSS variables for the glow’s center
+    glow.style.setProperty('--mouse-x', `${x}px`);
+    glow.style.setProperty('--mouse-y', `${y}px`);
   });
 
   // --- Elements and Variables ---
