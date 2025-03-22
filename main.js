@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     popup.style.display = "flex";
     dimmedOverlay.style.display = "block";
-    // Clone social links ensuring the icons are identical to the ones in footer.
+    // Clone social links ensuring the icons are identical to the ones in the footer.
     popupContent.innerHTML = socialLinks.innerHTML;
   });
   dimmedOverlay.addEventListener("click", () => {
