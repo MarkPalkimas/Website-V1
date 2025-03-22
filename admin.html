@@ -16,6 +16,7 @@
       background: #121212;
       color: #e0e0e0;
       overflow-x: hidden;
+      padding-bottom: 2rem;
     }
     header {
       background: #1f1f1f;
@@ -69,6 +70,7 @@
       border-collapse: collapse;
       background: #222;
       color: #e0e0e0;
+      margin-top: 1rem;
     }
     table th, table td {
       padding: 0.5rem;
@@ -90,7 +92,6 @@
           <tr>
             <th>Timestamp</th>
             <th>IP Address</th>
-            <th>Location</th>
             <th>Device</th>
           </tr>
         </thead>
@@ -101,7 +102,7 @@
     </div>
   </div>
   <script>
-    // Simple function to parse device type from user agent
+    // Function to parse device type from user-agent string
     function parseDevice(userAgent) {
       if (/Mobi|Android/i.test(userAgent)) {
         return "Mobile";
@@ -117,13 +118,11 @@
           const tbody = document.querySelector('#visitor-logs tbody');
           tbody.innerHTML = '';
           logs.forEach(log => {
-            const tr = document.createElement('tr');
-            const location = (log.latitude && log.longitude) ? `${log.latitude}, ${log.longitude}` : 'Denied';
             const device = parseDevice(log.userAgent || '');
+            const tr = document.createElement('tr');
             tr.innerHTML = `
               <td>${new Date(log.timestamp).toLocaleString()}</td>
               <td>${log.ip}</td>
-              <td>${location}</td>
               <td>${device}</td>
             `;
             tbody.appendChild(tr);
@@ -132,9 +131,21 @@
         .catch(err => console.error('Error fetching logs:', err));
     }
     
+    // Log the visitor immediately (optional: you might want to log only on page load)
+    function logVisitor() {
+      fetch('/api/logVisitor', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => console.log('Visitor logged:', data))
+        .catch(err => console.error('Error logging visitor:', err));
+    }
+    
     // Fetch logs on page load and then every 10 seconds
-    fetchVisitorLogs();
-    setInterval(fetchVisitorLogs, 10000);
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchVisitorLogs();
+      setInterval(fetchVisitorLogs, 10000);
+      // Log this visit (if desired; you might log once per visit)
+      logVisitor();
+    });
   </script>
 </body>
 </html>
