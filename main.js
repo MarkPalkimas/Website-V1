@@ -64,15 +64,13 @@ document.addEventListener("DOMContentLoaded", function () {
   profilePic.addEventListener("click", () => {
     aboutPopup.style.display = "flex";
     dimmedOverlay.style.display = "block";
-    profilePic.classList.add("enlarged");
-    introText.classList.add("hidden");
+    // Removed enlargement and intro text hiding for a cleaner about popup layout.
   });
   aboutLink.addEventListener("click", (e) => {
     e.preventDefault();
     aboutPopup.style.display = "flex";
     dimmedOverlay.style.display = "block";
-    profilePic.classList.add("enlarged");
-    introText.classList.add("hidden");
+    // Removed enlargement and intro text hiding for a cleaner about popup layout.
   });
   contactLink.addEventListener("click", (e) => {
     e.preventDefault();
@@ -85,10 +83,9 @@ document.addEventListener("DOMContentLoaded", function () {
     aboutPopup.style.display = "none";
     popup.style.display = "none";
     dimmedOverlay.style.display = "none";
-    profilePic.classList.remove("enlarged");
-    introText.classList.remove("hidden");
     socialLinks.classList.remove("hidden");
   });
+  
   // --- Admin Popup Controls ---
   adminBtn.addEventListener("click", () => {
     adminPopup.style.display = "block";
