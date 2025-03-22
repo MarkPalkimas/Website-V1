@@ -45,21 +45,24 @@
         color: #eee;
       }
       /* Popup & Overlay Styles */
-      .social-popup,
       .about-popup,
+      .social-popup,
       .admin-popup {
         display: none;
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: rgba(20, 20, 20, 0.95);
-        padding: 30px;
         border-radius: 10px;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);
         z-index: 1010;
-        text-align: center;
         max-width: 600px;
+      }
+      /* About Popup - Lighter background for readability */
+      .about-popup {
+        background: #f9f9f9;
+        color: #333;
+        padding: 30px;
       }
       .about-popup-content {
         display: flex;
@@ -70,22 +73,39 @@
       }
       .about-image img {
         max-width: 150px;
+        width: 100%;
         border-radius: 50%;
       }
       .about-text {
         text-align: left;
       }
+      /* Social Popup - White background so icons stand out */
+      .social-popup {
+        background: #fff;
+        color: #333;
+        padding: 30px;
+        text-align: center;
+      }
       .social-popup-content {
         display: flex;
         flex-direction: column;
         gap: 30px;
-        text-align: center;
       }
       .popup-social-links {
         display: flex;
         gap: 20px;
         justify-content: center;
         align-items: center;
+      }
+      .popup-social-links img {
+        width: 50px;
+        height: 50px;
+      }
+      .admin-popup {
+        background: #f9f9f9;
+        color: #333;
+        padding: 30px;
+        text-align: center;
       }
       .dimmed {
         position: fixed;
@@ -237,7 +257,7 @@
         <div class="intro-text">
           <h2>Hello, I'm Mark Palkimas</h2>
         </div>
-        <!-- About Popup: Displays info with image next to text -->
+        <!-- About Popup: Displays image and text side by side -->
         <div class="about-popup">
           <div class="about-popup-content">
             <div class="about-image">
