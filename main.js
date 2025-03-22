@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const adminBtn = document.querySelector(".admin-btn");
   const gravityBtn = document.querySelector(".gravity-btn");
   const resetBtn = document.querySelector(".reset-btn");
-  const introText = document.querySelector(".intro-text");
   const balls = [];
   const quoteContainer = document.getElementById("quote-container");
   
@@ -64,26 +63,24 @@ document.addEventListener("DOMContentLoaded", function () {
   profilePic.addEventListener("click", () => {
     aboutPopup.style.display = "flex";
     dimmedOverlay.style.display = "block";
-    // Removed enlargement and intro text hiding for a cleaner about popup layout.
   });
   aboutLink.addEventListener("click", (e) => {
     e.preventDefault();
     aboutPopup.style.display = "flex";
     dimmedOverlay.style.display = "block";
-    // Removed enlargement and intro text hiding for a cleaner about popup layout.
   });
   contactLink.addEventListener("click", (e) => {
     e.preventDefault();
-    socialLinks.classList.add("hidden");
     popup.style.display = "flex";
     dimmedOverlay.style.display = "block";
+    // Clone social links ensuring the icons are identical to the ones in footer.
     popupContent.innerHTML = socialLinks.innerHTML;
   });
   dimmedOverlay.addEventListener("click", () => {
     aboutPopup.style.display = "none";
     popup.style.display = "none";
+    adminPopup.style.display = "none";
     dimmedOverlay.style.display = "none";
-    socialLinks.classList.remove("hidden");
   });
   
   // --- Admin Popup Controls ---
