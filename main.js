@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // --- Neon Glow Effect Covering Entire Background ---
+  // --- Neon Glow Effect ---
   const neonContainer = document.getElementById("neon-container");
   let mouseX = window.innerWidth / 2;
   let mouseY = window.innerHeight / 2;
@@ -17,13 +17,12 @@ document.addEventListener("DOMContentLoaded", function () {
     updateNeonBackground();
   });
   
-  // Cycle through glow colors every 4 seconds (smooth fade due to CSS transition)
   setInterval(() => {
     glowIndex = (glowIndex + 1) % glowColors.length;
     updateNeonBackground();
   }, 4000);
   
-  // --- Elements & Variables for UI and Physics ---
+  // --- Elements & UI Variables ---
   const profilePic = document.querySelector(".profile-photo");
   const aboutPopup = document.querySelector(".about-popup");
   const aboutLink = document.querySelector(".about-link");
@@ -46,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const submitPasswordBtn = document.getElementById("submit-password");
   const cancelPasswordBtn = document.getElementById("cancel-password");
   
-  // Physics parameters.
+  // Physics parameters
   const GRAVITY = 0.3;
   const RESTITUTION = 0.8;
   
@@ -73,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     popup.style.display = "flex";
     dimmedOverlay.style.display = "block";
-    // Clone social links ensuring the icons are identical to the ones in the footer.
     popupContent.innerHTML = socialLinks.innerHTML;
   });
   dimmedOverlay.addEventListener("click", () => {
@@ -111,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
     adminPopup.style.display = "none";
   });
   
-  // --- Ball Physics and Collision ---
+  // --- Ball Physics & Collision ---
   gravityBtn.addEventListener("click", () => {
     dropBall();
     resetBtn.style.display = "block";
