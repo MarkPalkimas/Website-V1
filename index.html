@@ -46,7 +46,8 @@
       }
       /* Popup & Overlay Styles */
       .social-popup,
-      .about-popup {
+      .about-popup,
+      .admin-popup {
         display: none;
         position: fixed;
         top: 50%;
@@ -60,12 +61,31 @@
         text-align: center;
         max-width: 600px;
       }
-      .social-popup-content,
       .about-popup-content {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+      }
+      .about-image img {
+        max-width: 150px;
+        border-radius: 50%;
+      }
+      .about-text {
+        text-align: left;
+      }
+      .social-popup-content {
         display: flex;
         flex-direction: column;
         gap: 30px;
         text-align: center;
+      }
+      .popup-social-links {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
       }
       .dimmed {
         position: fixed;
@@ -141,20 +161,11 @@
         max-width: 100%;
         border-radius: 50%;
         transition: box-shadow 0.3s, transform 0.3s;
+        cursor: pointer;
       }
       .profile-photo:hover {
         box-shadow: 0 0 20px #00d084;
         transform: scale(1.05);
-      }
-      .profile-photo.enlarged {
-        width: 350px;
-        height: 350px;
-        position: absolute;
-        top: 30%;
-        left: 10%;
-        transform: translateY(-50%);
-        border-radius: 50%;
-        z-index: 1015;
       }
       /* Falling Quotes */
       #quote-container {
@@ -186,20 +197,6 @@
         box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
       }
       /* Admin Popup Styles */
-      .admin-popup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(20, 20, 20, 0.95);
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);
-        z-index: 1015;
-        text-align: center;
-        max-width: 400px;
-      }
       .admin-popup-content input {
         width: 80%;
         padding: 10px;
@@ -240,13 +237,18 @@
         <div class="intro-text">
           <h2>Hello, I'm Mark Palkimas</h2>
         </div>
-        <!-- About Popup: When triggered, displays the about text -->
-        <div class="about-section about-popup">
+        <!-- About Popup: Displays info with image next to text -->
+        <div class="about-popup">
           <div class="about-popup-content">
-            <h2>About Me</h2>
-            <p>
-              I'm Mark Palkimas, an ambitious student with a passion for technology and innovation. I thrive on learning, tackling complex challenges, and exploring diverse areas in the tech world to build creative, user-friendly solutions.
-            </p>
+            <div class="about-image">
+              <img src="profile.jpg" alt="Profile Photo" />
+            </div>
+            <div class="about-text">
+              <h2>About Me</h2>
+              <p>
+                I'm Mark Palkimas, an ambitious student with a passion for technology and innovation. I thrive on learning, tackling complex challenges, and exploring diverse areas in the tech world to build creative, user-friendly solutions.
+              </p>
+            </div>
           </div>
         </div>
       </section>
