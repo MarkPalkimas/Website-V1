@@ -53,12 +53,13 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        border-radius: 10px;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
         z-index: 1010;
         max-width: 600px;
+        width: 90%;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       }
-      /* About Popup - Modern white background */
+      /* Modern About Popup */
       .about-popup {
         background: #fff;
         color: #333;
@@ -66,18 +67,20 @@
       }
       .about-popup-content {
         display: flex;
-        flex-direction: row;
-        gap: 20px;
         align-items: center;
-        justify-content: center;
+        gap: 20px;
+      }
+      .about-image {
+        flex-shrink: 0;
       }
       .about-image img {
-        max-width: 200px;
-        width: 100%;
-        border-radius: 10px;
+        width: 200px;
+        border-radius: 8px;
       }
       .about-text {
-        text-align: left;
+        flex: 1;
+        font-size: 16px;
+        line-height: 1.5;
       }
       /* Social Popup - White background so icons stand out */
       .social-popup {
@@ -101,12 +104,25 @@
         width: 50px;
         height: 50px;
       }
+      /* Admin Popup */
       .admin-popup {
         background: #f9f9f9;
         color: #333;
         padding: 30px;
         text-align: center;
       }
+      .admin-popup-content input {
+        width: 80%;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 16px;
+      }
+      .admin-popup-content button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
+      }
+      /* Dimming Overlay */
       .dimmed {
         position: fixed;
         top: 0;
@@ -115,13 +131,6 @@
         height: 100%;
         background: rgba(0, 0, 0, 0.7);
         z-index: 1005;
-        display: none;
-      }
-      /* Extra CSS to hide/show elements as in the original */
-      .intro-text.hidden {
-        display: none;
-      }
-      .social-links.hidden {
         display: none;
       }
       /* Footer */
@@ -157,7 +166,7 @@
       .reset-btn:hover {
         background-color: #c21010;
       }
-      /* Neon Glow Effect (covers the whole background) */
+      /* Neon Glow Effect */
       #neon-container {
         position: fixed;
         top: 0;
@@ -208,25 +217,13 @@
         from { top: -50px; }
         to { top: 110vh; }
       }
-      /* Ball style: Added box-shadow for visibility */
+      /* Ball style */
       .ball {
         position: absolute;
         border-radius: 50%;
         z-index: 1000;
         pointer-events: none;
         box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-      }
-      /* Admin Popup Styles */
-      .admin-popup-content input {
-        width: 80%;
-        padding: 10px;
-        margin: 10px 0;
-        font-size: 16px;
-      }
-      .admin-popup-content button {
-        padding: 10px 20px;
-        margin: 5px;
-        font-size: 16px;
       }
     </style>
   </head>
@@ -257,11 +254,11 @@
         <div class="intro-text">
           <h2>Hello, I'm Mark Palkimas</h2>
         </div>
-        <!-- About Popup: Modern layout with larger profile image -->
+        <!-- Modern About Popup -->
         <div class="about-popup">
           <div class="about-popup-content">
             <div class="about-image">
-              <img src="profile.png" alt="Profile Image" />
+              <img src="profile.jpg" alt="Profile Image" />
             </div>
             <div class="about-text">
               <h2>About Me</h2>
@@ -326,7 +323,7 @@
       </div>
     </div>
     
-    <!-- Reset button -->
+    <!-- Reset Button -->
     <button class="reset-btn">Reset</button>
     
     <script src="main.js"></script>
