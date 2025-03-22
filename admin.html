@@ -102,7 +102,7 @@
     </div>
   </div>
   <script>
-    // Function to parse device type from user-agent string
+    // Function to parse device type from the user-agent string
     function parseDevice(userAgent) {
       if (/Mobi|Android/i.test(userAgent)) {
         return "Mobile";
@@ -110,7 +110,7 @@
       return "Desktop";
     }
     
-    // Fetch visitor logs from the server endpoint and populate the table
+    // Fetch visitor logs from the backend and populate the table
     function fetchVisitorLogs() {
       fetch('/api/getVisitorLogs')
         .then(response => response.json())
@@ -131,7 +131,7 @@
         .catch(err => console.error('Error fetching logs:', err));
     }
     
-    // Log the visitor immediately (optional: you might want to log only on page load)
+    // Log visitor data (this can be triggered on page load or from your main site)
     function logVisitor() {
       fetch('/api/logVisitor', { method: 'POST' })
         .then(response => response.json())
@@ -143,7 +143,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       fetchVisitorLogs();
       setInterval(fetchVisitorLogs, 10000);
-      // Log this visit (if desired; you might log once per visit)
+      // Optionally, log this visit (if you want each admin dashboard view logged, for example)
       logVisitor();
     });
   </script>
